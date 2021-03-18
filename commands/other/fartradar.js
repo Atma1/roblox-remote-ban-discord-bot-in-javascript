@@ -1,3 +1,5 @@
+const { getUserID } = require('../../modules/getUserID');
+
 module.exports = {
 	name: 'fartradar',
 	desc: 'read gurment',
@@ -6,12 +8,12 @@ module.exports = {
 	args: true,
 	guildonly: true,
 	async execute(message, arg, DB) {
-		const [playerId] = arg;
-		// const serverDoc = `Server: ${message.guild.id}`;
 		try {
+			const [ userName ] = arg;
+			const playerId = await getUserID(userName);
 			await DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(snap => {
 				if (!snap.exists) {
-					return message.channel.send(`No data exists for playerID: ${playerId}.`);
+					return message.channel.send(`No data exists for playerID: ${userName}.`);
 				}
 				const data = snap.data();
 				const keyData = Object.keys(data);

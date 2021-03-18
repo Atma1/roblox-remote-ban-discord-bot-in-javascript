@@ -26,7 +26,7 @@ module.exports = {
 				merge: true,
 			})
 				.then(() => {
-					msg.channel.send(`Player: ${playerID} has been banned.\nReason: ${banReason}.`);
+					msg.channel.send(`Player: ${userName} has been banned.\nReason: ${banReason}.`);
 				});
 		}
 		catch (error) {
