@@ -16,6 +16,7 @@ module.exports = {
 					return message.channel.send(`No data exists for playerID: ${userName}.`);
 				}
 				const data = snap.data();
+				console.log(data, typeof (data));
 				const keyData = Object.keys(data);
 				keyData.forEach((key) => {
 					return message.channel.send(`${key}: ${data[key]}`);
