@@ -1,0 +1,20 @@
+{
+  "name": "deskord",
+  "version": "1.0.0",
+  "description": "diskord bot",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [
+    "yes"
+  ],
+  "author": "fresh",
+  "license": "ISC",
+  "dependencies": {
+    "admin": "^1.4.1",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "firebase": "^8.2.9",
+    "firebase-admin": "^9.5.0",
+    "node-fetch": "^2.6.1"
+  }
+}
