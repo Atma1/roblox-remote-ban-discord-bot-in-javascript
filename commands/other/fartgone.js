@@ -8,8 +8,9 @@ module.exports = {
 	guildonly: true,
 	async execute(msg, args, DB) {
 		const [ userName ] = args;
+		console.log(userName);
 		try {
-			const playerID = await getUserID(msg, userName);
+			const playerID = await getUserID(userName);
 			DB.collection(Guild_Server).doc(`Player: ${playerID}`)
 				.delete()
 				.then(() => {

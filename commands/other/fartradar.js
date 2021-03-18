@@ -11,7 +11,7 @@ module.exports = {
 		try {
 			const [ userName ] = arg;
 			const playerId = await getUserID(userName);
-			await DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(snap => {
+			DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(snap => {
 				if (!snap.exists) {
 					return message.channel.send(`No data exists for playerID: ${userName}.`);
 				}
