@@ -14,6 +14,7 @@ module.exports = {
 			const { Id } = response;
 			console.log(Id);
 			return Id;
+			// fartzone
 		}
 		catch (error) {
 			throw (`${error} for player with the username ${username}.`);
