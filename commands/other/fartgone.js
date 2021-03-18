@@ -14,7 +14,7 @@ module.exports = {
 			DB.collection(Guild_Server).doc(`Player: ${playerID}`)
 				.delete()
 				.then(() => {
-					return msg.channel.send(`Player: ${playerID}, removed from Firebase Firestore.`);
+					return msg.channel.send(`Player: ${userName}, removed from Firebase Firestore.`);
 				})
 				.catch((error) => {
 					throw(error);
