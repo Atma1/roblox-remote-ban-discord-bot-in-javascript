@@ -10,7 +10,7 @@ const {
 const firebase = require('firebase/app');
 const admin = require('firebase-admin');
 const FV = require('firebase-admin').firestore.FieldValue;
-const serviceAccount = require('./serviceAccount.env');
+const serviceAccount = require('./serviceAccount.json');
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
