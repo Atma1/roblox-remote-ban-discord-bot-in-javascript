@@ -1,3 +1,5 @@
 node_modules
 serviceAccount.json
 config.json
+.gitignore
+.eslintrc.json
