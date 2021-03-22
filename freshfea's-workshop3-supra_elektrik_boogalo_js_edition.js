@@ -6,10 +6,10 @@ const [phi, planck] = x;
 const link = `https://api.quran.com/api/v3/chapters/${x[0]}/verses/${x[1]}`;
 const aa = ['poop', 'ball', 'eeeeee', 'ballin'];
 
-const loopAll = (deta) => {
-	console.log(...deta);
+const loopAll = (...deta) => {
+	console.log(deta);
 };
-loopAll(aa);
+loopAll(...aa);
 
 if (z === 'surah') {
 	if (!k.length) {
