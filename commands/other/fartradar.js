@@ -1,4 +1,5 @@
 const { getUserID } = require('../../modules/getUserID');
+const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
 
 module.exports = {
 	name: 'fartradar',
@@ -16,6 +17,12 @@ module.exports = {
 					return message.channel.send(`No data exists for playerID: ${userName}.`);
 				}
 				const data = snap.data();
+				const { bannedAt } = data;
+				const { bannedBy } = data;
+				const { playerName } = data;
+				const { playerID } = data;
+				const { banReason } = data;
+				console.log(data);
 				const keyData = Object.keys(data);
 				keyData.forEach((key) => {
 					return message.channel.send(`${key}: ${data[key]}`);
