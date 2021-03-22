@@ -22,11 +22,8 @@ module.exports = {
 				const { playerName } = data;
 				const { playerID } = data;
 				const { banReason } = data;
-				console.log(data);
-				const keyData = Object.keys(data);
-				keyData.forEach((key) => {
-					return message.channel.send(`${key}: ${data[key]}`);
-				});
+				const banInfoEmbed = newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
+				return message.channel.send(banInfoEmbed);
 			});
 		}
 		catch (error) {

@@ -1,9 +1,18 @@
 const Discord = require('discord.js');
-// eslint-disable-next-line no-unused-vars
 const embedMessage = new Discord.embedMessage();
 module.exports = {
-	newEmbed: (stuff) => {
-		console.log(stuff);
-
+	newEmbedBanInfo: (bannedAt, bannedBy, playerName, playerID, banReason, playerImg) => {
+		const playerImg =
+		embedMessage.setColor('RED');
+		embedMessage.setTitle(`Ban info for player ${playerName}`);
+		embedMessage.setThumbnail(playerImg);
+		embedMessage.addFields(
+			{ name: 'PlayerName', value: `${playerName}` },
+			{ name: 'PlayerId', value: `${playerID}` },
+			{ name: 'banReason', value: `${banReason}` },
+			{ name: 'bannedBy', value: `${bannedBy}` },
+			{ name: 'bannedAt', value: `${bannedAt}` },
+		);
+		return embedMessage;
 	},
 };
