@@ -3,35 +3,13 @@ const k = fart.slice(1).trim().split(' ');
 const z = k.shift();
 const x = k.toString().split(':');
 const [phi, planck] = x;
-const dateformat = require('dateformat');
-const now = new Date();
-const farter = dateformat(now, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
-console.log(farter);
 const link = `https://api.quran.com/api/v3/chapters/${x[0]}/verses/${x[1]}`;
+const aa = ['poop', 'ball', 'eeeeee', 'ballin'];
 
-const fartzone = {
-	'zone': {
-		'poop': {
-			'diarea': 76,
-		},
-	},
-	'fart': 'pooper',
+const loopAll = (deta) => {
+	console.log(...deta);
 };
-
-
-const {
-	zone: {
-		poop: {
-			diarea,
-		},
-	},
-} = fartzone;
-
-
-if (!isNaN(diarea)) {
-	console.log('fartbomb');
-}
-
+loopAll(aa);
 
 if (z === 'surah') {
 	if (!k.length) {
