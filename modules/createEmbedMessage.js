@@ -5,11 +5,11 @@ module.exports = {
 	newEmbedBanInfo: async (bannedAt, bannedBy, playerName, playerID, banReason) => {
 		const playerImg = await getUserImg(playerID);
 		embedMessage.setColor('RED');
-		embedMessage.setTitle(`Ban info for player ${playerName}`);
+		embedMessage.setTitle(`Ban Info For Player ${playerName}`);
 		embedMessage.setThumbnail(playerImg);
 		embedMessage.addFields(
-			{ name: 'PlayerName', value: `${playerName}` },
-			{ name: 'PlayerId', value: `${playerID}` },
+			{ name: 'playerName', value: `${playerName}` },
+			{ name: 'playerId', value: `${playerID}` },
 			{ name: 'banReason', value: `${banReason}` },
 			{ name: 'bannedBy', value: `${bannedBy}` },
 			{ name: 'bannedAt', value: `${bannedAt}` },

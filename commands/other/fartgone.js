@@ -3,7 +3,7 @@ const { getUserID } = require('../../modules/getUserID');
 module.exports = {
 	name: 'fartgone',
 	desc: 'remove gurment',
-	usage: 'argumentos',
+	usage: 'remove player',
 	cooldown: 5,
 	guildonly: true,
 	async execute(msg, args, DB) {

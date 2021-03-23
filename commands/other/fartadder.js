@@ -2,10 +2,11 @@ const Guild_Server = 'Guilds-Server';
 const { getUserID } = require('../../modules/getUserID');
 const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
 const dateformat = require('dateformat');
+
 module.exports = {
 	name: 'fartadder',
 	desc: 'add gurment',
-	usage: 'argumentos',
+	usage: 'username banreason',
 	cooldown: 5,
 	args: true,
 	guildonly: true,
