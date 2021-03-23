@@ -7,15 +7,15 @@ module.exports = {
 				.catch(err => {
 					throw new Error(err);
 				});
-			if (response.success == false) {
-				const { errorMessage } = response;
-				throw new Error(errorMessage);
+			if (response.errors) {
+				const noImgFound = 'http://cdn.onlinewebfonts.com/svg/img_137275.png';
+				return noImgFound;
 			}
-			const { Id } = response;
-			return Id;
+			const imageUrl = response.data[0].imageUrl;
+			return imageUrl;
 		}
 		catch (error) {
-			throw (`${error} for player with the username ${username}.`);
+			throw (`${error} for player with the username ${userId}.`);
 		}
 	},
 };

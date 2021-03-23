@@ -12,7 +12,7 @@ module.exports = {
 		try {
 			const [ userName ] = arg;
 			const playerId = await getUserID(userName);
-			DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(snap => {
+			DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(async snap => {
 				if (!snap.exists) {
 					return message.channel.send(`No data exists for playerID: ${userName}.`);
 				}
@@ -22,7 +22,7 @@ module.exports = {
 				const { playerName } = data;
 				const { playerID } = data;
 				const { banReason } = data;
-				const banInfoEmbed = newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
+				const banInfoEmbed = await newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
 				return message.channel.send(banInfoEmbed);
 			});
 		}
