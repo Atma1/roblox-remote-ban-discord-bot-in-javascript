@@ -48,7 +48,7 @@ client.on('message', async message => {
 		if (!client.commands.has(commandName)) return;
 
 		if (command.args && !args.length) {
-			let reply = 'Please provide agrument(s)';
+			let reply = 'Please provide argument(s)';
 			reply += `\n Do this: \`${prefix}${command.name} ${command.usage}\``;
 			return message.reply(reply);
 		}
