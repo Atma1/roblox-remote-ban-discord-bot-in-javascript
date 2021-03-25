@@ -3,17 +3,18 @@ const { getUserID } = require('../../modules/getUserID');
 module.exports = {
 	name: 'fartgone',
 	desc: 'remove gurment',
-	usage: 'argumentos',
+	usage: 'remove player',
 	cooldown: 5,
 	guildonly: true,
 	async execute(msg, args, DB) {
 		const [ userName ] = args;
+		console.log(userName);
 		try {
-			const playerID = await getUserID(msg, userName);
+			const playerID = await getUserID(userName);
 			DB.collection(Guild_Server).doc(`Player: ${playerID}`)
 				.delete()
 				.then(() => {
-					return msg.channel.send(`Player: ${playerID}, removed from Firebase Firestore.`);
+					return msg.channel.send(`Player: ${userName}, removed from Firebase Firestore.`);
 				})
 				.catch((error) => {
 					throw(error);

@@ -48,7 +48,7 @@ client.on('message', async message => {
 		if (!client.commands.has(commandName)) return;
 
 		if (command.args && !args.length) {
-			let reply = 'Please provide agrument(s)';
+			let reply = 'Please provide argument(s)';
 			reply += `\n Do this: \`${prefix}${command.name} ${command.usage}\``;
 			return message.reply(reply);
 		}
@@ -94,17 +94,19 @@ client.on('message', async message => {
 });
 
 client.on('guildCreate', guildData => {
-
-	DB.collection('Guilds-Server').doc(`Server: ${guildData.id}`).set({
+	const guildId = guildData.id;
+	DB.collection(guildId).doc(`Data for server: ${guildData.id}`).set({
 
 		'guildID': guildData.id,
 		'guildName': guildData.name,
 		'guildOwnerID': guildData.ownerID,
-		'var': 'empeti',
+		'guildOwnerUsername': guildData.owner,
+		'guildRegion' : guildData.region,
 
-	}).catch(err => {
-		return console.warn(err);
-	});
+	})
+		.catch(err => {
+			return console.warn(err);
+		});
 });
 
 client.login(token);

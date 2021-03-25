@@ -1,9 +1,10 @@
 const { getUserID } = require('../../modules/getUserID');
+const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
 
 module.exports = {
 	name: 'fartradar',
 	desc: 'read gurment',
-	usage: 'argumentos',
+	usage: 'check player',
 	cooldown: 5,
 	args: true,
 	guildonly: true,
@@ -11,15 +12,18 @@ module.exports = {
 		try {
 			const [ userName ] = arg;
 			const playerId = await getUserID(userName);
-			await DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(snap => {
+			DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(async snap => {
 				if (!snap.exists) {
-					return message.channel.send(`No data exists for playerID: ${userName}.`);
+					throw(`No data exists for playerID: ${userName}.`);
 				}
 				const data = snap.data();
-				const keyData = Object.keys(data);
-				keyData.forEach((key) => {
-					return message.channel.send(`${key}: ${data[key]}`);
-				});
+				const { bannedAt } = data;
+				const { bannedBy } = data;
+				const { playerName } = data;
+				const { playerID } = data;
+				const { banReason } = data;
+				const banInfoEmbed = await newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
+				return message.channel.send(banInfoEmbed);
 			});
 		}
 		catch (error) {
