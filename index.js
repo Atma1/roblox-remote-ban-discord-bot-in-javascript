@@ -4,6 +4,7 @@ const {
 	filterWord,
 	token,
 	prefix,
+	databaseURL,
 } = require('./config.json');
 
 // eslint-disable-next-line no-unused-vars
@@ -14,14 +15,14 @@ const serviceAccount = require('./serviceAccount.json');
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
-	databaseURL: 'https://retelo-d3092-default-rtdb.firebaseio.com',
+	databaseURL: databaseURL,
 });
 const DB = admin.firestore();
 
 const cooldowns = new Discord.Collection();
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-const commandFolders = fs.readdirSync('../commands');
+const commandFolders = fs.readdirSync('./commands');
 
 for (const folder of commandFolders) {
 	const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
