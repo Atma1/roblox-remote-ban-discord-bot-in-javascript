@@ -89,7 +89,7 @@ client.on('message', async message => {
 	for (let i = 0; i < filterWord.length; i++) {
 		if (msg.includes(filterWord[i])) {
 			message.reply('RACIST DETECTED');
-			message.delete();
+			return message.delete();
 		}
 	}
 });
