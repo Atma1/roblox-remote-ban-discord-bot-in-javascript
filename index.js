@@ -21,7 +21,7 @@ const DB = admin.firestore();
 const cooldowns = new Discord.Collection();
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
-const commandFolders = fs.readdirSync('./commands');
+const commandFolders = fs.readdirSync('../commands');
 
 for (const folder of commandFolders) {
 	const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));

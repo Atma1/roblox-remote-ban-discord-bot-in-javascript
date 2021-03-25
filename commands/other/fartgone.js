@@ -1,5 +1,5 @@
 const Guild_Server = 'Guilds-Server';
-const { getUserID } = require('../../../modules/getUserID');
+const { getUserID } = require('../../modules/getUserID');
 module.exports = {
 	name: 'fartgone',
 	desc: 'remove gurment',
