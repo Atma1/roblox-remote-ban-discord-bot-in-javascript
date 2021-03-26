@@ -103,6 +103,7 @@ client.on('guildCreate', guildData => {
 		'guildOwnerID': guildData.ownerID,
 		'guildOwnerUsername': guildData.owner,
 		'guildRegion' : guildData.region,
+		'roleAuthBanCommand' : [],
 
 	})
 		.catch(err => {
