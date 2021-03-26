@@ -33,7 +33,7 @@ module.exports = {
 				})
 				.then(async () => {
 					const embed = await newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
-					msg.channel.send(`\`Player: ${playerName} has been banned.\``, embed);
+					msg.channel.send(`\`Player: ${playerName} has been banned\``, embed);
 				});
 		}
 		catch (error) {

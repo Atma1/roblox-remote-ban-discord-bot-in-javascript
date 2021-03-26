@@ -11,10 +11,13 @@ module.exports = {
 	async execute(message, arg, DB) {
 		try {
 			const [ userName ] = arg;
+			if (arg.join(' ') == 'joe mama') {
+				throw new Error('No data exists for joe mama. Try searching for joe papa instead.');
+			}
 			const playerId = await getUserID(userName);
-			DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(async snap => {
+			await DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(async snap => {
 				if (!snap.exists) {
-					throw(`No data exists for playerID: ${userName}.`);
+					throw new Error(`No data exists for player ${userName}.`);
 				}
 				const data = snap.data();
 				const { bannedAt } = data;
@@ -24,11 +27,13 @@ module.exports = {
 				const { banReason } = data;
 				const banInfoEmbed = await newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
 				return message.channel.send(banInfoEmbed);
+			}).catch(err => {
+				throw (err);
 			});
 		}
 		catch (error) {
 			console.warn(error);
-			return message.channel.send('There was an error while attempting to retrive deta!', error);
+			return message.channel.send(`There was an error while attempting to retrive de deta!\n${error}`);
 		}
 	},
 };

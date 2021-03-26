@@ -96,7 +96,7 @@ client.on('message', async message => {
 
 client.on('guildCreate', guildData => {
 	const guildId = guildData.id;
-	DB.collection(guildId).doc(`Data for server: ${guildData.id}`).set({
+	DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildData.id}`).set({
 
 		'guildID': guildData.id,
 		'guildName': guildData.name,
