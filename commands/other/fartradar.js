@@ -15,9 +15,9 @@ module.exports = {
 				throw new Error('No data exists for joe mama. Try searching for joe papa instead.');
 			}
 			const playerId = await getUserID(userName);
-			await DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(async snap => {
+			DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(async snap => {
 				if (!snap.exists) {
-					throw new Error(`No data exists for player ${userName}.`);
+					return new Error(`No data exists for player ${userName}.`);
 				}
 				const data = snap.data();
 				const { bannedAt } = data;
@@ -27,8 +27,6 @@ module.exports = {
 				const { banReason } = data;
 				const banInfoEmbed = await newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
 				return message.channel.send(banInfoEmbed);
-			}).catch(err => {
-				throw (err);
 			});
 		}
 		catch (error) {
