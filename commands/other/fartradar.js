@@ -5,6 +5,7 @@ module.exports = {
 	name: 'fartradar',
 	desc: 'read gurment',
 	usage: 'playertobechecked ',
+	aliases : ['checkban', 'baninfo'],
 	cooldown: 5,
 	args: true,
 	guildonly: true,

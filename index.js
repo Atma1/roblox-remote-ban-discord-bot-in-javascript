@@ -19,8 +19,8 @@ admin.initializeApp({
 });
 const DB = admin.firestore();
 
-const cooldowns = new Discord.Collection();
 const client = new Discord.Client();
+client.cooldowns = new Discord.Collection();
 client.commands = new Discord.Collection();
 const commandFolders = fs.readdirSync('./commands');
 
@@ -43,25 +43,26 @@ client.on('message', async message => {
 	if (msg.startsWith(prefix) && !message.author.bot) {
 		const args = message.content.slice(prefix.length).trim().split(/ +/);
 		const commandName = args.shift().toLowerCase();
-		const command = client.commands.get(commandName);
-		const now = Date.now();
+		const command = client.commands.get(commandName)
+			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-		if (!client.commands.has(commandName)) return;
+		if (!command) return;
 
-		if (command.args && !args.length) {
-			let reply = 'Please provide argument(s)';
-			reply += `\n Do this: \`${prefix}${command.name} ${command.usage}\``;
+		if (command.args && !args.length || args.length < command.reqarglength) {
+			let reply = 'Please provide the necessary amount of argument(s)';
+			reply += `\n Do this: \`${prefix}${command.name},${command.aliases} ${command.usage}\``;
 			return message.reply(reply);
 		}
 
-		if (message.channel.type === 'dm') {
-			return message.reply('Can\'t do that man!');
+		if (command.guildonly && message.channel.type === 'dm') {
+			return message.reply('Can\'t do that in dm!');
 		}
+		const { cooldowns } = client;
 
 		if (!cooldowns.has(command.name)) {
 			cooldowns.set(command.name, new Discord.Collection());
 		}
-
+		const now = Date.now();
 		const cooldownAmount = (command.cooldown || 3) * 1000;
 		const timestamps = cooldowns.get(command.name);
 

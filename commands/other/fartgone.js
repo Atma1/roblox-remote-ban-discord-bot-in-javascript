@@ -4,6 +4,7 @@ module.exports = {
 	name: 'fartgone',
 	desc: 'remove gurment',
 	usage: 'remove player',
+	aliases: ['ub', 'unban'],
 	cooldown: 5,
 	guildonly: true,
 	async execute(msg, args, DB) {

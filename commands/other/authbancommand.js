@@ -1,6 +1,7 @@
 module.exports = {
-	name : 'authbancommand',
+	name : 'authorizebancommand',
 	desc : 'authorize specific role to ban command',
+	aliases : ['authban', 'permitban', 'authbanforrole'],
 	usage : 'roletobeauth',
 	args: true,
 	// eslint-disable-next-line no-unused-vars

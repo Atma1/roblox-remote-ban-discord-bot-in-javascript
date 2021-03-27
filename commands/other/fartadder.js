@@ -7,15 +7,13 @@ module.exports = {
 	name: 'fartadder',
 	desc: 'add gurment',
 	usage: 'username banreason',
+	aliases: ['ban', 'addban', 'banplayer'],
 	cooldown: 5,
 	args: true,
 	guildonly: true,
 	reqarglength: 2,
 	async execute(msg, args, DB) {
 		try {
-			if (args.length < this.reqarglength) {
-				throw new Error(`Expected 2 arguments. Got ${args.length} instead.`);
-			}
 			const playerName = args.shift();
 			const banReason = args.join(' ');
 			const bannedAt = dateformat(new Date, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
