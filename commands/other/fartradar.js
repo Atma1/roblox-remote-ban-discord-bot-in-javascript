@@ -4,7 +4,7 @@ const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
 module.exports = {
 	name: 'fartradar',
 	desc: 'read gurment',
-	usage: 'check player',
+	usage: 'playertobechecked ',
 	cooldown: 5,
 	args: true,
 	guildonly: true,
@@ -17,7 +17,7 @@ module.exports = {
 			const playerId = await getUserID(userName);
 			DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(async snap => {
 				if (!snap.exists) {
-					return new Error(`No data exists for player ${userName}.`);
+					return message.channel.send(`No data exists for player ${userName}.`);
 				}
 				const data = snap.data();
 				const { bannedAt } = data;
@@ -27,7 +27,10 @@ module.exports = {
 				const { banReason } = data;
 				const banInfoEmbed = await newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
 				return message.channel.send(banInfoEmbed);
-			});
+			})
+				.catch(err => {
+					throw new Error(err);
+				});
 		}
 		catch (error) {
 			console.warn(error);
