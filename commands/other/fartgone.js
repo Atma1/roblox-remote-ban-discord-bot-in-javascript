@@ -5,6 +5,7 @@ module.exports = {
 	desc: 'remove gurment',
 	usage: 'remove player',
 	aliases: ['ub', 'unban'],
+	args : true,
 	cooldown: 5,
 	guildonly: true,
 	async execute(msg, args, DB) {
