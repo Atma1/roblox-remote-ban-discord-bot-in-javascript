@@ -3,7 +3,7 @@ const { getUserID } = require('../../modules/getUserID');
 module.exports = {
 	name: 'fartgone',
 	desc: 'remove gurment',
-	usage: 'remove player',
+	usage: 'playerusername',
 	aliases: ['ub', 'unban'],
 	args : true,
 	cooldown: 5,
