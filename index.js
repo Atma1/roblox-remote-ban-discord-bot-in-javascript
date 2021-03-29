@@ -7,10 +7,8 @@ const {
 	databaseURL,
 } = require('./config.json');
 
-// eslint-disable-next-line no-unused-vars
-const firebase = require('firebase/app');
 const admin = require('firebase-admin');
-const FV = require('firebase-admin').firestore.FieldValue;
+const FV = admin.firestore.FieldValue;
 const serviceAccount = require('./serviceAccount.json');
 
 admin.initializeApp({
@@ -47,6 +45,10 @@ client.on('message', async message => {
 			|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 		if (!command) return;
+
+		if(command.permisson) {
+			console.log(true);
+		}
 
 		if (command.args && !args.length || args.length < command.reqarglength) {
 			let reply = 'Please provide the necessary amount of argument(s)';
@@ -106,7 +108,7 @@ client.on('guildCreate', guildData => {
 		'guildRegion' : guildData.region,
 		'roleAuthBanCommand' : [],
 
-	})
+	})l
 		.catch(err => {
 			return console.warn(err);
 		});

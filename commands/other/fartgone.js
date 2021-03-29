@@ -7,6 +7,7 @@ module.exports = {
 	aliases: ['ub', 'unban'],
 	args : true,
 	cooldown: 5,
+	permission: true,
 	guildonly: true,
 	async execute(msg, args, DB) {
 		const [ userName ] = args;
@@ -19,7 +20,7 @@ module.exports = {
 					return msg.channel.send(`Player: ${userName}, removed from Firebase Firestore.`);
 				})
 				.catch((error) => {
-					throw(error);
+					throw Error(error);
 				});
 		}
 		catch (error) {

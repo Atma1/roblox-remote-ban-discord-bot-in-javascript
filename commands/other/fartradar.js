@@ -9,6 +9,7 @@ module.exports = {
 	cooldown: 5,
 	args: true,
 	guildonly: true,
+	permission: true,
 	async execute(message, arg, DB) {
 		try {
 			const [ userName ] = arg;
