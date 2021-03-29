@@ -108,7 +108,7 @@ client.on('guildCreate', guildData => {
 		'guildRegion' : guildData.region,
 		'roleAuthBanCommand' : [],
 
-	})l
+	})
 		.catch(err => {
 			return console.warn(err);
 		});
