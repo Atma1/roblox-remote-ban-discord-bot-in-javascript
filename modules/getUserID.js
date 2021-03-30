@@ -15,7 +15,7 @@ module.exports = {
 			return Id;
 		}
 		catch (error) {
-			throw (`${error} for player with the username ${username}.`);
+			throw (`${error}.`);
 		}
 	},
 };

@@ -15,7 +15,7 @@ module.exports = {
 			return imageUrl;
 		}
 		catch (error) {
-			throw (`${error} for player with the userId ${userId}.`);
+			throw (`${error}.`);
 		}
 	},
 };
