@@ -46,8 +46,10 @@ client.on('message', async message => {
 
 		if (!command) return;
 
-		if(command.permisson) {
-			console.log(true);
+		if(command.permissionreq) {
+			if(!message.member.hasPermission(command.permissionreq)) {
+				return message.channel.send(false);
+			}
 		}
 
 		if (command.args && !args.length || args.length < command.reqarglength) {
