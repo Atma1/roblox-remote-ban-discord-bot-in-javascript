@@ -34,7 +34,7 @@ client.once('ready', () => {
 	console.log(`${client.user.tag} is ready.`);
 });
 
-client.on('message', async message => {
+client.on('message', message => {
 
 	const msg = message.content.toLowerCase();
 	console.log(msg);
