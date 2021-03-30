@@ -5,7 +5,7 @@ module.exports = {
 	usage : 'roletobeauth',
 	args: true,
 	guildonly: true,
-	permissionreq: ['BAN_MEMBERS'],
+	permission: ['BAN_MEMBERS'],
 	// eslint-disable-next-line no-unused-vars
 	async execute(msg, args, DB, FV) {
 		console.log(new Date);

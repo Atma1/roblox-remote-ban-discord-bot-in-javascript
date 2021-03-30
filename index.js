@@ -46,9 +46,9 @@ client.on('message', async message => {
 
 		if (!command) return;
 
-		if(command.permissionreq) {
-			if(!message.member.hasPermission(command.permissionreq)) {
-				return message.channel.send(false);
+		if(command.permission) {
+			if(!message.member.hasPermission(command.permission)) {
+				return message.channel.send('You don\'t have permission to do that.');
 			}
 		}
 

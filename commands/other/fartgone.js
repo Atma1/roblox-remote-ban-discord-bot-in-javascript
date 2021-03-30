@@ -7,7 +7,7 @@ module.exports = {
 	aliases: ['ub', 'unban'],
 	args : true,
 	cooldown: 5,
-	permissionreq: ['BAN_MEMBERS'],
+	permission: ['BAN_MEMBERS'],
 	guildonly: true,
 	async execute(msg, args, DB) {
 		const [ userName ] = args;

@@ -11,7 +11,7 @@ module.exports = {
 	cooldown: 5,
 	args: true,
 	guildonly: true,
-	permissionreq: ['BAN_MEMBERS'],
+	permission: ['BAN_MEMBERS'],
 	reqarglength: 2,
 	async execute(msg, args, DB) {
 		try {

@@ -37,6 +37,7 @@ module.exports = {
 		if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}.`);
 		if (command.desc) data.push(`**Desc:** ${command.desc}.`);
 		if (command.usage) data.push(`**Usage:** \`${prefix}${command.name} ${command.usage}\``);
+		if (command.permission) data.push(`**Permission required:** ${command.permission.join(', ')}.`);
 
 		data.push(`**Cooldown:** ${command.cooldown || 3} sekon.`);
 		console.log(data);

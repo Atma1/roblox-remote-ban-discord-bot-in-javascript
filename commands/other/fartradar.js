@@ -9,7 +9,7 @@ module.exports = {
 	cooldown: 5,
 	args: true,
 	guildonly: true,
-	permissionreq: ['BAN_MEMBERS'],
+	permission: ['BAN_MEMBERS'],
 	async execute(message, arg, DB) {
 		try {
 			const [ userName ] = arg;
