@@ -8,7 +8,11 @@ const [phi, planck] = x;
 const link = `https://api.quran.com/api/v3/chapters/${x[0]}/verses/${x[1]}`;
 const aa = ['poop', 'ball', 'eeeeee', 'ballin'];
 const bb = '!POOP ball eeeeee baAllin';
-const [cc, ...dd] = bb.slice(1).trim().split(/ +/);
+const [cc, ...dd] = bb.slice(1).trim().toLocaleLowerCase().split(/ +/);
+const pp = ['!poop', 'e'];
+const [ xx ] = pp;
+const yy = String(pp);
+console.log(yy);
 console.log(cc.toLowerCase(), dd);
 const pee = true;
 
