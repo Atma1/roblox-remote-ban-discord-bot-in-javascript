@@ -1,12 +1,7 @@
 const fs = require('fs');
 const Discord = require('discord.js');
-const {
-	filterWord,
-	token,
-	prefix,
-	databaseURL,
-} = require('./config.json');
-
+const {	filterWord, token, prefix, databaseURL } = require('./config.json');
+const {	checkPerm, getAuthRoles, convertToArray } = require('./util/util');
 const admin = require('firebase-admin');
 const FV = admin.firestore.FieldValue;
 const serviceAccount = require('./serviceAccount.json');
@@ -34,7 +29,7 @@ client.once('ready', () => {
 	console.log(`${client.user.tag} is ready.`);
 });
 
-client.on('message', message => {
+client.on('message', async message => {
 
 	const msg = message.content.toLowerCase();
 	console.log(msg);
@@ -46,15 +41,24 @@ client.on('message', message => {
 
 		if (!command) return;
 
-		if(command.permission) {
-			if(!message.member.hasPermission(command.permission)) {
-				return message.channel.send('You don\'t have permission to do that.');
+		if(command.permission && !message.member.hasPermission('ADMINISTRATOR')) {
+			const guildId = message.guild.id;
+			const userRoles = message.member.roles.cache;
+			const authorizedRoles = await getAuthRoles(guildId, DB)
+				.catch((err) => {
+					throw new Error (err);
+				});
+			const userids = convertToArray(userRoles);
+			console.log(authorizedRoles, userids, 'bar');
+			const isUserAuthorized = checkPerm(userids, authorizedRoles);
+			if (!isUserAuthorized) {
+				return message.channel.send('You don\'t have permission to do that!');
 			}
 		}
 
 		if (command.args && !args.length || args.length < command.reqarglength) {
 			let reply = 'Please provide the necessary amount of argument(s)';
-			reply += `\n Do this: \`${prefix}${command.name},${command.aliases} ${command.usage}\``;
+			reply += `\n Do this: \`${prefix}${command.name} ${command.usage}\``;
 			return message.reply(reply);
 		}
 
@@ -108,7 +112,7 @@ client.on('guildCreate', guildData => {
 		'guildOwnerID': guildData.ownerID,
 		'guildOwnerUsername': guildData.owner,
 		'guildRegion' : guildData.region,
-		'roleAuthBanCommand' : [],
+		'authorizedRoles' : [],
 
 	})
 		.catch(err => {
