@@ -5,16 +5,15 @@ const {	checkPerm, getAuthRoles, convertToArray } = require('./util/util');
 const admin = require('firebase-admin');
 const FV = admin.firestore.FieldValue;
 const serviceAccount = require('./serviceAccount.json');
+const client = new Discord.Client();
+client.cooldowns = new Discord.Collection();
+client.commands = new Discord.Collection();
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
 	databaseURL: databaseURL,
 });
 const DB = admin.firestore();
-
-const client = new Discord.Client();
-client.cooldowns = new Discord.Collection();
-client.commands = new Discord.Collection();
 const commandFolders = fs.readdirSync('./commands');
 
 for (const folder of commandFolders) {
@@ -46,18 +45,16 @@ client.on('message', async message => {
 			const userRoles = message.member.roles.cache;
 			const authorizedRoles = await getAuthRoles(guildId, DB)
 				.catch((err) => {
-					throw new Error (err);
+					return message.channel.send(`${err}`);
 				});
-			const userids = convertToArray(userRoles);
-			console.log(authorizedRoles, userids, 'bar');
-			const isUserAuthorized = checkPerm(userids, authorizedRoles);
+			const isUserAuthorized = checkPerm(convertToArray(userRoles), authorizedRoles);
 			if (!isUserAuthorized) {
 				return message.channel.send('You don\'t have permission to do that!');
 			}
 		}
 
 		if (command.args && !args.length || args.length < command.reqarglength) {
-			let reply = 'Please provide the necessary amount of argument(s)';
+			let reply = 'Please provide the necessary amount of argument(s).';
 			reply += `\n Do this: \`${prefix}${command.name} ${command.usage}\``;
 			return message.reply(reply);
 		}
@@ -97,8 +94,10 @@ client.on('message', async message => {
 	}
 	for (let i = 0; i < filterWord.length; i++) {
 		if (msg.includes(filterWord[i])) {
-			message.reply('RACIST DETECTED');
-			return message.delete();
+			message.reply('RACIST DETECTED')
+				.then(() =>{
+					return message.delete();
+				});
 		}
 	}
 });

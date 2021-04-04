@@ -8,7 +8,7 @@
     "yes"
   ],
   "author": "fresh",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "admin": "^1.4.1",
     "axios": "^0.21.1",

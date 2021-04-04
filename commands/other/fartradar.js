@@ -13,9 +13,6 @@ module.exports = {
 	async execute(message, arg, DB) {
 		try {
 			const [ userName ] = arg;
-			if (arg.join(' ') == 'joe mama') {
-				throw new Error('No data exists for joe mama. Try searching for joe papa instead.');
-			}
 			const playerId = await getUserID(userName);
 			DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(async snap => {
 				if (!snap.exists) {
