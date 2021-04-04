@@ -89,7 +89,7 @@ client.on('message', async message => {
 		}
 		catch (error) {
 			console.warn(error);
-			message.reply('There was an error!');
+			message.reply(`There was an error!\n${error}`);
 		}
 	}
 	for (let i = 0; i < filterWord.length; i++) {

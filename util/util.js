@@ -21,15 +21,18 @@ const retriveAuthroles = async (guildId, DB) => {
 	try {
 		const snap = await DB.collection('Guilds-Server').doc(`Server: ${guildId}`).get();
 		if (!snap.exists) {
-			throw ('No authorized role found.');
+			throw new Error('No authorized roles found.\nPossiblity of an error during the creation of the server\'s database.');
 		}
 		const data = snap.data();
 		const { authorizedRoles } = data;
+		if (!authorizedRoles.length) {
+			throw new Error('No authorized roles found.\nThe owner needs to add roles that are authorized to use the commands.');
+		}
 		console.log(typeof (authorizedRoles), authorizedRoles, 'retelo');
 		return authorizedRoles;
 	}
 	catch (error) {
-		throw new Error(error);
+		throw (`${error}`);
 	}
 
 };
