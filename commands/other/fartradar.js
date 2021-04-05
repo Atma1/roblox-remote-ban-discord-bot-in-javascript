@@ -9,16 +9,18 @@ module.exports = {
 	cooldown: 5,
 	args: true,
 	guildonly: true,
-	permission: ['BAN_MEMBERS'],
+	permission: true,
 	async execute(message, arg, DB) {
 		try {
 			const [ userName ] = arg;
+			const guildId = message.guild.id;
 			const playerId = await getUserID(userName);
-			DB.collection('Guilds-Server').doc(`Player: ${playerId}`).get().then(async snap => {
+			DB.collection(`Server: ${guildId}`).doc(`Player: ${playerId}`).get().then(async snap => {
 				if (!snap.exists) {
 					return message.channel.send(`No data exists for player ${userName}.`);
 				}
 				const data = snap.data();
+				console.log(data);
 				const { bannedAt } = data;
 				const { bannedBy } = data;
 				const { playerName } = data;
@@ -28,7 +30,8 @@ module.exports = {
 				return message.channel.send(banInfoEmbed);
 			})
 				.catch(err => {
-					throw new Error(err);
+					console.warn(err);
+					throw (err);
 				});
 		}
 		catch (error) {

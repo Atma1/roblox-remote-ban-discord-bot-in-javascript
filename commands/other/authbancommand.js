@@ -12,8 +12,9 @@ module.exports = {
 			return msg.channel.send('Make sure you input the correct role.');
 		}
 		try {
-			DB.collection('Guilds-Server').doc('Server: 347291257665486858').update({
-				'authorizedRoles' : FV.arrayUnion(`💩${roleId}`),
+			const guildId = msg.guild.id;
+			DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildId}`).update({
+				'authorizedRoles' : FV.arrayUnion(`${roleId}`),
 			})
 				.then(() => {
 					msg.channel.send(`${args} has been authorized to use the ban command!`);

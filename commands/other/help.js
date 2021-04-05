@@ -4,7 +4,7 @@ module.exports = {
 	name: 'help',
 	desc: 'give help',
 	usage: 'commandname',
-	aliases: ['help!11!!1', 'cmdinfo', 'command'],
+	aliases: ['help!11!!1', 'cmdinfo', 'command', 'cmd', 'commandinfo'],
 	cooldown: 5,
 	guildonly: true,
 	execute(message, args) {

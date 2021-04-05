@@ -4,12 +4,13 @@ module.exports = {
 		try {
 			const endpoint = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=48x48&format=Png&isCircular=false`;
 			const response = await fetch(endpoint);
-			const data = await response.json();
-			if (data.errors) {
+			const responseJSON = await response.json();
+			if (responseJSON.errors) {
 				const noImgFound = 'http://cdn.onlinewebfonts.com/svg/img_137275.png';
 				return noImgFound;
 			}
-			const imageUrl = response.data[0].imageUrl;
+			const [ data ] = responseJSON;
+			const { imageUrl } = data;
 			return imageUrl;
 		}
 		catch (error) {

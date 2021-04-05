@@ -27,7 +27,6 @@ for (const folder of commandFolders) {
 client.once('ready', () => {
 	console.log(`${client.user.tag} is ready.`);
 });
-
 client.on('message', async message => {
 
 	const msg = message.content.toLowerCase();
@@ -104,12 +103,13 @@ client.on('message', async message => {
 
 client.on('guildCreate', guildData => {
 	const guildId = guildData.id;
+	console.log('var');
 	DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildData.id}`).set({
 
 		'guildID': guildData.id,
 		'guildName': guildData.name,
 		'guildOwnerID': guildData.ownerID,
-		'guildOwnerUsername': guildData.owner,
+		'guildOwnerUsername': guildData.owner.nickname,
 		'guildRegion' : guildData.region,
 		'authorizedRoles' : [],
 

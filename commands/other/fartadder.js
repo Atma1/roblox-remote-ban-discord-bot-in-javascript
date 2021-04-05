@@ -1,4 +1,3 @@
-const Guild_Server = 'Guilds-Server';
 const { getUserID } = require('../../modules/getUserID');
 const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
 const dateformat = require('dateformat');
@@ -11,16 +10,17 @@ module.exports = {
 	cooldown: 5,
 	args: true,
 	guildonly: true,
-	permission: ['BAN_MEMBERS'],
+	permission: true,
 	reqarglength: 2,
 	async execute(msg, args, DB) {
 		try {
+			const guildId = msg.guild.id;
 			const playerName = args.shift();
 			const banReason = args.join(' ');
 			const bannedAt = dateformat(new Date, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
 			const bannedBy = msg.author.tag;
 			const playerID = await getUserID(playerName);
-			DB.collection(Guild_Server).doc(`Player: ${playerID}`)
+			DB.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`)
 				.set({
 					'playerID': `${playerID}`,
 					'playerName':`${playerName}`,
