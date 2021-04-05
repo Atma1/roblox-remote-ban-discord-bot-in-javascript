@@ -21,4 +21,4 @@ A discord bot made in JawaScript that will enable the capabilty of remote ban us
 11. Make a connection from your roblox game to your Firebase Firestore database.
 12. Type !help for all the bot's commands.
 
-Need help or have a questions? HMU on Discord FreshFea#8153.
+# Need help or have a questions? HMU on Discord FreshFea#8153.
