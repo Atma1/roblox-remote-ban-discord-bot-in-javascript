@@ -1,4 +1,4 @@
-# Discord bot  in JawaScript
+# Remote Ban Discord Bot in JawaScript
 
 How to use:
 
