@@ -4,7 +4,7 @@ module.exports = {
 		try {
 			const response = await fetch(`https://api.roblox.com/users/get-by-username?username=${username}`);
 			const data = await response.json();
-			if (data.success == false) {
+			if (!data.success) {
 				const { errorMessage } = data;
 				throw new Error(errorMessage);
 			}

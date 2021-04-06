@@ -19,7 +19,7 @@ const checkPermission = (userRoles, authorizedRoles) => {
 
 const retriveAuthroles = async (guildId, DB) => {
 	try {
-		const snap = await DB.collection('Guilds-Server').doc(`Server: ${guildId}`).get();
+		const snap = await DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildId}`).get();
 		if (!snap.exists) {
 			throw new Error('No authorized roles found.\nPossiblity of an error during the creation of the server\'s database.');
 		}
