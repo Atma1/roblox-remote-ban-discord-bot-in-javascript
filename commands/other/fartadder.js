@@ -20,7 +20,8 @@ module.exports = {
 			const bannedAt = dateformat(new Date, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
 			const bannedBy = msg.author.tag;
 			const playerID = await getUserID(playerName);
-			DB.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`)
+			const embed = await newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
+			await DB.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`)
 				.set({
 					'playerID': `${playerID}`,
 					'playerName':`${playerName}`,
@@ -29,11 +30,8 @@ module.exports = {
 					'bannedAt': `${bannedAt}`,
 				}, {
 					merge: true,
-				})
-				.then(async () => {
-					const embed = await newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
-					msg.channel.send(`\`Player: ${playerName} has been banned\``, embed);
 				});
+			msg.channel.send(`\`Player: ${playerName} has been banned\``, embed);
 		}
 		catch (error) {
 			console.warn(error);

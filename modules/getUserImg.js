@@ -9,12 +9,12 @@ module.exports = {
 				const noImgFound = 'http://cdn.onlinewebfonts.com/svg/img_137275.png';
 				return noImgFound;
 			}
-			const [ data ] = responseJSON;
-			const { imageUrl } = data;
+			const { data } = responseJSON;
+			const imageUrl = data[0].imageUrl;
 			return imageUrl;
 		}
 		catch (error) {
-			throw (`${error}.`);
+			throw new Error (`${error}`);
 		}
 	},
 };

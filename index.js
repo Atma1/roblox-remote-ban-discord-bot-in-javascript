@@ -101,22 +101,23 @@ client.on('message', async message => {
 	}
 });
 
-client.on('guildCreate', guildData => {
-	const guildId = guildData.id;
-	console.log('var');
-	DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildData.id}`).set({
-
-		'guildID': guildData.id,
-		'guildName': guildData.name,
-		'guildOwnerID': guildData.ownerID,
-		'guildOwnerUsername': guildData.owner.nickname,
-		'guildRegion' : guildData.region,
-		'authorizedRoles' : [],
-
-	})
-		.catch(err => {
-			return console.warn(err);
+client.on('guildCreate', async guildData => {
+	try {
+		const guildId = guildData.id;
+		let ownerTag = undefined;
+		await client.users.fetch(guildData.ownerID).then(user => ownerTag = user.tag);
+		await DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildData.id}`).set({
+			'guildID': guildData.id,
+			'guildName': guildData.name,
+			'guildOwnerID': guildData.ownerID,
+			'guildOwnerTag' : ownerTag,
+			'guildRegion' : guildData.region,
+			'authorizedRoles' : [],
 		});
+	}
+	catch (error) {
+		console.warn(error);
+	}
 });
 
 client.login(token);
