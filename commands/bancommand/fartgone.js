@@ -1,7 +1,7 @@
 const { getUserID } = require('../../modules/getUserID');
 module.exports = {
 	name: 'fartgone',
-	desc: 'remove player from the database assuming the player is in the database.',
+	desc: 'remove player from the database assuming the player is in the database',
 	usage: 'playerusername',
 	aliases: ['ub', 'unban'],
 	args : true,
