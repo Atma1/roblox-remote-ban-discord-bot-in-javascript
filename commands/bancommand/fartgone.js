@@ -1,7 +1,7 @@
 const { getUserID } = require('../../modules/getUserID');
 module.exports = {
 	name: 'fartgone',
-	desc: 'remove gurment',
+	desc: 'remove player from the database assuming the player is in the database.',
 	usage: 'playerusername',
 	aliases: ['ub', 'unban'],
 	args : true,
@@ -10,7 +10,6 @@ module.exports = {
 	guildonly: true,
 	async execute(msg, args, DB) {
 		const [ userName ] = args;
-		console.log(userName);
 		try {
 			const guildId = msg.guild.id;
 			const playerID = await getUserID(userName);
