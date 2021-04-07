@@ -1,0 +1,7 @@
+{
+    "token": "INSERT YOUR BOT TOKEN HERE",
+    // YOU MAY CHANGE THE BOT PREFIX IF YOU WOULD LIKE TO
+    "prefix": "!",
+    // EXAMPLE OF DATBASE URL: https://friedpoop-d42-default-rtdb.firebaseio.com
+    "databaseURL": "INSERT YOUR FIREBASE FIRE STORE DATABASE HERE"
+}
