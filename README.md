@@ -21,3 +21,7 @@ A discord bot made in JawaScript that will enable the capabilty of remote ban us
 12. Type !help for all the bot's commands.
 
 # Need help or have a questions? HMU on Discord FreshFea#8153.
+
+# File
+.env file
+[env.zip](https://github.com/Atma1/remote-ban-discord-bot-in-jawascript/files/6277583/env.zip)
