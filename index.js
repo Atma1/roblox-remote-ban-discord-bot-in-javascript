@@ -1,10 +1,14 @@
 const fs = require('fs');
 const Discord = require('discord.js');
-const {	filterWord, token, prefix, databaseURL } = require('./config.json');
-const {	checkPerm, getAuthRoles, convertToArray } = require('./util/util');
 const admin = require('firebase-admin');
-const FV = admin.firestore.FieldValue;
 const serviceAccount = require('./serviceAccount.json');
+require('dotenv').config();
+const {	checkPerm, getAuthRoles, convertToArray } = require('./util/util');
+
+const token = process.env.token;
+const prefix = process.env.prefix;
+const databaseURL = process.env.databaseURL;
+
 const client = new Discord.Client();
 client.cooldowns = new Discord.Collection();
 client.commands = new Discord.Collection();
@@ -13,6 +17,8 @@ admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
 	databaseURL: databaseURL,
 });
+
+const FV = admin.firestore.FieldValue;
 const DB = admin.firestore();
 const commandFolders = fs.readdirSync('./commands');
 
@@ -27,6 +33,7 @@ for (const folder of commandFolders) {
 client.once('ready', () => {
 	console.log(`${client.user.tag} is ready.`);
 });
+
 client.on('message', async message => {
 
 	const msg = message.content.toLowerCase();
@@ -44,6 +51,7 @@ client.on('message', async message => {
 			const userRoles = message.member.roles.cache;
 			const authorizedRoles = await getAuthRoles(guildId, DB)
 				.catch((err) => {
+					console.warn(err);
 					return message.channel.send(`${err}`);
 				});
 			const isUserAuthorized = checkPerm(convertToArray(userRoles), authorizedRoles);
@@ -91,14 +99,6 @@ client.on('message', async message => {
 			message.reply(`There was an error!\n${error}`);
 		}
 	}
-	for (let i = 0; i < filterWord.length; i++) {
-		if (msg.includes(filterWord[i])) {
-			message.reply('RACIST DETECTED')
-				.then(() =>{
-					return message.delete();
-				});
-		}
-	}
 });
 
 client.on('guildCreate', async guildData => {
@@ -106,7 +106,7 @@ client.on('guildCreate', async guildData => {
 		const guildId = guildData.id;
 		let ownerTag = undefined;
 		await client.users.fetch(guildData.ownerID).then(user => ownerTag = user.tag);
-		await DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildData.id}`).set({
+		DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildData.id}`).set({
 			'guildID': guildData.id,
 			'guildName': guildData.name,
 			'guildOwnerID': guildData.ownerID,
