@@ -1,4 +1,3 @@
-![jawascript](https://user-images.githubusercontent.com/78201403/114003752-99530700-9890-11eb-900a-3fab56056c15.png
 # Remote Ban Discord Bot in JawaScript
 
 Before starting I need to tell you something the process of setting up the bot might seems very complicated and requrie a great amount of techincal knowledge but fear not as long as you have the motivation to keep pushing and go forward it will not intimidate you.
