@@ -100,7 +100,7 @@ client.on('message', async message => {
 		}
 	}
 });
-console.log('bar');
+
 client.on('guildCreate', async guildData => {
 	try {
 		const guildId = guildData.id;
