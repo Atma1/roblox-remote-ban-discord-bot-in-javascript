@@ -7,7 +7,6 @@ const {	checkPerm, getAuthRoles, convertToArray } = require('./util/util');
 
 const token = process.env.token;
 const prefix = process.env.prefix;
-const databaseURL = process.env.databaseURL;
 
 const client = new Discord.Client();
 client.cooldowns = new Discord.Collection();
@@ -15,7 +14,6 @@ client.commands = new Discord.Collection();
 
 admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
-	databaseURL: databaseURL,
 });
 
 const FV = admin.firestore.FieldValue;

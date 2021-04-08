@@ -1,4 +1,5 @@
-const { prefix } = require('../../config.json');
+require('dotenv').config();
+const prefix = process.env.prefix;
 
 module.exports = {
 	name: 'help',
