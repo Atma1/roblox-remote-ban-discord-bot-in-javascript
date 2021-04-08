@@ -3,7 +3,7 @@ const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
 
 module.exports = {
 	name: 'fartradar',
-	desc: 'read gurment',
+	desc: 'check ban info for the player specified assuming the player is in the database',
 	usage: 'userName',
 	aliases : ['checkban', 'baninfo'],
 	cooldown: 5,

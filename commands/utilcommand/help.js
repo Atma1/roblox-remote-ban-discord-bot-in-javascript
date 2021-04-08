@@ -14,7 +14,7 @@ module.exports = {
 		if (!args.length) {
 			data.push('Here\'s a list of my commands');
 			data.push(commands.map(cmd => cmd.name).join(', '));
-			data.push(`\nIf you want info on specific command send \`${prefix}help [command name]\``);
+			data.push(`\nIf you want info on specific command send \`${prefix}help [command name]\` and don'\t send it here!`);
 
 			return message.author.send(data, { split: true })
 				.then(()=> {
