@@ -4,7 +4,7 @@ const dateformat = require('dateformat');
 
 module.exports = {
 	name: 'fartadder',
-	desc: 'add gurment',
+	desc: 'ban player. as of now the ban is permanent',
 	usage: 'username banreason',
 	aliases: ['ban', 'addban', 'banplayer'],
 	cooldown: 5,
