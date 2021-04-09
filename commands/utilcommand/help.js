@@ -5,7 +5,8 @@ module.exports = {
 	name: 'help',
 	desc: 'give help',
 	usage: 'commandname',
-	aliases: ['help!11!!1', 'cmdinfo', 'command', 'cmd', 'commandinfo'],
+	aliases: ['help!11!!1', 'cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
+	example : '!cmdinfo fartgone',
 	cooldown: 5,
 	guildonly: true,
 	execute(message, args) {
@@ -38,6 +39,7 @@ module.exports = {
 		if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}.`);
 		if (command.desc) data.push(`**Desc:** ${command.desc}.`);
 		if (command.usage) data.push(`**Usage:** \`${prefix}${command.name} ${command.usage}\``);
+		if (command.example) data.push(`**Example:** ${command.example}`);
 		if (command.permission) data.push('**Require permission:** True.');
 
 		data.push(`**Cooldown:** ${command.cooldown || 3} sekon.`);

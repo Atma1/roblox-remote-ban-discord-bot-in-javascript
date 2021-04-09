@@ -6,6 +6,7 @@ module.exports = {
 	desc: 'check ban info for the player specified assuming the player is in the database',
 	usage: 'userName',
 	aliases : ['checkban', 'baninfo'],
+	example : '!baninfo joemama',
 	cooldown: 5,
 	args: true,
 	guildonly: true,

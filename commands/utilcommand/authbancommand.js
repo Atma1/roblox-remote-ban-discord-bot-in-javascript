@@ -2,6 +2,7 @@ module.exports = {
 	name : 'authorizebancommand',
 	desc : 'authorize specific role to ban command',
 	aliases : ['authban', 'permitban', 'authbanforrole', 'auth'],
+	example: '!auth @joemama',
 	usage : 'roletobeauth',
 	args: true,
 	guildonly: true,

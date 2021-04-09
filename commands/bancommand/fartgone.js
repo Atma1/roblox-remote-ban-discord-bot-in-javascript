@@ -5,6 +5,7 @@ module.exports = {
 	desc: 'remove player from the database assuming the player is in the database',
 	usage: 'playerusername',
 	aliases: ['ub', 'unban'],
+	example: '!unban joemama',
 	args : true,
 	cooldown: 5,
 	permission: true,

@@ -7,6 +7,7 @@ module.exports = {
 	desc: 'ban player. as of now the ban is permanent',
 	usage: 'username banreason',
 	aliases: ['ban', 'addban', 'banplayer'],
+	example: '!ban joemama joemama is too fat',
 	cooldown: 5,
 	args: true,
 	guildonly: true,

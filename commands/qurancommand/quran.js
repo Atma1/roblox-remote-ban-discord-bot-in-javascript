@@ -6,6 +6,8 @@ const endPoint = 'https://api.quran.sutanlab.id';
 module.exports = {
 	name : 'quran',
 	desc : 'send surah from verse',
+	usage : 'surahnumber:versenumber',
+	example : '!quran 39:53',
 	args : true,
 	cooldown : 5,
 	async execute(message, args) {
