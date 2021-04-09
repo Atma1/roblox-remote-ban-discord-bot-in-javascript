@@ -1,4 +1,5 @@
 const { getUserID } = require('../../modules/getUserID');
+
 module.exports = {
 	name: 'fartgone',
 	desc: 'remove player from the database assuming the player is in the database',
@@ -13,14 +14,8 @@ module.exports = {
 		try {
 			const guildId = msg.guild.id;
 			const playerID = await getUserID(userName);
-			DB.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`)
-				.delete()
-				.then(() => {
-					return msg.channel.send(`Player: ${userName}, removed from Firebase Firestore.`);
-				})
-				.catch((error) => {
-					throw new Error(error);
-				});
+			await DB.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`).delete();
+			return msg.channel.send(`Player: ${userName}, removed from Firebase Firestore.`);
 		}
 		catch (error) {
 			console.warn(error);

@@ -44,7 +44,7 @@ client.on('message', async message => {
 
 		if (!command) return;
 
-		if(command.permission && !message.member.hasPermission('ADMINISTRATOR')) {
+		if (command.permission && !message.member.hasPermission('ADMINISTRATOR')) {
 			const guildId = message.guild.id;
 			const userRoles = message.member.roles.cache;
 			const authorizedRoles = await getAuthRoles(guildId, DB)

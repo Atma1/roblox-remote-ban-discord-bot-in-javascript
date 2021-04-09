@@ -24,7 +24,7 @@ const retriveAuthroles = async (guildId, DB) => {
 		const data = snap.data();
 		const { authorizedRoles } = data;
 		if (!authorizedRoles.length) {
-			throw new Error('No authorized roles found.\nThe owner needs to add roles that are authorized to use the commands.');
+			throw new Error('No authorized roles found.\nThe owner needs to add roles that is authorized to use the commands.');
 		}
 		return authorizedRoles;
 	}
