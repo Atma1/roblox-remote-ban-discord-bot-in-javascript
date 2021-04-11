@@ -1,17 +1,13 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
+
 module.exports = {
 	getUserImg: async (userId) => {
 		try {
-			const endpoint = `https://thumbnails.roblox.com/v1/users/avatar-headshot?userIds=${userId}&size=48x48&format=Png&isCircular=false`;
-			const response = await fetch(endpoint);
-			const responseJSON = await response.json();
-			if (responseJSON.errors) {
-				const noImgFound = 'http://cdn.onlinewebfonts.com/svg/img_137275.png';
-				return noImgFound;
-			}
-			const { data } = responseJSON;
-			const imageUrl = data[0].imageUrl;
-			return imageUrl;
+			const endpoint = `https://www.roblox.com/headshot-thumbnail/json?userId=${userId}&width=48&height=48&isCircular=false`;
+			const response = await axios.get(endpoint);
+			const { data } = response;
+			const { Url: userImage } = data;
+			return userImage;
 		}
 		catch (error) {
 			throw new Error (`${error}`);

@@ -1,9 +1,11 @@
-const fetch = require('node-fetch');
+const axios = require('axios');
+
 module.exports = {
 	getUserID: async (username) => {
 		try {
-			const response = await fetch(`https://api.roblox.com/users/get-by-username?username=${username}`);
-			const data = await response.json();
+			const response = await axios
+				.get(`https://api.roblox.com/users/get-by-username?username=${username}`);
+			const { data } = response;
 			if (data.success == false) {
 				const { errorMessage } = data;
 				throw new Error(errorMessage);
