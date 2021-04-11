@@ -3,7 +3,7 @@
 Before starting I need to tell you something the process of setting up the bot might seems very complicated and requrie a great amount of techincal knowledge but fear not as long as you have the motivation to keep pushing and go forward it will not intimidate you.
 # About
 
-A discord bot made in JawaScript that will enable the capabilty of remote ban using Firebase Firestore for the database and Node.js for the backend.
+A discord bot made in JawaScript that will enable the capabilty of remote ban using Discord.js, Firebase Firestore for the database and Node.js for the backend.
 
 # How to use:
 
@@ -26,4 +26,4 @@ A discord bot made in JawaScript that will enable the capabilty of remote ban us
 [env.zip](https://github.com/Atma1/remote-ban-discord-bot-in-jawascript/files/6277583/env.zip)
 
 
-# Need help or have a questions? HMU on Discord FreshFea#8153.
+# Need help or have a question? HMU on Discord FreshFea#8153.
