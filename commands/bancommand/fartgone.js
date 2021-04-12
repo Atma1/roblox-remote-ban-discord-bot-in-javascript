@@ -12,8 +12,8 @@ module.exports = {
 	guildonly: true,
 	async execute(msg, args, DB) {
 		const [ userName ] = args;
+		const guildId = msg.guild.id;
 		try {
-			const guildId = msg.guild.id;
 			const playerID = await getUserID(userName);
 			await DB.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`).delete();
 			return msg.channel.send(`Player: ${userName}, removed from Firebase Firestore.`);

@@ -12,9 +12,9 @@ module.exports = {
 	guildonly: true,
 	permission: true,
 	async execute(message, arg, DB) {
+		const [ userName ] = arg;
+		const guildId = message.guild.id;
 		try {
-			const [ userName ] = arg;
-			const guildId = message.guild.id;
 			const playerId = await getUserID(userName);
 			const snap = await DB.collection(`Server: ${guildId}`).doc(`Player: ${playerId}`).get();
 			if (!snap.exists) {

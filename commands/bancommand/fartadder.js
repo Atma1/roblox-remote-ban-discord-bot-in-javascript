@@ -14,12 +14,12 @@ module.exports = {
 	permission: true,
 	reqarglength: 2,
 	async execute(msg, args, DB) {
+		const guildId = msg.guild.id;
+		const playerName = args.shift();
+		const banReason = args.join(' ');
+		const bannedAt = dateformat(new Date, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
+		const bannedBy = msg.author.tag;
 		try {
-			const guildId = msg.guild.id;
-			const playerName = args.shift();
-			const banReason = args.join(' ');
-			const bannedAt = dateformat(new Date, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
-			const bannedBy = msg.author.tag;
 			const playerID = await getUserID(playerName);
 			const embed = await newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
 			await DB.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`)
