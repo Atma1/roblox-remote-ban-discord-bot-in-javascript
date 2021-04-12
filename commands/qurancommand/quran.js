@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js');
-const fetch = require('node-fetch');
+const axios = require('axios');
 const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
-const endPoint = 'https://api.quran.sutanlab.id';
+const endPoint = 'https://api.quran.sutanlab.id/surah/';
 
 module.exports = {
 	name : 'quran',
@@ -14,8 +14,8 @@ module.exports = {
 		const verseAndSurah = args.toString().split(':');
 		const [chapterNumber, verseNumber] = verseAndSurah;
 		try {
-			const response = await fetch(`https://api.quran.sutanlab.id/surah/${chapterNumber}/${verseNumber}`)
-				.then(res => res.json());
+			const response = await axios.get(`${endPoint}${chapterNumber}/${verseNumber}`)
+				.then(res => res.data);
 			const { data: { text: { arab } } } = response;
 			const { data: { text: { transliteration: { en:transliteral } } } } = response;
 			const { data: { translation: { en } } } = response;
