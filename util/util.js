@@ -1,18 +1,15 @@
-const convertUserRoleToArray = (userRoles) => {
-	const roleIds = [];
+const fs = require('fs');
+
+const convertUserRolesToArray = (userRoles) => {
+	const userRoleIds = [];
 	userRoles.forEach(role => {
-		roleIds.push(role.id);
+		userRoleIds.push(role.id);
 	});
-	return roleIds;
+	return userRoleIds;
 };
 
 const checkPermission = (userRoles, authorizedRoles) => {
-	try {
-		return userRoles.some(userRole => authorizedRoles.includes(userRole));
-	}
-	catch (error) {
-		throw new Error(error);
-	}
+	return userRoles.some(userRole => authorizedRoles.includes(userRole));
 };
 
 const retriveAuthroles = async (guildId, DB) => {
@@ -34,8 +31,31 @@ const retriveAuthroles = async (guildId, DB) => {
 
 };
 
+const loadCommands = (client) => {
+	const commandFolder = fs.readdirSync('../commands');
+
+	for (const folder of commandFolder) {
+		const commandFiles = fs.readdirSync(`../commands/${folder}`).filter(file => file.endsWith('.js'));
+		for (const file of commandFiles) {
+			const command = require(`./commands/${folder}/${file}`);
+			client.commands.set(command.name, command);
+		}
+	}
+	console.log('Loaded.');
+};
+
+const loadEvents = (client) => {
+	const eventsFolder = fs.readdirSync('../events').filter(file => file.endsWith('.js'));
+	for (const events of eventsFolder) {
+		const event = require(`../events/${events}`);
+		client.on(event, event.bind(null, client));
+	}
+};
+
 module.exports = {
-	convertToArray: convertUserRoleToArray,
+	convertUserRolesToArray: convertUserRolesToArray,
 	checkPerm: checkPermission,
 	getAuthRoles: retriveAuthroles,
+	loadCommands : loadCommands,
+	loadEvents: loadEvents,
 };
