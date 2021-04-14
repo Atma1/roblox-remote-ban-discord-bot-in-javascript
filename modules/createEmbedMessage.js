@@ -2,10 +2,7 @@ const Discord = require('discord.js');
 const { getUserImg } = require('./getUserImg');
 module.exports = {
 	newEmbedBanInfo: async (bannedAt, bannedBy, playerName, playerID, banReason) => {
-		const playerImg = await getUserImg(playerID)
-			.catch((error) => {
-				throw (error);
-			});
+		const playerImg = await getUserImg(playerID);
 		const embedMessage = new Discord.MessageEmbed();
 		embedMessage.setColor('DARK_NAVY');
 		embedMessage.setURL(`https://www.roblox.com/users/${playerID}`);

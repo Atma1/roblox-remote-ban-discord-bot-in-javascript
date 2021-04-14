@@ -1,9 +1,8 @@
-const fs = require('fs');
 const Discord = require('discord.js');
 const admin = require('firebase-admin');
 const serviceAccount = require('./serviceAccount.json');
 require('dotenv').config();
-const {	checkPerm, getAuthRoles, convertToArray } = require('./util/util');
+const {	checkPerm, getAuthRoles, convertUserRolesToArray, loadCommands } = require('./util/util');
 
 const token = process.env.token;
 const prefix = process.env.prefix;
@@ -18,15 +17,7 @@ admin.initializeApp({
 
 const FV = admin.firestore.FieldValue;
 const DB = admin.firestore();
-const commandFolders = fs.readdirSync('./commands');
-
-for (const folder of commandFolders) {
-	const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
-	for (const file of commandFiles) {
-		const command = require(`./commands/${folder}/${file}`);
-		client.commands.set(command.name, command);
-	}
-}
+loadCommands(client);
 
 client.once('ready', () => {
 	console.log(`${client.user.tag} is ready.`);
@@ -52,7 +43,7 @@ client.on('message', async message => {
 					console.warn(err);
 					return message.channel.send(`${err}`);
 				});
-			const isUserAuthorized = checkPerm(convertToArray(userRoles), authorizedRoles);
+			const isUserAuthorized = checkPerm(convertUserRolesToArray(userRoles), authorizedRoles);
 			if (!isUserAuthorized) {
 				return message.channel.send('You don\'t have permission to do that!');
 			}
