@@ -1,4 +1,5 @@
 const { getUserID } = require('../../modules/getUserID');
+const { getUserImg } = require('../../modules/getUserID');
 const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
 
 module.exports = {
@@ -15,6 +16,7 @@ module.exports = {
 		const [ userName ] = arg;
 		const guildId = message.guild.id;
 		try {
+			const userImage = await getUserImg(userName);
 			const playerId = await getUserID(userName);
 			const snap = await DB.collection(`Server: ${guildId}`).doc(`Player: ${playerId}`).get();
 			if (!snap.exists) {
@@ -26,7 +28,7 @@ module.exports = {
 			const { playerName } = data;
 			const { playerID } = data;
 			const { banReason } = data;
-			const banInfoEmbed = await newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
+			const banInfoEmbed = newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason, userImage);
 			return message.channel.send(banInfoEmbed);
 		}
 		catch (error) {

@@ -1,5 +1,6 @@
 const { getUserID } = require('../../modules/getUserID');
 const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
+const { getUserImg } = require('../../modules/getUserID');
 const dateformat = require('dateformat');
 
 module.exports = {
@@ -20,8 +21,8 @@ module.exports = {
 		const bannedAt = dateformat(new Date, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
 		const bannedBy = msg.author.tag;
 		try {
+			const playerImage = await getUserImg(playerName);
 			const playerID = await getUserID(playerName);
-			const embed = await newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason);
 			await DB.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`)
 				.set({
 					'playerID': `${playerID}`,
@@ -32,6 +33,7 @@ module.exports = {
 				}, {
 					merge: true,
 				});
+			const embed = newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason, playerImage);
 			msg.channel.send(`\`Player: ${playerName} has been banned\``, embed);
 		}
 		catch (error) {
