@@ -33,28 +33,29 @@ const retriveAuthroles = async (message, guildId, DB) => {
 };
 
 const loadCommands = (client) => {
-	const commandFolder = fs.readdirSync('../commands');
+	const commandFolder = fs.readdirSync('./commands');
 
 	for (const folder of commandFolder) {
-		const commandFiles = fs.readdirSync(`../commands/${folder}`).filter(file => file.endsWith('.js'));
+		const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
 		for (const file of commandFiles) {
 			const command = require(`../commands/${folder}/${file}`);
 			client.commands.set(command.name, command);
 		}
+		console.log(`Loaded ${commandFiles.length} commands.`);
 	}
-	console.log('Loaded all commands.');
 };
 
 const loadEvents = (client) => {
-	const eventsFolder = fs.readdirSync('../events').filter(file => file.endsWith('.js'));
+	const eventsFolder = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
 	for (const events of eventsFolder) {
 		const { name:eventName } = path.parse(events);
 		const event = require(`../events/${events}`);
-		client.on(eventName, event.bind(null, client));
+		console.log(event);
+		client.on(eventName, event.execute.bind(null, client));
 		delete require.cache[event];
 	}
-	console.log('Loaded all events');
+	console.log(`Loaded ${eventsFolder.length} events`);
 };
 
 module.exports = {
