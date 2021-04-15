@@ -34,15 +34,17 @@ const retriveAuthroles = async (message, guildId, DB) => {
 
 const loadCommands = (client) => {
 	const commandFolder = fs.readdirSync('./commands');
+	let commandFilesAmount = 0;
 
 	for (const folder of commandFolder) {
 		const commandFiles = fs.readdirSync(`./commands/${folder}`).filter(file => file.endsWith('.js'));
 		for (const file of commandFiles) {
 			const command = require(`../commands/${folder}/${file}`);
+			commandFilesAmount += 1;
 			client.commands.set(command.name, command);
 		}
-		console.log(`Loaded ${commandFiles.length} commands.`);
 	}
+	console.log(`Loaded ${commandFilesAmount} commands.`);
 };
 
 const loadEvents = (client) => {
@@ -51,11 +53,10 @@ const loadEvents = (client) => {
 	for (const events of eventsFolder) {
 		const { name:eventName } = path.parse(events);
 		const event = require(`../events/${events}`);
-		console.log(event);
 		client.on(eventName, event.execute.bind(null, client));
 		delete require.cache[event];
 	}
-	console.log(`Loaded ${eventsFolder.length} events`);
+	console.log(`Loaded ${eventsFolder.length} events.`);
 };
 
 module.exports = {
