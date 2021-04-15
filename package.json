@@ -17,6 +17,6 @@
     "dotenv": "^8.2.0",
     "firebase": "^8.2.9",
     "firebase-admin": "^9.5.0",
-    "node-fetch": "^2.6.1"
+    "path": "^0.12.7"
   }
 }
