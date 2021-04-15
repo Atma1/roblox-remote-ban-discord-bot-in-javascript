@@ -1,8 +1,7 @@
 const Discord = require('discord.js');
-const { getUserImg } = require('./getUserImg');
+
 module.exports = {
-	newEmbedBanInfo: async (bannedAt, bannedBy, playerName, playerID, banReason) => {
-		const playerImg = await getUserImg(playerID);
+	newEmbedBanInfo: (bannedAt, bannedBy, playerName, playerID, banReason, playerImg) => {
 		const embedMessage = new Discord.MessageEmbed();
 		embedMessage.setColor('DARK_NAVY');
 		embedMessage.setURL(`https://www.roblox.com/users/${playerID}`);
@@ -16,7 +15,6 @@ module.exports = {
 			{ name: 'Banned By', value: `${bannedBy}`, inline : true },
 			{ name: 'Banned At', value: `${bannedAt}` },
 		);
-		embedMessage.setFooter('Vehicle is pitching downrange', 'https://www.nasaspaceflight.com/wp-content/uploads/2018/05/DSC_0025.jpg');
 		embedMessage.setTimestamp();
 		return embedMessage;
 	},
