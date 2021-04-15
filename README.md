@@ -10,7 +10,7 @@ A discord bot made in JawaScript that will enable the capabilty of remote ban us
 1. Create a discord bot by going to discord developer portal and create a Firebase Firestore account.
 2. Get an IDE or code editor-e.g. Visual Code Studio or Repl.
 3. Clone the repository.
-4. Get the .env file found on near the bottom of this text extract it from the .zip file and insert it your bot's folder.
+4. Get the .env file found near the bottom of this text extract it from the .zip file and insert it your bot's folder.
 5. In the .env file add your bot token and you may costumize the bot's prefix if you would like to.
 6. Download your firebase admin SDK by going to firebase project settings and look for a tab called service accounts then click create service account.
 7. Insert it to the bot's folder and rename it to serviceAccount and keep the .json.
