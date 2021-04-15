@@ -9,8 +9,8 @@ admin.initializeApp({
 	credential: admin.credential.cert(serviceAccount),
 });
 
-const client = new DiscordClient;
+const client = new DiscordClient(token);
 client.cooldowns = new Discord.Collection();
 client.commands = new Discord.Collection();
 
-client.startBot(token);
+client.startBot();
