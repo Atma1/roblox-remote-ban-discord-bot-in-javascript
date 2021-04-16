@@ -1,4 +1,6 @@
-const { getUserID } = require('../../modules/getUserID');
+const {
+	getUserID,
+} = require('../../modules/getUserID');
 
 module.exports = {
 	name: 'fartgone',
@@ -6,12 +8,12 @@ module.exports = {
 	usage: 'playerusername',
 	aliases: ['ub', 'unban'],
 	example: '!unban joemama',
-	args : true,
+	args: true,
 	cooldown: 5,
 	permission: true,
 	guildonly: true,
 	async execute(msg, args, DB) {
-		const [ userName ] = args;
+		const [userName] = args;
 		const guildId = msg.guild.id;
 		try {
 			const playerID = await getUserID(userName);

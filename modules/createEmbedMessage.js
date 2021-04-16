@@ -7,14 +7,29 @@ module.exports = {
 		embedMessage.setURL(`https://www.roblox.com/users/${playerID}`);
 		embedMessage.setTitle(`Ban Info For Player ${playerName}`);
 		embedMessage.setThumbnail(playerImg);
-		embedMessage.addFields(
-			{ name: 'Player Name', value: `${playerName}`, inline : true },
-			{ name: 'Player Id', value: `${playerID}`, inline : true },
-			{ name: '\u200B', value: '\u200B' },
-			{ name: 'Ban Reason', value: `${banReason}`, inline : true },
-			{ name: 'Banned By', value: `${bannedBy}`, inline : true },
-			{ name: 'Banned At', value: `${bannedAt}` },
-		);
+		embedMessage.addFields({
+			name: 'Player Name',
+			value: `${playerName}`,
+			inline: true,
+		}, {
+			name: 'Player Id',
+			value: `${playerID}`,
+			inline: true,
+		}, {
+			name: '\u200B',
+			value: '\u200B',
+		}, {
+			name: 'Ban Reason',
+			value: `${banReason}`,
+			inline: true,
+		}, {
+			name: 'Banned By',
+			value: `${bannedBy}`,
+			inline: true,
+		}, {
+			name: 'Banned At',
+			value: `${bannedAt}`,
+		});
 		embedMessage.setTimestamp();
 		return embedMessage;
 	},

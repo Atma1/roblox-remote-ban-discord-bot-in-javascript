@@ -20,7 +20,9 @@ const retriveAuthroles = async (message, guildId, DB) => {
 			throw new Error('No authorized roles found.\nPossiblity of an error during the creation of the server\'s database.');
 		}
 		const data = snap.data();
-		const { authorizedRoles } = data;
+		const {
+			authorizedRoles,
+		} = data;
 		if (!authorizedRoles.length) {
 			throw new Error('No authorized roles found.\nThe owner needs to add roles that is authorized to use the commands.');
 		}
@@ -51,7 +53,9 @@ const loadEvents = (client) => {
 	const eventsFolder = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 
 	for (const events of eventsFolder) {
-		const { name:eventName } = path.parse(events);
+		const {
+			name: eventName,
+		} = path.parse(events);
 		const event = require(`../events/${events}`);
 		client.on(eventName, event.execute.bind(null, client));
 		delete require.cache[event];
@@ -63,6 +67,6 @@ module.exports = {
 	convertUserRolesToArray: convertUserRolesToArray,
 	checkPerm: checkPermission,
 	getAuthRoles: retriveAuthroles,
-	loadCommands : loadCommands,
+	loadCommands: loadCommands,
 	loadEvents: loadEvents,
 };

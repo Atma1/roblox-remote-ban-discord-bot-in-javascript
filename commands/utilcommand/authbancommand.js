@@ -1,9 +1,9 @@
 module.exports = {
-	name : 'authorizebancommand',
-	desc : 'authorize specific role to ban command',
-	aliases : ['authban', 'permitban', 'authbanforrole', 'auth'],
+	name: 'authorizebancommand',
+	desc: 'authorize specific role to ban command',
+	aliases: ['authban', 'permitban', 'authbanforrole', 'auth'],
 	example: '!auth @joemama',
-	usage : 'roletobeauth',
+	usage: '@roletobeauth',
 	args: true,
 	guildonly: true,
 	permission: true,
@@ -16,7 +16,7 @@ module.exports = {
 			const guildId = msg.guild.id;
 			await DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildId}`)
 				.update({
-					'authorizedRoles' : FV.arrayUnion(`${roleId}`),
+					'authorizedRoles': FV.arrayUnion(`${roleId}`),
 				});
 			msg.channel.send(`${args} has been authorized to use the ban command!`);
 

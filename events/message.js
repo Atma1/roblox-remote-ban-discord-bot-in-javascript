@@ -1,7 +1,11 @@
 require('dotenv').config();
 const Discord = require('discord.js');
 const admin = require('firebase-admin');
-const {	checkPerm, getAuthRoles, convertUserRolesToArray } = require('../util/util');
+const {
+	checkPerm,
+	getAuthRoles,
+	convertUserRolesToArray,
+} = require('../util/util');
 const prefix = process.env.prefix;
 const FV = admin.firestore.FieldValue;
 const DB = admin.firestore();
@@ -13,8 +17,8 @@ module.exports = {
 		if (msg.startsWith(prefix) && !message.author.bot) {
 			const args = message.content.slice(prefix.length).trim().split(/ +/);
 			const commandName = args.shift().toLowerCase();
-			const command = client.commands.get(commandName)
-				|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+			const command = client.commands.get(commandName) ||
+				client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 			if (!command) return;
 
@@ -38,7 +42,9 @@ module.exports = {
 				return message.reply('Can\'t do that in dm!');
 			}
 
-			const { cooldowns } = client;
+			const {
+				cooldowns,
+			} = client;
 
 			if (!cooldowns.has(command.name)) {
 				cooldowns.set(command.name, new Discord.Collection());

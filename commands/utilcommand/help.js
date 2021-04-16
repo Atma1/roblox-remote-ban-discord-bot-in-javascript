@@ -6,20 +6,24 @@ module.exports = {
 	desc: 'give help',
 	usage: 'commandname',
 	aliases: ['help!11!!1', 'cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
-	example : '!cmdinfo fartgone',
+	example: '!cmdinfo fartgone',
 	cooldown: 5,
 	guildonly: true,
 	execute(message, args) {
 		const data = [];
-		const { commands } = message.client;
+		const {
+			commands,
+		} = message.client;
 
 		if (!args.length) {
 			data.push('Here\'s a list of my commands');
 			data.push(commands.map(cmd => cmd.name).join(', '));
 			data.push(`\nIf you want info on specific command send \`${prefix}help [command name]\` and don'\t send it here!`);
 
-			return message.author.send(data, { split: true })
-				.then(()=> {
+			return message.author.send(data, {
+				split: true,
+			})
+				.then(() => {
 					message.reply('Sent all of my cmds to your DM.');
 				})
 				.catch(err => {
@@ -45,6 +49,8 @@ module.exports = {
 		data.push(`**Cooldown:** ${command.cooldown || 3} sekon.`);
 		console.log(data);
 
-		message.channel.send(data, { split : true });
+		message.channel.send(data, {
+			split: true,
+		});
 	},
 };
