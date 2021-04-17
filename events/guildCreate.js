@@ -6,8 +6,8 @@ module.exports = {
 		try {
 			const guildId = guildData.id;
 			const ownerTag = await client.users.fetch(guildData.ownerID).then(user => user.tag);
-			DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildData.id}`).set({
-				'guildID': guildData.id,
+			DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildId}`).set({
+				'guildID': guildId,
 				'guildName': guildData.name,
 				'guildOwnerID': guildData.ownerID,
 				'guildOwnerTag' : ownerTag,

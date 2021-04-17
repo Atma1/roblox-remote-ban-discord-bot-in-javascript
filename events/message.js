@@ -71,7 +71,7 @@ module.exports = {
 			}
 			catch (error) {
 				console.warn(error);
-				message.reply(`There was an error!\n${error}`);
+				message.reply(`There was an error while executing the command!\n${error}`);
 			}
 		}
 	},
