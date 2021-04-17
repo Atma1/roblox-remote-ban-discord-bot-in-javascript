@@ -1,6 +1,6 @@
 const { getUserID } = require('../../modules/getUserID');
 const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
-const { getUserImg } = require('../../modules/getUserID');
+const { getUserImg } = require('../../modules/getUserImg');
 const dateformat = require('dateformat');
 
 module.exports = {
@@ -21,8 +21,8 @@ module.exports = {
 		const bannedAt = dateformat(new Date, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
 		const bannedBy = msg.author.tag;
 		try {
-			const playerImage = await getUserImg(playerName);
 			const playerID = await getUserID(playerName);
+			const playerImage = await getUserImg(playerID);
 			await DB.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`)
 				.set({
 					'playerID': `${playerID}`,

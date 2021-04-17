@@ -1,5 +1,5 @@
 const { getUserID } = require('../../modules/getUserID');
-const { getUserImg } = require('../../modules/getUserID');
+const { getUserImg } = require('../../modules/getUserImg');
 const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
 
 module.exports = {
@@ -16,8 +16,8 @@ module.exports = {
 		const [ userName ] = arg;
 		const guildId = message.guild.id;
 		try {
-			const userImage = await getUserImg(userName);
 			const playerId = await getUserID(userName);
+			const userImage = await getUserImg(playerId);
 			const snap = await DB.collection(`Server: ${guildId}`).doc(`Player: ${playerId}`).get();
 			if (!snap.exists) {
 				throw new Error(`No data exists for player ${userName}.`);
@@ -33,7 +33,7 @@ module.exports = {
 		}
 		catch (error) {
 			console.warn(error);
-			return message.channel.send(`There was an error while attempting to retrive de deta!\n${error}`);
+			return message.channel.send(`There was an error while attempting to retrive the data!\n${error}`);
 		}
 	},
 };
