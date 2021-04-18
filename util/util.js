@@ -29,6 +29,7 @@ const retriveAuthroles = async (message, guildId, DB) => {
 		return authorizedRoles;
 	}
 	catch (error) {
+		console.error(error);
 		return message.channel.send(`${error}`);
 	}
 
