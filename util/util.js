@@ -54,10 +54,10 @@ const loadEvents = (client) => {
 
 	for (const events of eventsFolder) {
 		const {
-			name: eventName,
+			name: eventType,
 		} = path.parse(events);
 		const event = require(`../events/${events}`);
-		client.on(eventName, event.execute.bind(null, client));
+		client.on(eventType, event.execute.bind(null, client));
 		delete require.cache[event];
 	}
 	console.log(`Loaded ${eventsFolder.length} events.`);
