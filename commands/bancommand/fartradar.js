@@ -1,6 +1,6 @@
 const { getUserID } = require('../../modules/getUserID');
 const { getUserImg } = require('../../modules/getUserImg');
-const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
+const EmbededBanInfoMessage = require('../../modules/CreateEmbededBanInfoMessage');
 
 module.exports = {
 	name: 'fartradar',
@@ -17,7 +17,7 @@ module.exports = {
 		const guildId = message.guild.id;
 		try {
 			const playerId = await getUserID(userName);
-			const userImage = await getUserImg(playerId);
+			const playerImage = await getUserImg(playerId);
 			const snap = await DB.collection(`Server: ${guildId}`).doc(`Player: ${playerId}`).get();
 			if (!snap.exists) {
 				throw new Error(`No data exists for player ${userName}.`);
@@ -28,8 +28,10 @@ module.exports = {
 			const { playerName } = data;
 			const { playerID } = data;
 			const { banReason } = data;
-			const banInfoEmbed = newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason, userImage);
-			return message.channel.send(banInfoEmbed);
+			const embed = new EmbededBanInfoMessage(
+				bannedAt, bannedBy, playerName, playerID, banReason, playerImage,
+			);
+			return message.channel.send(embed);
 		}
 		catch (error) {
 			console.warn(error);

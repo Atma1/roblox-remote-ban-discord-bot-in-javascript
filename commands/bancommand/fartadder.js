@@ -1,5 +1,5 @@
 const { getUserID } = require('../../modules/getUserID');
-const { newEmbedBanInfo } = require('../../modules/createEmbedMessage');
+const EmbededBanInfoMessage = require('../../modules/CreateEmbededBanInfoMessage');
 const { getUserImg } = require('../../modules/getUserImg');
 const dateformat = require('dateformat');
 
@@ -33,7 +33,9 @@ module.exports = {
 				}, {
 					merge: true,
 				});
-			const embed = newEmbedBanInfo(bannedAt, bannedBy, playerName, playerID, banReason, playerImage);
+			const embed = new EmbededBanInfoMessage(
+				bannedAt, bannedBy, playerName, playerID, banReason, playerImage,
+			);
 			msg.channel.send(`\`Player: ${playerName} has been banned\``, embed);
 		}
 		catch (error) {
