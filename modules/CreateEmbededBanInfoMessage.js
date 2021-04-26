@@ -1,4 +1,6 @@
-const { MessageEmbed } = require('discord.js');
+const {
+	MessageEmbed,
+} = require('discord.js');
 
 module.exports = class EmbededBanInfoMessage extends MessageEmbed {
 	constructor(bannedAt, bannedBy, playerName, playerID, banReason, userImage) {

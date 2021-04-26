@@ -1,7 +1,7 @@
 const axios = require('axios');
 
 module.exports = {
-	getUserID: async (username) => {
+	getUserId: async (username) => {
 		try {
 			const response = await axios
 				.get(`https://api.roblox.com/users/get-by-username?username=${username}`);
