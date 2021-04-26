@@ -1,14 +1,20 @@
 require('dotenv').config();
 const prefix = process.env.prefix;
+const CommandClass = require('../../util/CommandClass');
 
-module.exports = {
-	name: 'help',
-	desc: 'give help',
-	usage: 'commandname',
-	aliases: ['help!11!!1', 'cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
-	example: '!cmdinfo fartgone',
-	cooldown: 5,
-	guildonly: true,
+module.exports = class extends CommandClass {
+	constructor() {
+		super(
+			'help',
+			'give help',
+			'commandname',
+			{	aliases: ['help!11!!1', 'cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
+				example: '!cmdinfo ban',
+				cooldown: 5,
+				guildonly: true },
+		);
+	}
+
 	execute(message, args) {
 		const data = [];
 		const {
@@ -27,18 +33,20 @@ module.exports = {
 					message.reply('Sent all of my cmds to your DM.');
 				})
 				.catch(err => {
-					console.warn(err);
-					message.reply('Your DM is closed thereby I cannot send my cmds.');
+					console.error(err);
+					message.reply('Can\'t send my cmds to your DM! Is your DM closed?.');
 				});
 		}
-		const name = args[0].toLowerCase();
-		const command = commands.get(name) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(name));
+		const [ cmdName ] = args;
+		cmdName.toLowerCase();
+		const command = commands.get(cmdName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 
 		if (!command) {
-			return message.reply('Make sure you type the correct cmd.');
+			return message.reply('Make sure you type the correct command.');
 		}
 
 		data.push(`**Name:** ${command.name}`);
+		data.push(`**Cooldown:** ${command.cooldown || 3} second(s).`);
 
 		if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}.`);
 		if (command.desc) data.push(`**Desc:** ${command.desc}.`);
@@ -46,11 +54,8 @@ module.exports = {
 		if (command.example) data.push(`**Example:** ${command.example}`);
 		if (command.permission) data.push('**Require permission:** True.');
 
-		data.push(`**Cooldown:** ${command.cooldown || 3} sekon.`);
-		console.log(data);
-
 		message.channel.send(data, {
 			split: true,
 		});
-	},
+	}
 };

@@ -1,29 +1,34 @@
-const { getUserID } = require('../../modules/getUserID');
 const EmbededBanInfoMessage = require('../../modules/CreateEmbededBanInfoMessage');
-const { getUserImg } = require('../../modules/getUserImg');
-const dateformat = require('dateformat');
+const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandClass');
 
-module.exports = {
-	name: 'fartadder',
-	desc: 'ban player. as of now the ban is permanent',
-	usage: 'username banreason',
-	aliases: ['ban', 'addban', 'banplayer'],
-	example: '!ban joemama joemama is too fat',
-	cooldown: 5,
-	args: true,
-	guildonly: true,
-	permission: true,
-	reqarglength: 2,
-	async execute(msg, args, DB) {
+module.exports = class extends DataBaseRelatedCommandClass {
+	constructor() {
+		super(
+			'ban',
+			'ban player. as of now the ban is permanent',
+			'username banreason',
+			{
+				aliases: ['ban', 'addban', 'banplayer'],
+				example: '!ban joemama joemama is too fat',
+				cooldown: 5,
+				args: true,
+				guildonly: true,
+				permission: true,
+				reqarglength: 2,
+			},
+		);
+	}
+
+	async execute(msg, args) {
 		const guildId = msg.guild.id;
 		const playerName = args.shift();
 		const banReason = args.join(' ');
-		const bannedAt = dateformat(new Date, 'dddd, mmmm dS, yyyy, h:MM:ss TT');
+		const bannedAt = this.dateformat(new Date);
 		const bannedBy = msg.author.tag;
 		try {
-			const playerID = await getUserID(playerName);
-			const playerImage = await getUserImg(playerID);
-			await DB.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`)
+			const playerID = await this.getUserId(playerName);
+			const playerImage = await this.getUserImg(playerID);
+			await this.dataBase.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`)
 				.set({
 					'playerID': `${playerID}`,
 					'playerName':`${playerName}`,
@@ -39,8 +44,8 @@ module.exports = {
 			msg.channel.send(`\`Player: ${playerName} has been banned\``, embed);
 		}
 		catch (error) {
-			console.warn(error);
+			console.error(error);
 			return msg.channel.send(`There was an error while banning the player!\n${error}`);
 		}
-	},
+	}
 };

@@ -1,19 +1,26 @@
 const { MessageEmbed } = require('discord.js');
+const CommandClass = require('../../util/CommandClass');
 const axios = require('axios');
 const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
-const endPoint = 'https://api.quran.sutanlab.id/surah';
 
-module.exports = {
-	name : 'quran',
-	desc : 'send surah from verse',
-	usage : 'surahnumber:versenumber',
-	example : '!quran 39:53',
-	args : true,
-	cooldown : 5,
+module.exports = class extends CommandClass {
+	constructor() {
+		super(
+			'quran',
+			'send surah from verse',
+			'chapterNumber:verseNumber',
+			{
+				example : '!quran 39:53',
+				args : true,
+				cooldown : 5,
+			});
+	}
+
 	async execute(message, args) {
-		const surahAndVerse = args.toString().split(':');
-		const [chapterNumber, verseNumber] = surahAndVerse;
+		const chapterAndVerseNumber = args.toString().split(':');
+		const [chapterNumber, verseNumber] = chapterAndVerseNumber;
 		try {
+			const endPoint = 'https://api.quran.sutanlab.id/surah';
 			const response = await axios.get(`${endPoint}/${chapterNumber}/${verseNumber}`)
 				.then(res => res.data);
 			const { data: { text: { arab } } } = response;
@@ -33,8 +40,8 @@ module.exports = {
 			return message.channel.send(embed);
 		}
 		catch(error) {
-			console.warn(error);
+			console.error(error);
 			return message.channel.send('There was an error while retriving data!');
 		}
-	},
+	}
 };
