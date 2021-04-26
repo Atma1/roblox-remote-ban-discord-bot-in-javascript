@@ -18,5 +18,8 @@
     "firebase": "^8.2.9",
     "firebase-admin": "^9.5.0",
     "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@types/dateformat": "^3.0.1"
   }
 }
