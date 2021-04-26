@@ -15,7 +15,7 @@ module.exports = {
 			});
 		}
 		catch (error) {
-			console.warn(error);
+			console.error(error);
 		}
 	},
 };
