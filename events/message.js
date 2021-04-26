@@ -1,20 +1,19 @@
 require('dotenv').config();
 const Discord = require('discord.js');
-const admin = require('firebase-admin');
 const {
 	checkPerm,
 	getAuthRoles,
 	convertUserRolesToArray,
 } = require('../util/util');
 const prefix = process.env.prefix;
-const FV = admin.firestore.FieldValue;
-const DB = admin.firestore();
 
 module.exports = {
 	async execute(client, message) {
-		const msg = message.content.toLowerCase();
-		console.log(msg);
-		if (msg.startsWith(prefix) && !message.author.bot) {
+		const lowerCaseMessage = message.content.toLowerCase();
+		const guildId = message.guild.id;
+		const userRoles = message.member.roles.cache;
+
+		if (lowerCaseMessage.startsWith(prefix) && !message.author.bot) {
 			const args = message.content.slice(prefix.length).trim().split(/ +/);
 			const commandName = args.shift().toLowerCase();
 			const command = client.commands.get(commandName) ||
@@ -23,9 +22,7 @@ module.exports = {
 			if (!command) return;
 
 			if (command.permission && !message.member.hasPermission('ADMINISTRATOR')) {
-				const guildId = message.guild.id;
-				const userRoles = message.member.roles.cache;
-				const authorizedRoles = await getAuthRoles(guildId, DB);
+				const authorizedRoles = await getAuthRoles(message, guildId);
 				const isUserAuthorized = checkPerm(convertUserRolesToArray(userRoles), authorizedRoles);
 				if (!isUserAuthorized) {
 					return message.channel.send('You don\'t have permission to do that!');
@@ -66,11 +63,12 @@ module.exports = {
 			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
 			try {
-				command.execute(message, args, DB, FV);
+				command.execute(message, args);
+				console.log(lowerCaseMessage);
 				console.log(args);
 			}
 			catch (error) {
-				console.warn(error);
+				console.error(error);
 				message.reply(`There was an error while executing the command!\n${error}`);
 			}
 		}
