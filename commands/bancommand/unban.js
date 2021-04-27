@@ -7,7 +7,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 			'remove player from the database assuming the player is in the database',
 			'playerusername',
 			{
-				aliases: ['ub', 'unban'],
+				aliases: ['ub', 'forgive'],
 				example: '!unban joemama',
 				args: true,
 				cooldown: 5,

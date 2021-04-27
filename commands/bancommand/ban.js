@@ -8,7 +8,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 			'ban player. as of now the ban is permanent',
 			'username banreason',
 			{
-				aliases: ['ban', 'addban', 'banplayer'],
+				aliases: ['addban', 'banplayer', 'bn'],
 				example: '!ban joemama joemama is too fat',
 				cooldown: 5,
 				args: true,
