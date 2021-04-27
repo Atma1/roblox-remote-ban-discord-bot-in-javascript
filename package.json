@@ -1,0 +1,25 @@
+{
+  "name": "deskord",
+  "version": "1.0.0",
+  "description": "diskord bot",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [
+    "yes"
+  ],
+  "author": "fresh",
+  "license": "MIT",
+  "dependencies": {
+    "admin": "^1.4.1",
+    "axios": "^0.21.1",
+    "dateformat": "^4.5.1",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0",
+    "firebase": "^8.2.9",
+    "firebase-admin": "^9.5.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@types/dateformat": "^3.0.1"
+  }
+}
