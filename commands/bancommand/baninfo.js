@@ -16,7 +16,6 @@ module.exports = class extends DataBaseRelatedCommandClass {
 				permission: true,
 			});
 	}
-
 	async execute(message, arg) {
 		const [ playername ] = arg;
 		const guildId = message.guild.id;
