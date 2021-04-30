@@ -14,11 +14,12 @@ A discord bot made in JavaScript that will enable the capabilty of remote ban us
 5. In the .env file add your bot token and you may costumize the bot's prefix if you would like to.
 6. Download your firebase admin SDK JSON by going to firebase project settings and look for a tab called service accounts then click create service account.
 7. Insert the SDK to the bot's folder and rename it to serviceAccount and keep the .json.
-8. Install the dependencies. If you are using a code editor type in the shell/command prompt npm i or if you are using Repl it'll auto install all the dependencies after you've run the bot.
-9. Deploy the bot to your server using the bot's invite link located in your discord developer portal and make sure every thing is norminal.
-10. Make sure in firebase firestore rules tab anyone can read the database otherwise you'll have to create a system on the roblox side to retrive the database authorization token.
-11. Create a connection from your roblox game to your Firebase Firestore database.
-12. Type !help for all  of the bot's commands.
+8. Type in shell or cmd prompt npm init
+9. Install the dependencies. If you are using a code editor type in the shell/command prompt npm i or if you are using Repl it'll auto install all the dependencies after you've run the bot.
+10. Deploy the bot to your server using the bot's invite link located in your discord developer portal and make sure every thing is norminal.
+11. Make sure in firebase firestore rules tab anyone can read the database otherwise you'll have to create a system on the roblox side to retrive the database authorization token.
+12. Create a connection from your roblox game to your Firebase Firestore database.
+13. Type !help for all  of the bot's commands.
 
 # File
 
