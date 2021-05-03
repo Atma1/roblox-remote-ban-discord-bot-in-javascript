@@ -15,11 +15,11 @@ const checkPermission = (userRoles, authorizedRoles) => {
 
 const retriveAuthroles = async (message, guildId, DB) => {
 	try {
-		const snap = await DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildId}`).get();
-		if (!snap.exists) {
+		const snapshot = await DB.collection(`Server: ${guildId}`).doc(`Data for server: ${guildId}`).get();
+		if (!snapshot.exists) {
 			throw new Error('No authorized roles found.\nPossiblity of an error during the creation of the server\'s database.');
 		}
-		const data = snap.data();
+		const data = snapshot.data();
 		const {
 			authorizedRoles,
 		} = data;
@@ -44,8 +44,8 @@ const loadCommands = (client) => {
 		for (const file of commandFiles) {
 			const commandFile = require(`../commands/${folder}/${file}`);
 			const command = new commandFile;
-			commandFilesAmount += 1;
 			client.commands.set(command.name, command);
+			commandFilesAmount += 1;
 			delete require.cache[commandFile];
 		}
 	}
