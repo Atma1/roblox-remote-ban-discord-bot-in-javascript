@@ -6,10 +6,9 @@ const { firestore } = admin;
 
 module.exports = class DataBaseRelatedCommandClass {
 
-	constructor(name, desc, usage, commandOptions = {}) {
+	constructor(name, desc, commandOptions = {}) {
 		this.name = name;
 		this.desc = desc;
-		this.usage = usage;
 		this.aliases = commandOptions.aliases || false;
 		this.example = commandOptions.example || 'No example';
 		this.cooldown = commandOptions.cooldown || 3;
