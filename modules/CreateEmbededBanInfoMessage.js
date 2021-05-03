@@ -5,7 +5,7 @@ const {
 module.exports = class EmbededBanInfoMessage extends MessageEmbed {
 	constructor(bannedAt, bannedBy, playerName, playerID, banReason, userImage) {
 		super();
-		super.setTitle(`Ban Info For Player ${playerName}`);
+		super.setTitle(`Ban Info for Player ${playerName}`);
 		super.setThumbnail(userImage);
 		super.setURL(`https://www.roblox.com/users/${playerID}`);
 		super.setColor('DARK_NAVY');
