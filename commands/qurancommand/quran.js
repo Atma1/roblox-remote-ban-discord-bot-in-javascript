@@ -7,8 +7,7 @@ module.exports = class extends CommandClass {
 	constructor() {
 		super(
 			'quran',
-			'send surah from verse',
-			'chapterNumber:verseNumber',
+			'get the specified chapter from the specified quran verse',
 			{
 				example : '!quran 39:53',
 				args : true,
@@ -18,7 +17,7 @@ module.exports = class extends CommandClass {
 
 	async execute(message, args) {
 		const chapterAndVerseNumber = args.toString().split(':');
-		const [chapterNumber, verseNumber] = chapterAndVerseNumber;
+		const [ chapterNumber, verseNumber ] = chapterAndVerseNumber;
 		try {
 			const endPoint = 'https://api.quran.sutanlab.id/surah';
 			const response = await axios.get(`${endPoint}/${chapterNumber}/${verseNumber}`)

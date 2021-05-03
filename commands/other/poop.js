@@ -5,7 +5,6 @@ module.exports = class extends CommandClass {
 		super(
 			'poop',
 			'make poop',
-			'poop',
 		);
 	}
 	execute(message) {

@@ -5,8 +5,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 	constructor() {
 		super(
 			'ban',
-			'ban player. as of now the ban is permanent',
-			'username banreason',
+			'ban player. as of now the ban is permanent. to edit the ban, just rerun the command',
 			{
 				aliases: ['addban', 'banplayer', 'bn'],
 				example: '!ban joemama joemama is too fat',
@@ -25,22 +24,25 @@ module.exports = class extends DataBaseRelatedCommandClass {
 		const bannedAt = this.dateformat(new Date);
 		const bannedBy = msg.author.tag;
 		try {
-			const playerID = await this.getUserId(playerName);
-			const playerImage = await this.getUserImg(playerID);
-			await this.dataBase.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`)
-				.set({
-					'playerID': `${playerID}`,
-					'playerName':`${playerName}`,
-					'banReason': `${banReason}`,
-					'bannedBy': `${bannedBy}`,
-					'bannedAt': `${bannedAt}`,
-				}, {
-					merge: true,
-				});
+			const playerId = await this.getUserId(playerName);
+			const playerBanDocument = {
+				playerID: `${playerId}`,
+				playerName:`${playerName}`,
+				banReason: `${banReason}`,
+				bannedBy: `${bannedBy}`,
+				bannedAt: `${bannedAt}`,
+			};
+			const [ playerImage ] = await Promise.all([
+				this.getUserImg(playerId)
+					.catch(error => { throw(error);}),
+				this.dataBase.collection(`Server: ${guildId}`).doc(`Player: ${playerId}`)
+					.set(playerBanDocument, { merge: true })
+					.catch(error => { throw(error);}),
+			]);
 			const embed = new EmbededBanInfoMessage(
-				bannedAt, bannedBy, playerName, playerID, banReason, playerImage,
+				bannedAt, bannedBy, playerName, playerId, banReason, playerImage,
 			);
-			msg.channel.send(`\`Player: ${playerName} has been banned\``, embed);
+			return msg.channel.send(`\`Player: ${playerName} has been banned\``, embed);
 		}
 		catch (error) {
 			console.error(error);
