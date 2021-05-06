@@ -31,7 +31,7 @@ module.exports = {
 
 			if (command.args && !args.length || args.length < command.reqarglength) {
 				let reply = 'Please provide the necessary amount of argument(s).';
-				reply += `\n Do this: \`${prefix}${command.name} ${command.usage}\``;
+				reply += `\n Do this: \`${prefix}${command.usage}\``;
 				return message.reply(reply);
 			}
 
@@ -63,9 +63,9 @@ module.exports = {
 			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
 			try {
-				command.execute(message, args);
 				console.log(lowerCaseMessage);
 				console.log(args);
+				command.execute(message, args);
 			}
 			catch (error) {
 				console.error(error);
