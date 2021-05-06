@@ -29,9 +29,7 @@ module.exports = class extends CommandClass {
 			});
 			embed.setDescription(commands.map(cmd => cmd.name).join(', '));
 			try {
-				await message.author.send(embed, {
-					split: true,
-				});
+				await message.author.send(embed);
 				return message.reply('Sent all of my commands to your DM.');
 			}
 			catch (error) {
