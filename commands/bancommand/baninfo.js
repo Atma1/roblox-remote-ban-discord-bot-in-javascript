@@ -6,9 +6,9 @@ module.exports = class extends DataBaseRelatedCommandClass {
 		super(
 			'baninfo',
 			'check ban information for the player specified assuming the player is in the database',
-			{
-				aliases: ['checkban', 'cb'],
-				example: '!baninfo joemama',
+			'baninfo playerName', {
+				aliases: ['checkban', 'cb', 'bi'],
+				example: 'baninfo joemama',
 				cooldown: 5,
 				args: true,
 				guildonly: true,
@@ -16,15 +16,19 @@ module.exports = class extends DataBaseRelatedCommandClass {
 			});
 	}
 	async execute(message, arg) {
-		const [ playername ] = arg;
+		const [playername] = arg;
 		const guildId = message.guild.id;
 		try {
 			const playerId = await this.getUserId(playername);
-			const [ playerImage, snapshot] = await Promise.all([
+			const [playerImage, snapshot] = await Promise.all([
 				this.getUserImg(playerId)
-					.catch(error => { throw(error);}),
+					.catch(error => {
+						throw (error);
+					}),
 				this.dataBase.collection(`Server: ${guildId}`).doc(`Player: ${playerId}`).get()
-					.catch(error => { throw (error);}),
+					.catch(error => {
+						throw (error);
+					}),
 			]);
 
 			if (!snapshot.exists) {
