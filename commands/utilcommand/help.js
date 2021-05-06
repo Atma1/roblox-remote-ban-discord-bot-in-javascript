@@ -8,9 +8,9 @@ module.exports = class extends CommandClass {
 		super(
 			'help',
 			'give help and info on the specified command',
-			'help commandName or nhelp', {
+			'help commandName/noCommandName', {
 				aliases: ['cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
-				example: 'cmdinfo ban',
+				example: 'help ban or just help',
 				cooldown: 5,
 				guildonly: true,
 			},
