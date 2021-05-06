@@ -6,9 +6,9 @@ module.exports = class extends DataBaseRelatedCommandClass {
 		super(
 			'ban',
 			'ban player. as of now the ban is permanent. to edit the ban, just rerun the command',
-			{
+			'ban playerName banReason', {
 				aliases: ['addban', 'banplayer', 'bn'],
-				example: '!ban joemama joemama is too fat',
+				example: 'ban joemama joemama is too fat',
 				cooldown: 5,
 				args: true,
 				guildonly: true,
@@ -18,26 +18,34 @@ module.exports = class extends DataBaseRelatedCommandClass {
 		);
 	}
 	async execute(msg, args) {
-		const guildId = msg.guild.id;
-		const playerName = args.shift();
-		const banReason = args.join(' ');
-		const bannedAt = this.dateformat(new Date);
-		const bannedBy = msg.author.tag;
 		try {
+			const guildId = msg.guild.id;
+			const playerName = args.shift();
+			const banReason = args.join(' ');
+			const bannedAt = this.dateformat(new Date);
+			const bannedBy = msg.author.tag;
+
 			const playerId = await this.getUserId(playerName);
 			const playerBanDocument = {
 				playerID: `${playerId}`,
-				playerName:`${playerName}`,
+				playerName: `${playerName}`,
 				banReason: `${banReason}`,
 				bannedBy: `${bannedBy}`,
 				bannedAt: `${bannedAt}`,
 			};
-			const [ playerImage ] = await Promise.all([
+			const [playerImage] = await Promise.all([
 				this.getUserImg(playerId)
-					.catch(error => { throw(error);}),
-				this.dataBase.collection(`Server: ${guildId}`).doc(`Player: ${playerId}`)
-					.set(playerBanDocument, { merge: true })
-					.catch(error => { throw(error);}),
+					.catch(error => {
+						throw (error);
+					}),
+				this.dataBase.collection(`Server: ${guildId}`)
+					.doc(`Player: ${playerId}`)
+					.set(playerBanDocument, {
+						merge: true,
+					})
+					.catch(error => {
+						throw (error);
+					}),
 			]);
 			const embed = new EmbededBanInfoMessage(
 				bannedAt, bannedBy, playerName, playerId, banReason, playerImage,

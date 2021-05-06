@@ -5,9 +5,9 @@ module.exports = class extends DataBaseRelatedCommandClass {
 		super(
 			'unban',
 			'remove the player from the database assuming the player is in the database',
-			{
-				aliases: ['ub', 'forgive'],
-				example: '!unban joemama',
+			'unban playerName', {
+				aliases: ['ub', 'forgive', 'amnesty'],
+				example: 'unban joemama',
 				args: true,
 				cooldown: 5,
 				permission: true,
@@ -15,7 +15,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 			});
 	}
 	async execute(msg, args) {
-		const [ playerName ] = args;
+		const [playerName] = args;
 		const guildId = msg.guild.id;
 		try {
 			const playerId = await this.getUserId(playerName);

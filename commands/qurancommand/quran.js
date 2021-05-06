@@ -8,17 +8,16 @@ module.exports = class extends CommandClass {
 		super(
 			'quran',
 			'get the specified chapter from the specified quran verse',
-			{
-				example : '!quran 39:53',
+			'quran chapterNumber:verseNumber', {
+				example : 'quran 39:53',
 				args : true,
 				cooldown : 5,
 			});
 	}
 
 	async execute(message, args) {
-		const chapterAndVerseNumber = args.toString().split(':');
-		const [ chapterNumber, verseNumber ] = chapterAndVerseNumber;
 		try {
+			const [ chapterNumber, verseNumber ] = args.toString().split(':');
 			const endPoint = 'https://api.quran.sutanlab.id/surah';
 			const response = await axios.get(`${endPoint}/${chapterNumber}/${verseNumber}`)
 				.then(res => res.data);
