@@ -18,7 +18,7 @@ A discord bot made in JavaScript that will enable the capabilty of remote ban us
 9. Deploy the bot to your server using the bot's invite link located in your discord developer portal and make sure every thing is norminal.
 10. Make sure in firebase firestore rules tab anyone can read the database otherwise you'll have to create a system on the roblox side to retrive the database authorization token.
 11. Create a connection from your roblox game to your Firebase Firestore database.
-12. Type !help for all  of the bot's commands.
+12. Type !(or type your costum prefix)help for all  of the bot's commands.
 
 # File
 
