@@ -6,7 +6,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 		super(
 			'ban',
 			'ban player. as of now the ban is permanent. to edit the ban, just rerun the command',
-			'ban playerName banReason', {
+			'playerName banReason', {
 				aliases: ['addban', 'banplayer', 'bn'],
 				example: 'ban joemama joemama is too fat',
 				cooldown: 5,
@@ -18,13 +18,13 @@ module.exports = class extends DataBaseRelatedCommandClass {
 		);
 	}
 	async execute(msg, args) {
-		try {
-			const guildId = msg.guild.id;
-			const playerName = args.shift();
-			const banReason = args.join(' ');
-			const bannedAt = this.dateformat(new Date);
-			const bannedBy = msg.author.tag;
+		const guildId = msg.guild.id;
+		const playerName = args.shift();
+		const banReason = args.join(' ');
+		const bannedAt = this.dateformat(new Date);
+		const bannedBy = msg.author.tag;
 
+		try {
 			const playerId = await this.getUserId(playerName);
 			const playerBanDocument = {
 				playerID: `${playerId}`,

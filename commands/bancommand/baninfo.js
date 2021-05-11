@@ -7,7 +7,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 			'baninfo',
 			'check ban information for the player specified assuming the player is in the database',
 			'baninfo playerName', {
-				aliases: ['checkban', 'cb', 'bi'],
+				aliases: ['checkban', 'cb', 'bi', 'retrive'],
 				example: 'baninfo joemama',
 				cooldown: 5,
 				args: true,
