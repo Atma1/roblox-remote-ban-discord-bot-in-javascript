@@ -33,13 +33,13 @@ module.exports = class extends CommandClass {
 					{ name: 'Arabic', value: trim(arab, 1024) },
 					{ name: 'Transliteration', value: trim(transliteral, 1024) },
 					{ name: 'Translation (EN)', value: trim(en, 1024) },
-					{ name: 'API', value: endPoint },
+					{ name: 'REST API', value: endPoint },
 				);
 			return message.channel.send(embed);
 		}
 		catch(error) {
 			console.error(error);
-			return message.channel.send('There was an error while retriving data!');
+			return message.channel.send(`${error}`);
 		}
 	}
 };
