@@ -23,17 +23,17 @@ module.exports = class extends DataBaseRelatedCommandClass {
 		if (!msg.guild.roles.cache.find(guildRole => guildRole.id === `${roleId}`)) {
 			return msg.channel.send('Make sure you input the correct role.');
 		}
+
 		try {
 			await this.dataBase.collection(`Server: ${guildId}`).doc(`Data for server: ${guildId}`)
 				.update({
 					authorizedRoles: this.FieldValue.arrayUnion(`${roleId}`),
 				});
-			return msg.channel.send(`${role} has been authorized to use the ban command!`);
+			return msg.channel.send(`${role} has been authorized to use permission restricted command!`);
 		}
 		catch (error) {
 			console.error(error);
 			return msg.channel.send(`There was an error while adding the role!\n${error}`);
 		}
-
 	}
 };
