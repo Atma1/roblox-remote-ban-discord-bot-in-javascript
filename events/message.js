@@ -10,8 +10,6 @@ const prefix = process.env.prefix;
 module.exports = {
 	async execute(client, message) {
 		const lowerCaseMessage = message.content.toLowerCase();
-		const guildId = message.guild.id;
-		const userRoles = message.member.roles.cache;
 
 		if (lowerCaseMessage.startsWith(prefix) && !message.author.bot) {
 			const args = message.content.slice(prefix.length).trim().split(/ +/);
@@ -21,7 +19,13 @@ module.exports = {
 
 			if (!command) return;
 
+			if (command.guildonly && message.channel.type === 'dm') {
+				return message.reply('Can\'t do that in dm!');
+			}
+
 			if (command.permission && !message.member.hasPermission('ADMINISTRATOR')) {
+				const guildId = message.guild.id;
+				const userRoles = message.member.roles.cache;
 				const authorizedRoles = await getAuthRoles(message, guildId);
 				const isUserAuthorized = checkPerm(convertUserRolesToArray(userRoles), authorizedRoles);
 				if (!isUserAuthorized) {
@@ -31,12 +35,8 @@ module.exports = {
 
 			if (command.args && !args.length || args.length < command.reqarglength) {
 				let reply = 'Please provide the necessary amount of argument(s).';
-				reply += `\n Do this: \`${prefix}${command.name} ${command.usage}\``;
+				reply += `\n Do this: \`${prefix}${command.usage}\``;
 				return message.reply(reply);
-			}
-
-			if (command.guildonly && message.channel.type === 'dm') {
-				return message.reply('Can\'t do that in dm!');
 			}
 
 			const {
@@ -63,9 +63,9 @@ module.exports = {
 			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
 			try {
-				command.execute(message, args);
 				console.log(lowerCaseMessage);
 				console.log(args);
+				command.execute(message, args);
 			}
 			catch (error) {
 				console.error(error);

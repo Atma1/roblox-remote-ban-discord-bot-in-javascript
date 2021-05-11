@@ -4,11 +4,10 @@ module.exports = class extends DataBaseRelatedCommandClass {
 	constructor() {
 		super(
 			'unban',
-			'remove player from the database assuming the player is in the database',
-			'playerusername',
-			{
-				aliases: ['ub', 'forgive'],
-				example: '!unban joemama',
+			'remove the player from the database assuming the player is in the database',
+			'unban playerName', {
+				aliases: ['ub', 'forgive', 'amnesty', 'remove'],
+				example: 'unban joemama',
 				args: true,
 				cooldown: 5,
 				permission: true,
@@ -16,11 +15,11 @@ module.exports = class extends DataBaseRelatedCommandClass {
 			});
 	}
 	async execute(msg, args) {
-		const [ playerName ] = args;
+		const [playerName] = args;
 		const guildId = msg.guild.id;
 		try {
-			const playerID = await this.getUserId(playerName);
-			await this.dataBase.collection(`Server: ${guildId}`).doc(`Player: ${playerID}`).delete();
+			const playerId = await this.getUserId(playerName);
+			await this.dataBase.collection(`Server: ${guildId}`).doc(`Player: ${playerId}`).delete();
 			return msg.channel.send(`Player: ${playerName}, removed from Firebase Firestore.`);
 		}
 		catch (error) {

@@ -17,6 +17,8 @@
     "dotenv": "^8.2.0",
     "firebase": "^8.2.9",
     "firebase-admin": "^9.5.0",
+    "lodash": "^4.17.21",
+    "lodash-migrate": "^0.3.16",
     "path": "^0.12.7"
   },
   "devDependencies": {

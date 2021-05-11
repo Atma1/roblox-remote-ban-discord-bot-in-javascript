@@ -1,43 +1,44 @@
-require('dotenv').config();
-const prefix = process.env.prefix;
 const CommandClass = require('../../util/CommandClass');
+const {
+	MessageEmbed,
+} = require('discord.js');
 
 module.exports = class extends CommandClass {
 	constructor() {
 		super(
 			'help',
-			'give help',
-			'commandname',
-			{	aliases: ['help!11!!1', 'cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
-				example: '!cmdinfo ban',
+			'give help and info on the specified command',
+			'help commandName/noCommandName', {
+				aliases: ['cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
+				example: 'help ban or just help',
 				cooldown: 5,
-				guildonly: true },
+				guildonly: true,
+			},
 		);
 	}
-
-	execute(message, args) {
-		const data = [];
+	async execute(message, args) {
+		const embed = new MessageEmbed;
 		const {
 			commands,
 		} = message.client;
 
 		if (!args.length) {
-			data.push('Here\'s a list of my commands');
-			data.push(commands.map(cmd => cmd.name).join(', '));
-			data.push(`\nIf you want info on specific command send \`${prefix}help [command name]\` and don'\t send it here!`);
-
-			return message.author.send(data, {
-				split: true,
-			})
-				.then(() => {
-					message.reply('Sent all of my cmds to your DM.');
-				})
-				.catch(err => {
-					console.error(err);
-					message.reply('Can\'t send my cmds to your DM! Is your DM closed?.');
-				});
+			embed.setTitle('Commands List');
+			embed.addFields({
+				name: 'Important to Know❗', value: `\nIf you want info on specific command send ${this.prefix}help [commandName] and don't send it here!`,
+			});
+			embed.setDescription(commands.map(cmd => cmd.name).join(', '));
+			try {
+				await message.author.send(embed);
+				return message.reply('Sent all of my commands to your DM.');
+			}
+			catch (error) {
+				console.error(error);
+				return message.reply('Can\'t send my commands to your DM! Is your DM closed?.');
+			}
 		}
-		const [ cmdName ] = args;
+
+		const [cmdName] = args;
 		cmdName.toLowerCase();
 		const command = commands.get(cmdName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 
@@ -45,17 +46,40 @@ module.exports = class extends CommandClass {
 			return message.reply('Make sure you type the correct command.');
 		}
 
-		data.push(`**Name:** ${command.name}`);
-		data.push(`**Cooldown:** ${command.cooldown || 3} second(s).`);
-
-		if (command.aliases) data.push(`**Aliases:** ${command.aliases.join(', ')}.`);
-		if (command.desc) data.push(`**Desc:** ${command.desc}.`);
-		if (command.usage) data.push(`**Usage:** \`${prefix}${command.name} ${command.usage}\``);
-		if (command.example) data.push(`**Example:** ${command.example}`);
-		if (command.permission) data.push('**Require permission:** True.');
-
-		message.channel.send(data, {
-			split: true,
+		embed.setColor('#EFFF00');
+		embed.setTitle('Command Information');
+		embed.addFields({
+			name: 'Command Name:',
+			value: `${command.name}`,
+		}, {
+			name: 'Command Desc:',
+			value: `${command.desc}`,
+		}, {
+			name: 'Command Cooldown:',
+			value: `${command.cooldown || 3} second(s)`,
+		}, {
+			name: 'Command Usage:',
+			value: `${command.usage}`,
 		});
+
+		if (command.example) {
+			embed.addFields({
+				name: 'Command Example:',
+				value: `${this.prefix}${command.example}`,
+			});
+		}
+		if (command.aliases) {
+			embed.addFields({
+				name: 'Command Aliases:',
+				value: `${command.aliases.join(', ')}`,
+			});
+		}
+		if (command.permission) {
+			embed.addFields({
+				name: 'Require Permission:',
+				value: true,
+			});
+		}
+		message.channel.send(embed);
 	}
 };

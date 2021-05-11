@@ -4,12 +4,11 @@ const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandCl
 module.exports = class extends DataBaseRelatedCommandClass {
 	constructor() {
 		super(
-			'fartradar',
-			'check ban info for the player specified assuming the player is in the database',
-			'playerName',
-			{
-				aliases: ['checkban', 'cb'],
-				example: '!baninfo joemama',
+			'baninfo',
+			'check ban information for the player specified assuming the player is in the database',
+			'baninfo playerName', {
+				aliases: ['checkban', 'cb', 'bi', 'retrive'],
+				example: 'baninfo joemama',
 				cooldown: 5,
 				args: true,
 				guildonly: true,
@@ -17,16 +16,26 @@ module.exports = class extends DataBaseRelatedCommandClass {
 			});
 	}
 	async execute(message, arg) {
-		const [ playername ] = arg;
+		const [playername] = arg;
 		const guildId = message.guild.id;
 		try {
 			const playerId = await this.getUserId(playername);
-			const playerImage = await this.getUserImg(playerId);
-			const snap = await this.dataBase.collection(`Server: ${guildId}`).doc(`Player: ${playerId}`).get();
-			if (!snap.exists) {
+			const [playerImage, snapshot] = await Promise.all([
+				this.getUserImg(playerId)
+					.catch(error => {
+						throw (error);
+					}),
+				this.dataBase.collection(`Server: ${guildId}`).doc(`Player: ${playerId}`).get()
+					.catch(error => {
+						throw (error);
+					}),
+			]);
+
+			if (!snapshot.exists) {
 				throw new Error(`No data exists for player ${playername}.`);
 			}
-			const data = snap.data();
+
+			const data = snapshot.data();
 			const { bannedAt } = data;
 			const { bannedBy } = data;
 			const { playerName } = data;

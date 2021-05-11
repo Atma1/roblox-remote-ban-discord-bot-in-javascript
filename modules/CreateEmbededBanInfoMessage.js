@@ -3,12 +3,12 @@ const {
 } = require('discord.js');
 
 module.exports = class EmbededBanInfoMessage extends MessageEmbed {
-	constructor(bannedAt, bannedBy, playerName, playerID, banReason, userImage) {
+	constructor(bannedAt, bannedBy, playerName, playerId, banReason, userImage) {
 		super();
-		super.setTitle(`Ban Info For Player ${playerName}`);
+		super.setTitle(`Ban Info for Player ${playerName}`);
 		super.setThumbnail(userImage);
-		super.setURL(`https://www.roblox.com/users/${playerID}`);
-		super.setColor('DARK_NAVY');
+		super.setURL(`https://www.roblox.com/users/${playerId}`);
+		super.setColor('EFFF00');
 		super.setTimestamp();
 		super.addFields({
 			name: 'Player Name',
@@ -16,7 +16,7 @@ module.exports = class EmbededBanInfoMessage extends MessageEmbed {
 			inline: true,
 		}, {
 			name: 'Player Id',
-			value: `${playerID}`,
+			value: `${playerId}`,
 			inline: true,
 		}, {
 			name: '\u200B',

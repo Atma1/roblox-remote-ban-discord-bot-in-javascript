@@ -4,11 +4,11 @@ module.exports = class extends DataBaseRelatedCommandClass {
 	constructor() {
 		super(
 			'authorizerole',
-			'authorize specific role to ban command',
-			'@roletobeauth',
-			{
-				aliases: ['authban', 'permitban', 'authbanforrole', 'auth'],
-				example: '!auth @joemama',
+			'authorize specific role to command that require permission',
+			'authorizerole @role', {
+				aliases: ['auth', 'permit', 'authforrole'],
+				example: 'auth @joemama',
+				cooldown: 5,
 				args: true,
 				guildonly: true,
 				permission: true,
@@ -16,22 +16,24 @@ module.exports = class extends DataBaseRelatedCommandClass {
 	}
 
 	async execute(msg, args) {
-		const roleId = args[0].toString().match(/[0-9]\d+/g);
+		const [ role ] = args;
+		const roleId = role.match(/[0-9]\d+/g);
+		const guildId = msg.guild.id;
+
 		if (!msg.guild.roles.cache.find(guildRole => guildRole.id === `${roleId}`)) {
 			return msg.channel.send('Make sure you input the correct role.');
 		}
+
 		try {
-			const guildId = msg.guild.id;
 			await this.dataBase.collection(`Server: ${guildId}`).doc(`Data for server: ${guildId}`)
 				.update({
-					'authorizedRoles': this.FieldValue.arrayUnion(`${roleId}`),
+					authorizedRoles: this.FieldValue.arrayUnion(`${roleId}`),
 				});
-			msg.channel.send(`${args} has been authorized to use the ban command!`);
+			return msg.channel.send(`${role} has been authorized to use permission restricted command!`);
 		}
 		catch (error) {
 			console.error(error);
 			return msg.channel.send(`There was an error while adding the role!\n${error}`);
 		}
-
 	}
 };

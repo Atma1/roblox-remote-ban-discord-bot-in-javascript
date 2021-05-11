@@ -7,19 +7,17 @@ module.exports = class extends CommandClass {
 	constructor() {
 		super(
 			'quran',
-			'send surah from verse',
-			'chapterNumber:verseNumber',
-			{
-				example : '!quran 39:53',
+			'get the specified chapter from the specified quran verse',
+			'quran chapterNumber:verseNumber', {
+				example : 'quran 39:53',
 				args : true,
 				cooldown : 5,
 			});
 	}
 
 	async execute(message, args) {
-		const chapterAndVerseNumber = args.toString().split(':');
-		const [chapterNumber, verseNumber] = chapterAndVerseNumber;
 		try {
+			const [ chapterNumber, verseNumber ] = args.toString().split(':');
 			const endPoint = 'https://api.quran.sutanlab.id/surah';
 			const response = await axios.get(`${endPoint}/${chapterNumber}/${verseNumber}`)
 				.then(res => res.data);
@@ -35,13 +33,13 @@ module.exports = class extends CommandClass {
 					{ name: 'Arabic', value: trim(arab, 1024) },
 					{ name: 'Transliteration', value: trim(transliteral, 1024) },
 					{ name: 'Translation (EN)', value: trim(en, 1024) },
-					{ name: 'API', value: endPoint },
+					{ name: 'REST API', value: endPoint },
 				);
 			return message.channel.send(embed);
 		}
 		catch(error) {
 			console.error(error);
-			return message.channel.send('There was an error while retriving data!');
+			return message.channel.send(`${error}`);
 		}
 	}
 };
