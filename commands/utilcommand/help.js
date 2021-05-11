@@ -24,8 +24,8 @@ module.exports = class extends CommandClass {
 
 		if (!args.length) {
 			embed.setTitle('Commands List');
-			embed.fields({
-				name: 'Important to Know❗', value: '\nIf you want info on specific command send `nhelp [command name]` and don\'\t send it here!',
+			embed.addFields({
+				name: 'Important to Know❗', value: `\nIf you want info on specific command send ${this.prefix}help [commandName] and don't send it here!`,
 			});
 			embed.setDescription(commands.map(cmd => cmd.name).join(', '));
 			try {
