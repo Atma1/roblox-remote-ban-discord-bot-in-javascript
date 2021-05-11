@@ -8,7 +8,7 @@ Before starting I need to tell you something the process of setting up the bot m
 
 ### Prerequisites
 
-The things you need before installing the software.
+The things you need before installing the bot.
 
 * Some understanding of JavaScript(In case of bugs)
 * Firebase Firestore account(The spark plan is free)
