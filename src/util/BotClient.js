@@ -10,7 +10,6 @@ module.exports = class BotClient extends Client {
 		super();
 		this.token = token;
 		this.serviceAccount = serviceAccount;
-		this.cachedAuthorizedRoles = undefined;
 	}
 
 	initFireBaseFireStoreApp() {
