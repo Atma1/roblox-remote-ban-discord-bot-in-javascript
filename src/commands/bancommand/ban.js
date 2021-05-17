@@ -1,9 +1,11 @@
 const EmbededBanInfoMessage = require('../../modules/CreateEmbededBanInfoMessage');
 const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandClass');
-const { PlayerBanDocument } = require('../../util/util');
+const { PlayerBanDocument, playerBanDocConverter } = require('../../util/util');
+
 module.exports = class extends DataBaseRelatedCommandClass {
-	constructor() {
+	constructor(botClient) {
 		super(
+			botClient,
 			'ban',
 			'ban player. as of now the ban is permanent. to edit the ban, just rerun the command',
 			'playerName banReason', {
@@ -37,6 +39,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 					.doc('banList')
 					.collection('bannedPlayerList')
 					.doc(`Player:${playerId}`)
+					.withConverter(playerBanDocConverter)
 					.set(playerBanDoc, {
 						merge: true,
 					})

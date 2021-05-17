@@ -4,8 +4,9 @@ const {
 } = require('discord.js');
 
 module.exports = class extends CommandClass {
-	constructor() {
+	constructor(botClient) {
 		super(
+			botClient,
 			'help',
 			'give help and info on the specified command',
 			'help commandName/noCommandName', {
@@ -20,7 +21,7 @@ module.exports = class extends CommandClass {
 		const embed = new MessageEmbed;
 		const {
 			commands,
-		} = message.client;
+		} = this.botClient;
 
 		if (!args.length) {
 			embed.setTitle('Commands List');

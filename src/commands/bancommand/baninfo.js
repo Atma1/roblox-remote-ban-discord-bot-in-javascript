@@ -2,8 +2,9 @@ const EmbededBanInfoMessage = require('../../modules/CreateEmbededBanInfoMessage
 const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandClass');
 
 module.exports = class extends DataBaseRelatedCommandClass {
-	constructor() {
+	constructor(botClient) {
 		super(
+			botClient,
 			'baninfo',
 			'check ban information for the player specified assuming the player is in the database',
 			'baninfo playerName', {

@@ -15,21 +15,14 @@ module.exports = class extends EventClass {
 			const guildId = guildData.id;
 			const ownerTag = await this.botClient.users.fetch(guildData.ownerID)
 				.then(user => user.tag);
-			const batch = DB.batch();
-			batch.set(
-				DB.collection('serverDataBase').doc('serverData'), {
-					'guildID': guildId,
-					'guildName': guildData.name,
-					'guildOwnerID': guildData.ownerID,
-					'guildOwnerTag': ownerTag,
-					'authorizedRoles': [],
-				},
-			);
-			batch.set(
-				DB.collection('serverDataBase').doc('banList')
-					.collection('bannedPlayerList'),
-			);
-			batch.commit();
+			await DB.collection('serverDataBase').doc('serverData').create({
+				'guildID': guildId,
+				'guildName': guildData.name,
+				'guildOwnerID': guildData.ownerID,
+				'guildOwnerTag': ownerTag,
+				'authorizedRoles': [],
+			});
+			console.log('Database created.');
 		}
 		catch (error) {
 			console.error(error);

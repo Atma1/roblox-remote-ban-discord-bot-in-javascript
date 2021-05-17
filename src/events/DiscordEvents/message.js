@@ -24,7 +24,9 @@ module.exports = class extends EventClass {
 			const command = this.botClient.commands.get(commandName) ||
 				this.botClient.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-			if (!command) return;
+			if (!command) {
+				return message.reply('Not a cmd!');
+			}
 
 			if (command.guildonly && message.channel.type === 'dm') {
 				return message.reply('Can\'t do that in dm!');
@@ -56,6 +58,7 @@ module.exports = class extends EventClass {
 			const now = Date.now();
 			const cooldownAmount = (command.cooldown || 3) * 1000;
 			const timestamps = cooldowns.get(command.name);
+			console.log(lowerCaseMessage);
 
 			if (timestamps.has(message.author.id)) {
 				const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
@@ -70,7 +73,6 @@ module.exports = class extends EventClass {
 			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
 			try {
-				console.log(lowerCaseMessage);
 				console.log(args);
 				command.execute(message, args);
 			}

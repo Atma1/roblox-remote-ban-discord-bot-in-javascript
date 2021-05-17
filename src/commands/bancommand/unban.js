@@ -1,8 +1,9 @@
 const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandClass');
 
 module.exports = class extends DataBaseRelatedCommandClass {
-	constructor() {
+	constructor(botClient) {
 		super(
+			botClient,
 			'unban',
 			'remove the player from the database assuming the player is in the database',
 			'unban playerName', {

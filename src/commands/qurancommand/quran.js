@@ -5,8 +5,9 @@ const endPoint = 'https://api.quran.sutanlab.id/surah';
 const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
 
 module.exports = class extends CommandClass {
-	constructor() {
+	constructor(botClient) {
 		super(
+			botClient,
 			'quran',
 			'get the specified chapter from the specified quran verse',
 			'quran chapterNumber:verseNumber', {
