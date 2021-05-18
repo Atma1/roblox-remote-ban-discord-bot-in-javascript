@@ -10,6 +10,7 @@ module.exports = class BotClient extends Client {
 		super();
 		this.token = token;
 		this.serviceAccount = serviceAccount;
+		this.cachedAuthorizedRoles = [];
 	}
 
 	initFireBaseFireStoreApp() {
@@ -20,7 +21,7 @@ module.exports = class BotClient extends Client {
 
 	async startBot() {
 		this.initFireBaseFireStoreApp();
-		this.cachedAuthorizedRoles = util.getAuthRoles(admin.firestore());
+		this.cachedAuthorizedRoles.push(util.getAuthRoles(admin.firestore()));
 		util.loadCommands(this);
 		util.loadEvents(this);
 		super.login(this.token);
