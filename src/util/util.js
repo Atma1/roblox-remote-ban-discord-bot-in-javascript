@@ -7,13 +7,21 @@ const PlayerBanDocumentCreator = class PlayerBanDocument {
 		this.banReason = banReason;
 		this.bannedBy = bannedBy;
 		this.bannedAt = bannedAt;
-		return this;
 	}
 };
 
-
 const playerDocConverter = {
 	toFirestore: (banDoc) => {
+		return {
+			playerID: banDoc.playerID,
+			playerName: banDoc.playerName,
+			banReason: banDoc.banReason,
+			bannedBy: banDoc.bannedBy,
+			bannedAt: banDoc.bannedAt,
+		};
+	},
+	fromFirestore: (snapshot, options) => {
+		const banDoc = snapshot.data(options);
 		return {
 			playerID: banDoc.playerID,
 			playerName: banDoc.playerName,
@@ -46,9 +54,7 @@ const retriveAuthroles = async (DB) => {
 			throw new Error('No authorized roles found. Possiblity of an error during the creation of the server\'s database.');
 		}
 		const data = snapshot.data();
-		const {
-			authorizedRoles,
-		} = data;
+		const { authorizedRoles } = data;
 		if (!authorizedRoles.length) {
 			return console.warn('Reminder❗ The owner needs to add roles that is authorized to use the commands.');
 		}
