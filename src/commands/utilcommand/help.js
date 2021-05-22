@@ -19,9 +19,7 @@ module.exports = class extends CommandClass {
 	}
 	async execute(message, args) {
 		const embed = new MessageEmbed;
-		const {
-			commands,
-		} = this.botClient;
+		const { commands } = this.botClient;
 
 		if (!args.length) {
 			embed.setTitle('Commands List');
@@ -30,6 +28,7 @@ module.exports = class extends CommandClass {
 				value: `\nIf you want info on specific command send ${this.prefix}help [commandName] and don't send it here!`,
 			});
 			embed.setDescription(commands.map(cmd => cmd.name).join(', '));
+
 			try {
 				await message.author.send(embed);
 				return message.reply('Sent all of my commands to your DM.');

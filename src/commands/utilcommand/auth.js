@@ -18,9 +18,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 	async execute(msg, args) {
 		const [role] = args;
 		const roleId = role.match(/[0-9]\d+/g);
-		const {
-			cachedAuthorizedRoles,
-		} = this.botClient;
+		const { cachedAuthorizedRoles } = this.botClient;
 
 		if (!msg.guild.roles.cache.find(guildRole => guildRole.id === `${roleId}`)) {
 			return msg.channel.send('Make sure you input the correct role.');
@@ -36,6 +34,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 			console.error(error);
 			return msg.channel.send(`There was an error while adding the role!\n${error}`);
 		}
+
 		cachedAuthorizedRoles.push(roleId);
 		return msg.channel.send(`${role} has been authorized to use permission restricted command!`);
 	}
