@@ -1,6 +1,8 @@
 const EmbededBanInfoMessage = require('../../modules/CreateEmbededBanInfoMessage');
 const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandClass');
-const { PlayerBanDocument, playerBanDocConverter } = require('../../util/util');
+const {
+	PlayerBanDocument,
+} = require('../../util/util');
 
 module.exports = class extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -19,11 +21,11 @@ module.exports = class extends DataBaseRelatedCommandClass {
 			},
 		);
 	}
-	async execute(msg, args) {
+	async execute(message, args) {
 		const playerName = args.shift();
 		const banReason = args.join(' ');
 		const bannedAt = this.dateformat(Date.now());
-		const bannedBy = msg.author.tag;
+		const bannedBy = message.author.tag;
 
 		try {
 			const playerId = await this.getUserId(playerName);
@@ -31,30 +33,20 @@ module.exports = class extends DataBaseRelatedCommandClass {
 				playerId, playerName, banReason, bannedBy, bannedAt,
 			);
 			const [playerImage] = await Promise.all([
-				this.getUserImg(playerId)
-					.catch(error => {
-						throw (error);
-					}),
-				this.dataBase.collection('serverDataBase')
-					.doc('banList')
-					.collection('bannedPlayerList')
-					.doc(`Player:${playerId}`)
-					.withConverter(playerBanDocConverter)
-					.set(playerBanDoc, {
-						merge: true,
-					})
-					.catch(error => {
-						throw (error);
-					}),
-			]);
+				this.getUserImg(playerId),
+				this.addPlayerToBanList(playerBanDoc),
+			])
+				.catch(error => {
+					throw (error);
+				});
 			const embed = new EmbededBanInfoMessage(
 				bannedAt, bannedBy, playerName, playerId, banReason, playerImage,
 			);
-			return msg.channel.send(`\`Player: ${playerName} has been banned.\``, embed);
+			return message.channel.send(`\`Player: ${playerName} has been banned.\``, embed);
 		}
 		catch (error) {
 			console.error(error);
-			return msg.channel.send(`There was an error while banning the player!\n${error}`);
+			return message.channel.send(`There was an error while banning the player!\n${error}`);
 		}
 	}
 };

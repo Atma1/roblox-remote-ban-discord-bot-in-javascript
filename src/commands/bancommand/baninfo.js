@@ -18,41 +18,39 @@ module.exports = class extends DataBaseRelatedCommandClass {
 	}
 	async execute(message, arg) {
 		const [playername] = arg;
+		const msg = await message.channel.send('Attempting to retrive the document from the database...');
 		try {
 			const playerId = await this.getUserId(playername);
-			const [playerImage, snapshot] = await Promise.all([
-				this.getUserImg(playerId)
-					.catch(error => {
-						throw (error);
-					}),
-				this.dataBase.collection('serverDataBase')
-					.doc('banList')
-					.collection('bannedPlayerList')
-					.doc(`Player:${playerId}`)
-					.get()
-					.catch(error => {
-						throw (error);
-					}),
-			]);
+			const [snapshot, playerImage] = await Promise.all([
+				this.retriveBanDocument(playerId),
+				this.getUserImg(playerId),
+			])
+				.catch(err => {
+					throw (err);
+				});
 
 			if (!snapshot.exists) {
-				throw new Error(`No data exists for player ${playername}.`);
+				throw new Error(`${playername} is not found in the database.`);
 			}
 
 			const data = snapshot.data();
-			const { bannedAt } = data;
-			const { bannedBy } = data;
-			const { playerName } = data;
-			const { playerID } = data;
-			const { banReason } = data;
+
+			const {
+				playerID,
+				playerName,
+				banReason,
+				bannedBy,
+				bannedAt,
+			} = data;
+
 			const embed = new EmbededBanInfoMessage(
 				bannedAt, bannedBy, playerName, playerID, banReason, playerImage,
 			);
-			return message.channel.send(embed);
+			return msg.edit(null, embed);
 		}
 		catch (error) {
 			console.error(error);
-			return message.channel.send(`There was an error while attempting to retrive the data!\n${error}`);
+			return msg.edit(`There was an error while attempting to retrive the document!\n${error}`);
 		}
 	}
 };

@@ -19,11 +19,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 		const [playerName] = args;
 		try {
 			const playerId = await this.getUserId(playerName);
-			await this.dataBase.collection('serverDataBase')
-				.doc('banList')
-				.collection('bannedPlayerList')
-				.doc(`Player:${playerId}`)
-				.delete();
+			this.deletePlayerBanDocument(playerId);
 		}
 		catch (error) {
 			console.error(error);
