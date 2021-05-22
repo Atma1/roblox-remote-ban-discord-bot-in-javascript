@@ -24,9 +24,7 @@ module.exports = class extends EventClass {
 			const command = this.botClient.commands.get(commandName) ||
 				this.botClient.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-			if (!command) {
-				return message.reply('Not a cmd!');
-			}
+			if (!command) return;
 
 			if (command.guildonly && message.channel.type === 'dm') {
 				return message.reply('Can\'t do that in dm!');
