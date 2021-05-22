@@ -33,6 +33,5 @@ module.exports = class EmbededBanInfoMessage extends MessageEmbed {
 			name: 'Banned At',
 			value: `${bannedAt}`,
 		});
-		return this;
 	}
 };
