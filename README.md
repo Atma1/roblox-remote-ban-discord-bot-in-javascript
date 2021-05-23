@@ -46,4 +46,5 @@ The things you need before installing the bot.
 
 .env File: 
 [env.zip](https://github.com/Atma1/remote-ban-discord-bot-in-jawascript/files/6277583/env.zip)
-# Need help or have a question? HMU on Discord FreshFea#8153
+## Support 
+Need help or have a question? HMU on Discord FreshFea#8153
