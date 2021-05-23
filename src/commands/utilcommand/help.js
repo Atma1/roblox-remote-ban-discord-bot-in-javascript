@@ -4,8 +4,9 @@ const {
 } = require('discord.js');
 
 module.exports = class extends CommandClass {
-	constructor() {
+	constructor(botClient) {
 		super(
+			botClient,
 			'help',
 			'give help and info on the specified command',
 			'help commandName/noCommandName', {
@@ -18,16 +19,16 @@ module.exports = class extends CommandClass {
 	}
 	async execute(message, args) {
 		const embed = new MessageEmbed;
-		const {
-			commands,
-		} = message.client;
+		const { commands } = this.botClient;
 
 		if (!args.length) {
 			embed.setTitle('Commands List');
 			embed.addFields({
-				name: 'Important to Know❗', value: `\nIf you want info on specific command send ${this.prefix}help [commandName] and don't send it here!`,
+				name: 'Important to Know❗',
+				value: `\nIf you want info on specific command send ${this.prefix}help [commandName] and don't send it here!`,
 			});
 			embed.setDescription(commands.map(cmd => cmd.name).join(', '));
+
 			try {
 				await message.author.send(embed);
 				return message.reply('Sent all of my commands to your DM.');
@@ -59,7 +60,7 @@ module.exports = class extends CommandClass {
 			value: `${command.cooldown || 3} second(s)`,
 		}, {
 			name: 'Command Usage:',
-			value: `${command.usage}`,
+			value: `${this.prefix}${command.usage}`,
 		});
 
 		if (command.example) {

@@ -1,9 +1,10 @@
 require('dotenv').config();
 module.exports = class Command {
-	constructor(name, desc, usage, commandOptions = {}) {
+	constructor(botClient, name, desc, usage, commandOptions = {}) {
 		this.name = name;
 		this.desc = desc;
 		this.usage = usage;
+		this.botClient = botClient;
 		this.prefix = process.env.prefix;
 		this.aliases = commandOptions.aliases || false;
 		this.example = commandOptions.example || 'No example';

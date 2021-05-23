@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const serviceAccount = require('./serviceAccount.json');
-const BotClient = require('./util/BotClient');
+const BotClient = require('./src/util/BotClient');
 require('dotenv').config();
 const token = process.env.token;
 

@@ -1,13 +1,16 @@
-const { Client } = require('discord.js');
-const util = require('./util') ;
-const admin = require('firebase-admin') ;
+const {
+	Client,
+} = require('discord.js');
+const util = require('./util');
+const admin = require('firebase-admin');
 
-module.exports = class DiscordClient extends Client {
+module.exports = class BotClient extends Client {
 
 	constructor(token, serviceAccount) {
 		super();
 		this.token = token;
 		this.serviceAccount = serviceAccount;
+		this.cachedAuthorizedRoles = [];
 	}
 
 	initFireBaseFireStoreApp() {
@@ -18,6 +21,7 @@ module.exports = class DiscordClient extends Client {
 
 	async startBot() {
 		this.initFireBaseFireStoreApp();
+		this.cachedAuthorizedRoles.push(util.getAuthRoles(admin.firestore()));
 		util.loadCommands(this);
 		util.loadEvents(this);
 		super.login(this.token);

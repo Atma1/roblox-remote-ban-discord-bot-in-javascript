@@ -1,8 +1,9 @@
 const CommandClass = require('../../util/CommandClass');
 
 module.exports = class extends CommandClass {
-	constructor() {
+	constructor(botClient) {
 		super(
+			botClient,
 			'poop',
 			'make poop',
 			'poop',

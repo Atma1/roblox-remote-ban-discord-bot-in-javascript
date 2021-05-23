@@ -1,8 +1,9 @@
 const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandClass');
 
 module.exports = class extends DataBaseRelatedCommandClass {
-	constructor() {
+	constructor(botClient) {
 		super(
+			botClient,
 			'authorizerole',
 			'authorize specific role to command that require permission',
 			'authorizerole @role', {
@@ -14,26 +15,27 @@ module.exports = class extends DataBaseRelatedCommandClass {
 				permission: true,
 			});
 	}
-
 	async execute(msg, args) {
-		const [ role ] = args;
+		const [role] = args;
 		const roleId = role.match(/[0-9]\d+/g);
-		const guildId = msg.guild.id;
+		const { cachedAuthorizedRoles } = this.botClient;
 
 		if (!msg.guild.roles.cache.find(guildRole => guildRole.id === `${roleId}`)) {
 			return msg.channel.send('Make sure you input the correct role.');
 		}
 
 		try {
-			await this.dataBase.collection(`Server: ${guildId}`).doc(`Data for server: ${guildId}`)
+			await this.dataBase.collection('serverDataBase').doc('serverData')
 				.update({
-					authorizedRoles: this.FieldValue.arrayUnion(`${roleId}`),
+					authorizedRoles: this.firestore.FieldValue.arrayUnion(`${roleId}`),
 				});
-			return msg.channel.send(`${role} has been authorized to use permission restricted command!`);
 		}
 		catch (error) {
 			console.error(error);
 			return msg.channel.send(`There was an error while adding the role!\n${error}`);
 		}
+
+		cachedAuthorizedRoles.push(roleId);
+		return msg.channel.send(`${role} has been authorized to use permission restricted command!`);
 	}
 };

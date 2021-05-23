@@ -1,11 +1,13 @@
 const { MessageEmbed } = require('discord.js');
 const CommandClass = require('../../util/CommandClass');
 const axios = require('axios');
+const endPoint = 'https://api.quran.sutanlab.id/surah';
 const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
 
 module.exports = class extends CommandClass {
-	constructor() {
+	constructor(botClient) {
 		super(
+			botClient,
 			'quran',
 			'get the specified chapter from the specified quran verse',
 			'quran chapterNumber:verseNumber', {
@@ -14,11 +16,9 @@ module.exports = class extends CommandClass {
 				cooldown : 5,
 			});
 	}
-
 	async execute(message, args) {
 		try {
-			const [ chapterNumber, verseNumber ] = args.toString().split(':');
-			const endPoint = 'https://api.quran.sutanlab.id/surah';
+			const [chapterNumber, verseNumber] = args.toString().split(':');
 			const response = await axios.get(`${endPoint}/${chapterNumber}/${verseNumber}`)
 				.then(res => res.data);
 			const { data: { text: { arab } } } = response;
@@ -27,7 +27,7 @@ module.exports = class extends CommandClass {
 			const { data: { audio: { primary } } } = response;
 			const embed = new MessageEmbed()
 				.setColor ('#EFFF00')
-				.setTitle (`Quran ${args}. Click for audio.`)
+				.setTitle (`Quran ${args} Click for audio`)
 				.setURL (primary)
 				.addFields (
 					{ name: 'Arabic', value: trim(arab, 1024) },

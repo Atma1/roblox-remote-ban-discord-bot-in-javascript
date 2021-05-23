@@ -5,12 +5,12 @@ const {
 module.exports = class EmbededBanInfoMessage extends MessageEmbed {
 	constructor(bannedAt, bannedBy, playerName, playerId, banReason, userImage) {
 		super();
-		super.setTitle(`Ban Info for Player ${playerName}`);
-		super.setThumbnail(userImage);
-		super.setURL(`https://www.roblox.com/users/${playerId}`);
-		super.setColor('EFFF00');
-		super.setTimestamp();
-		super.addFields({
+		this.setTitle(`Ban Info for Player ${playerName}`);
+		this.setThumbnail(userImage);
+		this.setURL(`https://www.roblox.com/users/${playerId}`);
+		this.setColor('EFFF00');
+		this.setTimestamp();
+		this.addFields({
 			name: 'Player Name',
 			value: `${playerName}`,
 			inline: true,
@@ -33,6 +33,5 @@ module.exports = class EmbededBanInfoMessage extends MessageEmbed {
 			name: 'Banned At',
 			value: `${bannedAt}`,
 		});
-		return this;
 	}
 };
