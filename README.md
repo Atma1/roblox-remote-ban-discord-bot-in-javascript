@@ -18,6 +18,7 @@ The things you need before installing the bot.
 ### Installation
 
 ```
+
 1. Create a discord bot by going to discord developer portal and create a Firebase Firestore account.
 2. Get an IDE or code editor-e.g. Visual Code Studio or Repl.
 3. Clone the repository.
@@ -30,7 +31,9 @@ The things you need before installing the bot.
 9. Deploy the bot to your server using the bot's invite link located in your discord developer portal and make sure every thing is norminal.
 10. Make sure in firebase firestore rules tab anyone can read the database otherwise you'll have to create a system on the roblox side to retrive the database authorization token(very tedious but worth the extra security).
 11. Create a connection from your roblox game to your Firebase Firestore database using firebase Firestore REST API.
-12. Type !(or type your custom prefix)help for all  of the bot's commands.
+12. Add role for permission restricted command.
+13. Type !(or type your custom prefix)help for all  of the bot's commands.
+
 ```
 
 ## Additional Documentation
