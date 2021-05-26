@@ -10,7 +10,7 @@ module.exports = class extends CommandClass {
 			botClient,
 			'quran',
 			'get the specified chapter from the specified quran verse',
-			'quran chapterNumber:verseNumber', {
+			'chapterNumber:verseNumber', {
 				example : 'quran 39:53',
 				args : true,
 				cooldown : 5,
