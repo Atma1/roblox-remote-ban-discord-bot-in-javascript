@@ -7,7 +7,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 			botClient,
 			'baninfo',
 			'check ban information for the player specified assuming the player is in the database',
-			'baninfo playerName', {
+			'playerName', {
 				aliases: ['checkban', 'cb', 'bi', 'retrive'],
 				example: 'baninfo joemama',
 				cooldown: 5,
@@ -43,8 +43,9 @@ module.exports = class extends DataBaseRelatedCommandClass {
 				bannedAt,
 			} = data;
 
+			const formattedDate = this.dateformat(bannedAt);
 			const embed = new EmbededBanInfoMessage(
-				bannedAt, bannedBy, playerName, playerID, banReason, playerImage,
+				formattedDate, bannedBy, playerName, playerID, banReason, playerImage,
 			);
 			return msg.edit(null, embed);
 		}
