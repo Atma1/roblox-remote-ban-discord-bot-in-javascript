@@ -15,7 +15,7 @@ module.exports = class extends EventClass {
 			const guildId = guildData.id;
 			const ownerTag = await this.botClient.users.fetch(guildData.ownerID)
 				.then(user => user.tag);
-			DB.collection('serverDataBase').doc('serverData').create({
+			await DB.collection('serverDataBase').doc('serverData').create({
 				'guildID': guildId,
 				'guildName': guildData.name,
 				'guildOwnerID': guildData.ownerID,
