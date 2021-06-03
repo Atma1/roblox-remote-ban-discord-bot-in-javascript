@@ -2,9 +2,14 @@ const axios = require('axios');
 const endpoint = 'https://www.roblox.com/headshot-thumbnail/json';
 
 module.exports = {
+	/**
+	 *
+	 * @param {String} userId;
+	 * @returns User Image Url
+	 */
 	getUserImg: async (userId) => {
 		const params = {
-			userId: `${userId}`,
+			userId: userId,
 			width: '48',
 			height: '48',
 			isCircular: 'false',
@@ -19,7 +24,6 @@ module.exports = {
 			return userImage;
 		}
 		catch (error) {
-			console.log(error);
 			throw (`${error}`);
 		}
 	},

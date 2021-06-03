@@ -2,6 +2,11 @@ const axios = require('axios');
 const endpoint = 'https://api.roblox.com/users/get-by-username';
 
 module.exports = {
+	/**
+	 *
+	 * @param {String} requestedUserName;
+	 * @return UserId: string
+	 */
 	getUserId: async (requestedUserName) => {
 		try {
 			const response = await axios
