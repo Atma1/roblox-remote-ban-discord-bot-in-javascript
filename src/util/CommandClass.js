@@ -5,7 +5,6 @@ module.exports = class Command {
 		this.desc = desc;
 		this.usage = usage;
 		this.botClient = botClient;
-		this.prefix = process.env.prefix;
 		this.aliases = commandOptions.aliases || false;
 		this.example = commandOptions.example || 'No example';
 		this.cooldown = commandOptions.cooldown || 3;
@@ -13,5 +12,6 @@ module.exports = class Command {
 		this.guildonly = commandOptions.guildonly || false;
 		this.permission = commandOptions.permission || false;
 		this.reqarglength = commandOptions.reqarglength || false;
+		this.guildOwnerOnly = commandOptions.guildOwnerOnly || false;
 	}
 };
