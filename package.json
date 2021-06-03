@@ -19,9 +19,20 @@
     "firebase-admin": "^9.5.0",
     "lodash": "^4.17.21",
     "lodash-migrate": "^0.3.16",
+    "module-alias": "^2.2.2",
+    "ms": "^2.1.3",
     "path": "^0.12.7"
   },
   "devDependencies": {
     "@types/dateformat": "^3.0.1"
+  },
+  "_moduleAliases": {
+    "@root": ".",
+    "@serviceAccount": "./serviceAccount.json",
+    "@commands": "src/commands",
+    "@util": "src/util",
+    "@modules": "src/modules",
+    "@events": "src/events",
+    "@structures": "src/structures"
   }
 }
