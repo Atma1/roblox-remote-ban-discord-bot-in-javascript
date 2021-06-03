@@ -1,35 +1,74 @@
 const fs = require('fs');
-
-const PlayerBanDocumentCreator = class PlayerBanDocument {
-	constructor(playerID, playerName, banReason, bannedBy, bannedAt) {
-		this.playerID = playerID;
-		this.playerName = playerName;
-		this.banReason = banReason;
-		this.bannedBy = bannedBy;
-		this.bannedAt = bannedAt;
-	}
-};
+const toMs = require('ms');
 
 const playerDocConverter = {
-	toFirestore: (banDoc) => {
+	toFirestore: (Doc) => {
+		const { banDetails } = Doc;
 		return {
-			playerID: banDoc.playerID,
-			playerName: banDoc.playerName,
-			banReason: banDoc.banReason,
-			bannedBy: banDoc.bannedBy,
-			bannedAt: banDoc.bannedAt,
+			banDetails: {
+				playerID: banDetails.playerID,
+				playerName: banDetails.playerName,
+				banReason: banDetails.banReason,
+				banType: banDetails.banType,
+				bannedBy: banDetails.bannedBy,
+				bannedAt: banDetails.bannedAt,
+				bannedUntil: banDetails.bannedUntil,
+			},
 		};
 	},
 	fromFirestore: (snapshot, options) => {
 		const banDoc = snapshot.data(options);
+		const { banDetails } = banDoc;
 		return {
-			playerID: banDoc.playerID,
-			playerName: banDoc.playerName,
-			banReason: banDoc.banReason,
-			bannedBy: banDoc.bannedBy,
-			bannedAt: banDoc.bannedAt,
+			playerID: banDetails.playerID,
+			playerName: banDetails.playerName,
+			banReason: banDetails.banReason,
+			banType: banDetails.banType,
+			bannedBy: banDetails.bannedBy,
+			bannedAt: banDetails.bannedAt,
+			bannedUntil: banDetails.bannedUntil,
 		};
 	},
+};
+
+const GuildConfigDocConverter = {
+	toFirestore: (Doc) => {
+		const { guildConfig } = Doc;
+		return {
+			guildConfig: {
+				authorizedRoles: guildConfig.authorizedRoles,
+				defaultPrefix: guildConfig.defaultPrefix,
+			},
+		};
+	},
+	fromFirestore: (snapshot, options) => {
+		const guildConfigDoc = snapshot.data(options);
+		const { guildConfig } = guildConfigDoc;
+		return {
+			authorizedRoles: guildConfig.authorizedRoles,
+			defaultPrefix: guildConfig.defaultPrefix,
+		};
+	},
+};
+
+const seperateDurationAndBanReason = (args) => {
+	const durationRE = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y|dcd|c)?$/i;
+	const durationArray = args.filter(key => key.match(durationRE));
+	const banReason = args.splice(durationArray.length).join(' ');
+	return [banReason, ...durationArray];
+};
+
+const parseDurationArraytoMs = (durationArray) => {
+	let miliSeconds = 0;
+	for (const duration of durationArray) {
+		miliSeconds += toMs(duration);
+	}
+	return miliSeconds;
+};
+
+const checkIfHasBanDuration = (args) => {
+	const durationRE = /(-?(?:\d+\.?\d*|\d*\.?\d+)(?:e[-+]?\d+)?)\s*([\p{L}]*)/uig;
+	return args.some(arg => durationRE.test(arg));
 };
 
 const convertUserRolesToArray = (userRoles) => {
@@ -40,30 +79,8 @@ const convertUserRolesToArray = (userRoles) => {
 	return userRoleIds;
 };
 
-const checkPermission = (message, userRoles, authorizedRoles) => {
-	if (!authorizedRoles.length) {
-		return message.channel.send('No authorized roles found.\nThe owner needs to add roles that is authorized to use the commands.');
-	}
+const checkPermission = (userRoles, authorizedRoles) => {
 	return userRoles.some(userRole => authorizedRoles.includes(userRole));
-};
-
-const retriveAuthroles = async (DB) => {
-	try {
-		const snapshot = await DB.collection('serverDataBase').doc('serverData').get();
-		if (!snapshot.exists) {
-			throw new Error('No authorized roles found. Possiblity of an error during the creation of the server\'s database.');
-		}
-		const data = snapshot.data();
-		const { authorizedRoles } = data;
-		if (!authorizedRoles.length) {
-			return console.warn('Reminder❗ The owner needs to add roles that is authorized to use the commands.');
-		}
-		return authorizedRoles;
-	}
-	catch (error) {
-		console.error(error);
-	}
-
 };
 
 const loadCommands = (client) => {
@@ -74,7 +91,7 @@ const loadCommands = (client) => {
 		for (const commandFolders of mainCommandFolder) {
 			const commandFiles = fs.readdirSync(`./src/commands/${commandFolders}`).filter(file => file.endsWith('.js'));
 			for (const commandFile of commandFiles) {
-				const commandClass = require(`../../src/commands/${commandFolders}/${commandFile}`);
+				const commandClass = require(`@commands/${commandFolders}/${commandFile}`);
 				const command = new commandClass(client);
 				client.commands.set(command.name, command);
 				commandFilesAmount += 1;
@@ -89,10 +106,10 @@ const loadCommands = (client) => {
 };
 
 const loadEvents = (client) => {
-	const eventsFolder = fs.readdirSync('./src/events/DiscordEvents').filter(file => file.endsWith('.js'));
 	try {
+		const eventsFolder = fs.readdirSync('./src/events/DiscordEvents').filter(file => file.endsWith('.js'));
 		for (const eventFile of eventsFolder) {
-			const eventClass = require(`../../src/events/DiscordEvents/${eventFile}`);
+			const eventClass = require(`@events/DiscordEvents/${eventFile}`);
 			const event = new eventClass(client);
 			client[event.eventEmmiter](event.eventType, (...parameters) => event.execute(...parameters));
 			delete require.cache[eventClass];
@@ -107,9 +124,11 @@ const loadEvents = (client) => {
 module.exports = {
 	convertUserRolesToArray: convertUserRolesToArray,
 	checkPerm: checkPermission,
-	getAuthRoles: retriveAuthroles,
 	loadCommands: loadCommands,
 	loadEvents: loadEvents,
-	PlayerBanDocument: PlayerBanDocumentCreator,
+	GuildConfigDocConverter: GuildConfigDocConverter,
 	playerBanDocConverter: playerDocConverter,
+	parseDurationArraytoMs: parseDurationArraytoMs,
+	seperateDurationAndBanReason: seperateDurationAndBanReason,
+	checkIfHasBanDuration: checkIfHasBanDuration,
 };
