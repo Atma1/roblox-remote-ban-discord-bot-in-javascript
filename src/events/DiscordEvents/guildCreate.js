@@ -1,8 +1,10 @@
 const admin = require('firebase-admin');
 const DB = admin.firestore();
-const EventClass = require('../../util/EventClass');
+const EventClass = require('@util/EventClass');
+const GuildConfigDocument = require('@util/GuildConfigDocumentClass');
+const { GuildConfigDocConverter } = require('@util/util');
 
-module.exports = class extends EventClass {
+module.exports = class GuildCreateEvent extends EventClass {
 	constructor(botClient) {
 		super(
 			botClient,
@@ -11,20 +13,24 @@ module.exports = class extends EventClass {
 		);
 	}
 	async execute(guildData) {
+
+		const { id } = guildData;
+		const guildOwner = await this.botClient.users.fetch(guildData.ownerID);
+
 		try {
-			const guildId = guildData.id;
-			const ownerTag = await this.botClient.users.fetch(guildData.ownerID)
-				.then(user => user.tag);
-			await DB.collection('serverDataBase').doc('serverData').create({
-				'guildID': guildId,
-				'guildName': guildData.name,
-				'guildOwnerID': guildData.ownerID,
-				'guildOwnerTag': ownerTag,
-				'authorizedRoles': [],
-			});
-			console.log('Database created.');
+			await DB.collection(`guildDataBase:${id}`)
+				.doc('guildConfigurations')
+				.withConverter(GuildConfigDocConverter)
+				.create(new GuildConfigDocument());
+
+			let dm = 'Collection containing your guild config has been created.';
+			dm += 'Be sure to add roles is authorized to use the commands!';
+
+			guildOwner.send(dm);
+			console.log(`Database for guild ${id} has been created.`);
 		}
 		catch (error) {
+			guildOwner.send('There was an error while creating your guild collection!');
 			console.error(error);
 		}
 	}
