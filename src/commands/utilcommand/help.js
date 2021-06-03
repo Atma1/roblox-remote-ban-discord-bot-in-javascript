@@ -1,9 +1,9 @@
-const CommandClass = require('../../util/CommandClass');
+const CommandClass = require('@util/CommandClass');
 const {
 	MessageEmbed,
 } = require('discord.js');
 
-module.exports = class extends CommandClass {
+module.exports = class HelpCommand extends CommandClass {
 	constructor(botClient) {
 		super(
 			botClient,
@@ -19,13 +19,14 @@ module.exports = class extends CommandClass {
 	}
 	async execute(message, args) {
 		const embed = new MessageEmbed;
+		const prefix = message.guild.guildConfig.get('defaultPrefix');
 		const { commands } = this.botClient;
 
 		if (!args.length) {
 			embed.setTitle('Commands List');
 			embed.addFields({
 				name: 'Important to Know❗',
-				value: `\nIf you want info on specific command send ${this.prefix}help [commandName] and don't send it here!`,
+				value: `\nIf you want info on specific command send ${prefix}help [commandName] and don't send it here!`,
 			});
 			embed.setDescription(commands.map(cmd => cmd.name).join(', '));
 
@@ -60,13 +61,13 @@ module.exports = class extends CommandClass {
 			value: `${command.cooldown || 3} second(s)`,
 		}, {
 			name: 'Command Usage:',
-			value: `${this.prefix}${cmdName} ${command.usage}`,
+			value: `${prefix}${cmdName} ${command.usage}`,
 		});
 
 		if (command.example) {
 			embed.addFields({
 				name: 'Command Example:',
-				value: `${this.prefix}${command.example}`,
+				value: `${prefix}${command.example}`,
 			});
 		}
 		if (command.aliases) {
@@ -78,6 +79,12 @@ module.exports = class extends CommandClass {
 		if (command.args) {
 			embed.addFields({
 				name: 'Require arguments:',
+				value: true,
+			});
+		}
+		if (command.guildOwnerOnly) {
+			embed.addFields({
+				name: 'Owner Only:',
 				value: true,
 			});
 		}
