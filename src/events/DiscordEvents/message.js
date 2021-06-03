@@ -3,11 +3,10 @@ const Discord = require('discord.js');
 const {
 	checkPerm,
 	convertUserRolesToArray,
-} = require('../../util/util');
-const prefix = process.env.prefix;
-const EventClass = require('../../util/EventClass');
+} = require('@util/util');
+const EventClass = require('@util/EventClass');
 
-module.exports = class extends EventClass {
+module.exports = class MessageEvent extends EventClass {
 	constructor(botClient) {
 		super(
 			botClient,
@@ -16,7 +15,12 @@ module.exports = class extends EventClass {
 		);
 	}
 	async execute(message) {
+
+		if (message.channel.type === 'dm') return;
+
 		const lowerCaseMessage = message.content.toLowerCase();
+		const { guildConfig } = message.guild;
+		const prefix = guildConfig.get('defaultPrefix');
 
 		if (lowerCaseMessage.startsWith(prefix) && !message.author.bot) {
 			const args = message.content.slice(prefix.length).trim().split(/ +/);
@@ -31,9 +35,15 @@ module.exports = class extends EventClass {
 			}
 
 			if (command.permission && !message.member.hasPermission('ADMINISTRATOR')) {
+				const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
+
+				if (!cachedAuthorizedRoles.length) {
+					return message.channel.send('Cannot find this server authorized role!');
+				}
+
 				const userRoles = message.member.roles.cache;
-				const { cachedAuthorizedRoles } = this.botClient;
-				const isUserAuthorized = checkPerm(message, convertUserRolesToArray(userRoles), cachedAuthorizedRoles);
+				const isUserAuthorized = checkPerm(convertUserRolesToArray(userRoles), cachedAuthorizedRoles);
+
 				if (!isUserAuthorized) {
 					return message.channel.send('You don\'t have permission to do that!');
 				}
@@ -56,7 +66,6 @@ module.exports = class extends EventClass {
 			const now = Date.now();
 			const cooldownAmount = (command.cooldown || 3) * 1000;
 			const timestamps = cooldowns.get(command.name);
-
 
 			if (timestamps.has(message.author.id)) {
 				const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
