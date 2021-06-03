@@ -1,7 +1,10 @@
-const EmbededBanInfoMessage = require('../../modules/CreateEmbededBanInfoMessage');
-const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandClass');
+const {
+	EmbededPermBanInfoMessage,
+	EmbededTempBanInfoMessage,
+} = require('@modules/EmbededBanMessage');
+const DataBaseRelatedCommandClass = require('@util/DataBaseRelatedCommandClass');
 
-module.exports = class extends DataBaseRelatedCommandClass {
+module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
 		super(
 			botClient,
@@ -21,7 +24,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 		const msg = await message.channel.send('Attempting to retrive the document from the database...');
 		try {
 			const playerId = await this.getUserId(playername);
-			const [snapshot, playerImage] = await Promise.all([
+			const [snapshot, userImage] = await Promise.all([
 				this.retriveBanDocument(playerId),
 				this.getUserImg(playerId),
 			])
@@ -41,12 +44,25 @@ module.exports = class extends DataBaseRelatedCommandClass {
 				banReason,
 				bannedBy,
 				bannedAt,
+				bannedUntil,
+				banType,
 			} = data;
 
-			const formattedDate = this.dateformat(bannedAt);
-			const embed = new EmbededBanInfoMessage(
-				formattedDate, bannedBy, playerName, playerID, banReason, playerImage,
-			);
+			const formattedBanDate = this.dateformat(bannedAt);
+			let embed;
+
+			if (banType == 'permBan') {
+				embed = new EmbededPermBanInfoMessage(
+					formattedBanDate, bannedBy, playerName, playerID, banReason, userImage,
+				);
+			}
+			else if (banType == 'tempBan') {
+				const formattedUnbanDate = this.dateformat(bannedUntil);
+				embed = new EmbededTempBanInfoMessage(
+					formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
+				);
+			}
+
 			return msg.edit(null, embed);
 		}
 		catch (error) {

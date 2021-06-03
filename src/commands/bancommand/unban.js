@@ -1,6 +1,6 @@
-const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandClass');
+const DataBaseRelatedCommandClass = require('@util/DataBaseRelatedCommandClass');
 
-module.exports = class extends DataBaseRelatedCommandClass {
+module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
 		super(
 			botClient,

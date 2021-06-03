@@ -1,17 +1,15 @@
-const EmbededBanInfoMessage = require('../../modules/CreateEmbededBanInfoMessage');
-const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandClass');
-const {
-	PlayerBanDocument,
-} = require('../../util/util');
+const { EmbededPermBanInfoMessage } = require('@modules/EmbededBanMessage');
+const DataBaseRelatedCommandClass = require('@util/DataBaseRelatedCommandClass');
+const PlayerBanDocument = require('@util/PlayerBanDocumentClass');
 
-module.exports = class extends DataBaseRelatedCommandClass {
+module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
 		super(
 			botClient,
 			'ban',
-			'ban player. as of now the ban is permanent. to edit the ban, just rerun the command',
+			'ban player until who know when. to edit the ban, just rerun the command',
 			'playerName banReason', {
-				aliases: ['addban', 'banplayer', 'bn'],
+				aliases: ['addban', 'banplayer', 'bn', 'permban', 'pb'],
 				example: 'ban joemama joemama is too fat',
 				cooldown: 5,
 				args: true,
@@ -22,16 +20,16 @@ module.exports = class extends DataBaseRelatedCommandClass {
 		);
 	}
 	async execute(message, args) {
-		const playerName = args.shift();
-		const banReason = args.join(' ');
+		const [playerName, ...banReason] = args;
+		banReason.join(' ');
 		const bannedAt = Date.now();
 		const bannedBy = message.author.tag;
-		const formattedDate = this.dateformat(bannedAt);
+		const formattedBanDate = this.dateformat(bannedAt);
 
 		try {
 			const playerId = await this.getUserId(playerName);
 			const playerBanDoc = new PlayerBanDocument(
-				playerId, playerName, banReason, bannedBy, bannedAt,
+				playerId, playerName, banReason, bannedBy, 'permaBan', bannedAt,
 			);
 			const [playerImage] = await Promise.all([
 				this.getUserImg(playerId),
@@ -40,8 +38,8 @@ module.exports = class extends DataBaseRelatedCommandClass {
 				.catch(error => {
 					throw (error);
 				});
-			const embed = new EmbededBanInfoMessage(
-				formattedDate, bannedBy, playerName, playerId, banReason, playerImage,
+			const embed = new EmbededPermBanInfoMessage(
+				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage,
 			);
 			return message.channel.send(`\`Player: ${playerName} has been banned.\``, embed);
 		}
