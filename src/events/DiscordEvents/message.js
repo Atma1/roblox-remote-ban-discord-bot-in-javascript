@@ -30,27 +30,31 @@ module.exports = class MessageEvent extends EventClass {
 
 			if (!command) return;
 
-			if (command.guildonly && message.channel.type === 'dm') {
-				return message.reply('Can\'t do that in dm!');
+			if (command.guildonly && message.channel.type == 'dm') {
+				return message.reply('can\'t do that in DM!');
+			}
+
+			if (command.guildOwnerOnly && message.author.id != message.guild.ownerID) {
+				return message.reply('only the guild owner can run that command!');
 			}
 
 			if (command.permission && !message.member.hasPermission('ADMINISTRATOR')) {
 				const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
 				if (!cachedAuthorizedRoles.length) {
-					return message.channel.send('Cannot find this server authorized role!');
+					return message.reply('cannot find this server authorized role!');
 				}
 
 				const userRoles = message.member.roles.cache;
 				const isUserAuthorized = checkPerm(convertUserRolesToArray(userRoles), cachedAuthorizedRoles);
 
 				if (!isUserAuthorized) {
-					return message.channel.send('You don\'t have permission to do that!');
+					return message.reply('you don\'t have permission to do that!');
 				}
 			}
 
 			if (command.args && !args.length || args.length < command.reqarglength) {
-				let reply = 'Please provide the necessary amount of argument(s).';
+				let reply = 'please provide the necessary amount of argument(s)!';
 				reply += `\n Do this: \`${prefix}${commandName} ${command.usage}\``;
 				return message.reply(reply);
 			}
