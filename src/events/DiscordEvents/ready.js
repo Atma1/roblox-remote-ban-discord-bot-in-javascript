@@ -1,5 +1,6 @@
-const EventClass = require('../../util/EventClass');
-module.exports = class extends EventClass {
+const EventClass = require('@util/EventClass');
+
+module.exports = class ReadyEvent extends EventClass {
 	constructor(botClient) {
 		super(
 			botClient,
