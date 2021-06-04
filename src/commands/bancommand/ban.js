@@ -8,7 +8,7 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 			botClient,
 			'ban',
 			'ban player until who know when. to edit the ban, just rerun the command',
-			'playerName banReason', {
+			'<playerName> <banReason>', {
 				aliases: ['addban', 'banplayer', 'bn', 'permban', 'pb'],
 				example: 'ban joemama joemama is too fat',
 				cooldown: 5,
@@ -20,10 +20,11 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 		);
 	}
 	async execute(message, args) {
+		const { id:guildId } = message.channel.guild;
 		const [playerName, ...banReason] = args;
 		banReason.join(' ');
 		const bannedAt = Date.now();
-		const bannedBy = message.author.tag;
+		const { tag: bannedBy } = message.author;
 		const formattedBanDate = this.dateformat(bannedAt);
 
 		try {
@@ -31,17 +32,19 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 			const playerBanDoc = new PlayerBanDocument(
 				playerId, playerName, banReason, bannedBy, 'permaBan', bannedAt,
 			);
+
 			const [playerImage] = await Promise.all([
 				this.getUserImg(playerId),
-				this.addPlayerToBanList(playerBanDoc),
+				this.addPlayerToBanList(playerBanDoc, guildId),
 			])
 				.catch(error => {
 					throw (error);
 				});
+
 			const embed = new EmbededPermBanInfoMessage(
 				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage,
 			);
-			return message.channel.send(`\`Player: ${playerName} has been banned.\``, embed);
+			return message.channel.send(`\`${playerName} has been banned.\``, embed);
 		}
 		catch (error) {
 			console.error(error);

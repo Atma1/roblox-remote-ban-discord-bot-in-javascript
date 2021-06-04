@@ -10,7 +10,7 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 			botClient,
 			'baninfo',
 			'check ban information for the player specified assuming the player is in the database',
-			'playerName', {
+			'<playerName>', {
 				aliases: ['checkban', 'cb', 'bi', 'retrive'],
 				example: 'baninfo joemama',
 				cooldown: 5,
@@ -20,12 +20,13 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 			});
 	}
 	async execute(message, arg) {
+		const { id:guildId } = message.channel.guild;
 		const [playername] = arg;
 		const msg = await message.channel.send('Attempting to retrive the document from the database...');
 		try {
 			const playerId = await this.getUserId(playername);
 			const [snapshot, userImage] = await Promise.all([
-				this.retriveBanDocument(playerId),
+				this.retriveBanDocument(playerId, guildId),
 				this.getUserImg(playerId),
 			])
 				.catch(err => {

@@ -6,7 +6,7 @@ module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
 			botClient,
 			'unban',
 			'remove the player from the database assuming the player is in the database',
-			'playerName', {
+			'<playerName>', {
 				aliases: ['ub', 'forgive', 'amnesty', 'remove'],
 				example: 'unban joemama',
 				args: true,
@@ -15,16 +15,17 @@ module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
 				guildonly: true,
 			});
 	}
-	async execute(msg, args) {
+	async execute(message, args) {
 		const [playerName] = args;
+		const { id:guildId } = message.channel.guild;
 		try {
 			const playerId = await this.getUserId(playerName);
-			this.deletePlayerBanDocument(playerId);
+			this.deletePlayerBanDocument(playerId, guildId);
 		}
 		catch (error) {
 			console.error(error);
-			return msg.channel.send(`There was an error while removing ${playerName}!\n${error}`);
+			return message.channel.send(`There was an error while removing ${playerName}!\n${error}`);
 		}
-		return msg.channel.send(`Player: ${playerName}, removed from Firebase Firestore.`);
+		return message.channel.send(`Player: ${playerName}, removed from Firebase Firestore.`);
 	}
 };

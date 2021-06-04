@@ -17,7 +17,7 @@ module.exports = class TemporaryBanCommand extends DataBaseRelatedCommandClass {
 			botClient,
 			'tempban',
 			'temp ban the player. to edit the ban, just rerun the command',
-			'playerName banDuration banReason', {
+			'<playerName> <banDuration> <banReason>', {
 				aliases: ['tban', 'temppunish', 'tb', 'tbc', 'tp'],
 				example: 'tempban joemama 720y 666w 420d 42h joemama is too fat',
 				cooldown: 5,
@@ -37,9 +37,10 @@ module.exports = class TemporaryBanCommand extends DataBaseRelatedCommandClass {
 		const banDuration = checkIfHasBanDuration(args);
 
 		if (!banDuration) {
-			return message.channel.send('You need to specify the ban duration!');
+			return message.reply('You need to specify the ban duration!');
 		}
 
+		const { id:guildId } = message.channel.guild;
 		const { tag: bannedBy } = message.author;
 		const playerName = args.shift();
 		const [banReason, ...banDurationArray] = seperateDurationAndBanReason(args);
@@ -55,7 +56,7 @@ module.exports = class TemporaryBanCommand extends DataBaseRelatedCommandClass {
 			);
 			const [playerImage] = await Promise.all([
 				this.getUserImg(playerId),
-				this.addPlayerToBanList(playerBanDoc),
+				this.addPlayerToBanList(playerBanDoc, guildId),
 			])
 				.catch(error => {
 					throw (error);
@@ -67,7 +68,7 @@ module.exports = class TemporaryBanCommand extends DataBaseRelatedCommandClass {
 		}
 		catch (error) {
 			console.error(error);
-			return message.channel.send(`There was an error while banning the player!\n${error}`);
+			return message.reply(`There was an error while banning the player!\n${error}`);
 		}
 	}
 };
