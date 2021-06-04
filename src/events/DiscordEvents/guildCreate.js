@@ -14,8 +14,8 @@ module.exports = class GuildCreateEvent extends EventClass {
 	}
 	async execute(guildData) {
 
-		const { id } = guildData;
-		const guildOwner = await this.botClient.users.fetch(guildData.ownerID);
+		const { id, ownerID } = guildData;
+		const guildOwner = await this.botClient.users.fetch(ownerID);
 
 		try {
 			await DB.collection(`guildDataBase:${id}`)
@@ -24,7 +24,7 @@ module.exports = class GuildCreateEvent extends EventClass {
 				.create(new GuildConfigDocument());
 
 			let dm = 'Collection containing your guild config has been created.';
-			dm += 'Be sure to add roles is authorized to use the commands!';
+			dm += ' Be sure to add roles is authorized to use the commands!';
 
 			guildOwner.send(dm);
 			console.log(`Database for guild ${id} has been created.`);
