@@ -14,12 +14,17 @@ Structures.extend('Guild', (Guild) => {
 		async setupGuildConfig() {
 			try {
 				const snap = await this.getGuildPrefixAndRole();
+
+				if (!snap.exists) {
+					console.warn(`Guild config for guild ${this.id} is not avaible!`);
+				}
+
 				const { defaultPrefix, authorizedRoles } = snap.data();
-				this.guildConfig.set('defaultPrefix', defaultPrefix);
-				this.guildConfig.set('authorizedRoles', authorizedRoles);
+				console.log(defaultPrefix, authorizedRoles);
+				this.guildConfig.set('defaultPrefix', defaultPrefix || '!');
+				this.guildConfig.set('authorizedRoles', authorizedRoles || []);
 			}
 			catch (error) {
-				this.owner.send('There was an error while setting up your guildConfig.', error);
 				console.error(error);
 			}
 		}
