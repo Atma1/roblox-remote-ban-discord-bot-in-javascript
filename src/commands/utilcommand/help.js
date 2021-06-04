@@ -9,7 +9,7 @@ module.exports = class HelpCommand extends CommandClass {
 			botClient,
 			'help',
 			'give help and info on the specified command',
-			'help commandName/noCommandName', {
+			'<commandName/noCommandName>', {
 				aliases: ['cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
 				example: 'help ban or just help',
 				cooldown: 5,
