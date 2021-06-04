@@ -1,10 +1,10 @@
 const admin = require('firebase-admin');
-const { getUserId } = require('../modules/getUserId');
-const { getUserImg } = require('../modules/getUserImg');
+const { getUserId } = require('@modules/getUserId');
+const { getUserImg } = require('@modules/getUserImg');
+const { playerBanDocConverter } = require('@util/util');
+const { firestore } = admin;
 const dateformat = require('dateformat');
 const genericCommandClass = require('./CommandClass');
-const { playerBanDocConverter } = require('../util/util');
-const { firestore } = admin;
 
 module.exports = class DataBaseRelatedCommandClass extends genericCommandClass {
 
@@ -14,19 +14,19 @@ module.exports = class DataBaseRelatedCommandClass extends genericCommandClass {
 		this.dataBase = admin.firestore();
 	}
 
-	addPlayerToBanList(playerBanDoc) {
-		this.dataBase.collection('serverDataBase')
+	addPlayerToBanList(playerBanDoc, guildId) {
+		this.dataBase.collection(`guildDataBase:${guildId}`)
 			.doc('banList')
 			.collection('bannedPlayerList')
-			.doc(`Player:${playerBanDoc.playerID}`)
+			.doc(`Player:${playerBanDoc.banDetails.playerID}`)
 			.withConverter(playerBanDocConverter)
 			.set(playerBanDoc, {
 				merge: true,
 			});
 	}
 
-	retriveBanDocument(playerId) {
-		return this.dataBase.collection('serverDataBase')
+	retriveBanDocument(playerId, guildId) {
+		return this.dataBase.collection(`guildDataBase:${guildId}`)
 			.doc('banList')
 			.collection('bannedPlayerList')
 			.doc(`Player:${playerId}`)
@@ -34,8 +34,8 @@ module.exports = class DataBaseRelatedCommandClass extends genericCommandClass {
 			.get();
 	}
 
-	deletePlayerBanDocument(playerId) {
-		this.dataBase.collection('serverDataBase')
+	deletePlayerBanDocument(playerId, guildId) {
+		this.dataBase.collection(`guildDataBase:${guildId}`)
 			.doc('banList')
 			.collection('bannedPlayerList')
 			.doc(`Player:${playerId}`)
