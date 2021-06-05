@@ -24,7 +24,8 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
-    "@types/dateformat": "^3.0.1"
+    "@types/dateformat": "^3.0.1",
+    "eslint": "^7.28.0"
   },
   "_moduleAliases": {
     "@root": ".",
