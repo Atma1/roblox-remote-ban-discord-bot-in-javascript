@@ -14,29 +14,30 @@ module.exports = class ReadyEvent extends EventClass {
 	async execute() {
 		console.log(`${this.botClient.user.tag} is ready!`);
 
-		const checkBan = async () => {
-			// const now = Date.now();
-			const playersToUnban = await fireStore
-				.collection('serverDataBase')
-				.doc('banList')
-				.collection('bannedPlayerList')
-				.where('banDetails.banReason', '==', 'tesuto')
-				.get();
-			return playersToUnban;
-		};
 
-		const unbanSnapShot = await checkBan();
+		// const checkBan = async () => {
+		// 	// const now = Date.now();
+		// 	const playersToUnbanDoc = await fireStore
+		// 		.collection('serverDataBase')
+		// 		.doc('banList')
+		// 		.collection('bannedPlayerList')
+		// 		.where('banDetails.banReason', '==', 'tesuto')
+		// 		.get();
+		// 	return playersToUnbanDoc;
+		// };
 
-		if (!unbanSnapShot.empty) {
-			// IMPLEMENT STAGED DELETE IF SIZE >= 500
-			console.log(unbanSnapShot.size);
-			const unbanBatch = fireStore.batch();
+		// const unbanDocSnapShot = await checkBan();
 
-			unbanSnapShot.forEach(doc => {
-				console.log(`Unbanned ${doc.id}.`);
-				unbanBatch.delete(doc.ref);
-			});
-			await unbanBatch.commit();
-		}
+		// if (!unbanDocSnapShot.empty) {
+		// 	// IMPLEMENT STAGED DELETE IF SIZE >= 500
+		// 	console.log(unbanDocSnapShot.size);
+		// 	const unbanBatch = fireStore.batch();
+
+		// 	unbanDocSnapShot.forEach(doc => {
+		// 		console.log(`Unbanned ${doc.id}.`);
+		// 		unbanBatch.delete(doc.ref);
+		// 	});
+		// 	await unbanBatch.commit();
+		// }
 	}
 };
