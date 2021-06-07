@@ -11,7 +11,7 @@ module.exports = {
 		try {
 			const response = await axios
 				.get(endpoint, {
-					timeout: 5000,
+					timeout: 3000,
 					params: {
 						username: `${requestedUserName}`,
 					},
@@ -24,7 +24,8 @@ module.exports = {
 			}
 
 			const { Id } = response;
-			return Id;
+
+			return toString(Id);
 		}
 		catch (error) {
 			throw (`${error}`);
