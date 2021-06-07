@@ -15,18 +15,18 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 				permission: true,
 			});
 	}
-	async execute(msg, args) {
+	async execute(message, args) {
 		const [role] = args;
 		const roleId = role.match(/[0-9]\d+/g);
-		const { guildConfig, id } = msg.guild;
+		const { guildConfig, id } = message.guild;
 		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
 		if (!roleId) {
-			return msg.reply('That is not a role Id!');
+			return message.reply('That is not a role Id!');
 		}
 
-		if (!msg.guild.roles.cache.find(guildRole => guildRole.id == roleId)) {
-			return msg.reply('Make sure you input the correct role.');
+		if (!message.guild.roles.cache.find(guildRole => guildRole.id == roleId)) {
+			return message.reply('Make sure you input the correct role.');
 		}
 
 		try {
@@ -39,11 +39,11 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 		}
 		catch (error) {
 			console.error(error);
-			return msg.reply(`There was an error while adding the role!\n${error}`);
+			return message.reply(`There was an error while adding the role!\n${error}`);
 		}
 
 		cachedAuthorizedRoles.push(roleId);
 		guildConfig.set('authorizedRoles', cachedAuthorizedRoles);
-		return msg.channel.send(`${role} has been authorized to use permission restricted command!`);
+		return message.channel.send(`${role} has been authorized to use permission restricted command!`);
 	}
 };
