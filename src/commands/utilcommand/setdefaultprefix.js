@@ -18,12 +18,12 @@ module.exports = class SetPrefixCommand extends DataBaseRelatedCommandClass {
 			});
 	}
 	async execute(message, args) {
-		const { guildConfig, guildId } = message.guild;
+		const { guildConfig, id } = message.guild;
 		const [desiredDefaultPrefix] = args;
 
 		try {
 			await this.dataBase
-				.collection(`guildDataBase:${guildId}`)
+				.collection(`guildDataBase:${id}`)
 				.doc('guildConfigurations')
 				.update({
 					'guildConfig.defaultPrefix': desiredDefaultPrefix,
