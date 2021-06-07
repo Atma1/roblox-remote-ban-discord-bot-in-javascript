@@ -52,7 +52,7 @@ const GuildConfigDocConverter = {
 };
 
 const seperateDurationAndBanReason = (args) => {
-	const durationRE = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y|dcd|c)?$/i;
+	const durationRE = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y|dcd|c)?$/ig;
 	const durationArray = args.filter(key => key.match(durationRE));
 	const banReason = args.splice(durationArray.length).join(' ');
 	return [banReason, ...durationArray];
@@ -67,7 +67,7 @@ const parseDurationArraytoMs = (durationArray) => {
 };
 
 const checkIfHasBanDuration = (args) => {
-	const durationRE = /(-?(?:\d+\.?\d*|\d*\.?\d+)(?:e[-+]?\d+)?)\s*([\p{L}]*)/uig;
+	const durationRE = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y|dcd|c)?$/ig;
 	return args.some(arg => durationRE.test(arg));
 };
 
