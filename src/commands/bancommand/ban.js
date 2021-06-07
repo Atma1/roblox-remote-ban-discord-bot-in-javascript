@@ -21,8 +21,8 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 	}
 	async execute(message, args) {
 		const { id:guildId } = message.channel.guild;
-		const [playerName, ...banReason] = args;
-		banReason.join(' ');
+		const playerName = args.shift();
+		const banReason = args.join(' ');
 		const bannedAt = Date.now();
 		const { tag: bannedBy } = message.author;
 		const formattedBanDate = this.dateformat(bannedAt);
