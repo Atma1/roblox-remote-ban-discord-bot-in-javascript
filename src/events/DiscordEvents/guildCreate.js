@@ -21,7 +21,7 @@ module.exports = class GuildCreateEvent extends EventClass {
 			await DB.collection(`guildDataBase:${id}`)
 				.doc('guildConfigurations')
 				.withConverter(GuildConfigDocConverter)
-				.create(new GuildConfigDocument());
+				.create(new GuildConfigDocument);
 
 			let dm = 'Collection containing your guild config has been created.';
 			dm += ' Be sure to add roles is authorized to use the commands!';
