@@ -29,7 +29,7 @@ module.exports = class DataBaseRelatedCommandClass extends genericCommandClass {
 		return this.dataBase.collection(`guildDataBase:${guildId}`)
 			.doc('banList')
 			.collection('bannedPlayerList')
-			.doc(`Player:${playerId}`)
+			.where('banDetails.playerID', '==', playerId)
 			.withConverter(playerBanDocConverter)
 			.get();
 	}
