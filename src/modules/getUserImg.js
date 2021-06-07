@@ -16,7 +16,7 @@ module.exports = {
 		};
 		try {
 			const response = await axios.get(endpoint, {
-				timeout: 5000,
+				timeout: 3000,
 				params,
 			});
 			const { data } = response;
