@@ -1,6 +1,6 @@
 const { EmbededPermBanInfoMessage } = require('@modules/EmbededBanMessage');
-const DataBaseRelatedCommandClass = require('@util/DataBaseRelatedCommandClass');
-const PlayerBanDocument = require('@util/PlayerBanDocumentClass');
+const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
+const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
 
 module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -13,7 +13,6 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 				example: 'ban joemama joemama is too fat',
 				cooldown: 5,
 				args: true,
-				guildonly: true,
 				permission: true,
 				reqarglength: 2,
 			},
@@ -36,10 +35,7 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 			const [playerImage] = await Promise.all([
 				this.getUserImg(playerId),
 				this.addPlayerToBanList(playerBanDoc, guildId),
-			])
-				.catch(error => {
-					throw (error);
-				});
+			]);
 
 			const embed = new EmbededPermBanInfoMessage(
 				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage,
