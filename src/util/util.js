@@ -1,5 +1,6 @@
 const fs = require('fs');
-const toMs = require('ms');
+const readableToMs = require('readable-to-ms');
+const GuildConfigDocument = require('@class/GuildConfigDocumentClass');
 
 const playerDocConverter = {
 	toFirestore: (Doc) => {
@@ -31,7 +32,7 @@ const playerDocConverter = {
 	},
 };
 
-const GuildConfigDocConverter = {
+const guildConfigDocConverter = {
 	toFirestore: (Doc) => {
 		const { guildConfig } = Doc;
 		return {
@@ -52,23 +53,40 @@ const GuildConfigDocConverter = {
 };
 
 const seperateDurationAndBanReason = (args) => {
-	const durationRE = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y|dcd|c)?$/ig;
-	const durationArray = args.filter(key => key.match(durationRE));
-	const banReason = args.splice(durationArray.length).join(' ');
-	return [banReason, ...durationArray];
-};
-
-const parseDurationArraytoMs = (durationArray) => {
-	let miliSeconds = 0;
-	for (const duration of durationArray) {
-		miliSeconds += toMs(duration);
-	}
-	return miliSeconds;
+	const { ms:banDuration, text:banReason } = readableToMs(args.join(' '));
+	return [banDuration, banReason];
 };
 
 const checkIfHasBanDuration = (args) => {
 	const durationRE = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y|dcd|c)?$/ig;
 	return args.some(arg => durationRE.test(arg));
+};
+
+const trimString = (str, max) => {
+	return ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
+};
+
+const checkIfRoleId = (arg) => {
+	return arg.match(/[0-9]\d+/g);
+};
+
+const createNewGuildDataBase = async (id, DB) => {
+	try {
+		await DB.collection(`guildDataBase:${id}`)
+			.doc('guildConfigurations')
+			.withConverter(guildConfigDocConverter)
+			.create(new GuildConfigDocument);
+
+		let successMessage = 'Collection containing your guild config has been created.';
+		successMessage += ' Be sure to add roles is authorized to use the commands!';
+
+		console.log(`Database for guild ${id} has been created.`);
+		return successMessage;
+	}
+	catch (error) {
+		console.error(error);
+		return error;
+	}
 };
 
 const convertUserRolesToArray = (userRoles) => {
@@ -126,9 +144,11 @@ module.exports = {
 	checkPerm: checkPermission,
 	loadCommands: loadCommands,
 	loadEvents: loadEvents,
-	GuildConfigDocConverter: GuildConfigDocConverter,
+	trimString: trimString,
+	checkIfRoleId: checkIfRoleId,
+	createNewGuildDataBase: createNewGuildDataBase,
+	guildConfigDocConverter: guildConfigDocConverter,
 	playerBanDocConverter: playerDocConverter,
-	parseDurationArraytoMs: parseDurationArraytoMs,
 	seperateDurationAndBanReason: seperateDurationAndBanReason,
 	checkIfHasBanDuration: checkIfHasBanDuration,
 };
