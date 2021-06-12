@@ -5,7 +5,7 @@ module.exports = {
 	/**
 	 *
 	 * @param {String} requestedUserName;
-	 * @return UserId: string
+	 * @return UserId
 	 */
 	getUserId: async (requestedUserName) => {
 		try {
@@ -25,7 +25,7 @@ module.exports = {
 
 			const { Id } = response;
 
-			return toString(Id);
+			return `${Id}`;
 		}
 		catch (error) {
 			throw (`${error}`);
