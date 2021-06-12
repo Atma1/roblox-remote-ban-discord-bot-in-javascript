@@ -1,4 +1,4 @@
-const CommandClass = require('@util/CommandClass');
+const CommandClass = require('@class/CommandClass');
 const {
 	MessageEmbed,
 } = require('discord.js');
@@ -13,30 +13,30 @@ module.exports = class HelpCommand extends CommandClass {
 				aliases: ['cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
 				example: 'help ban or just help',
 				cooldown: 5,
-				guildonly: true,
 			},
 		);
 	}
 	async execute(message, args) {
-		const embed = new MessageEmbed;
+		const commandInfoEmbed = new MessageEmbed;
 		const prefix = message.guild.guildConfig.get('defaultPrefix');
-		const { commands } = this.botClient;
+		const {
+			commands,
+		} = this.botClient;
 
 		if (!args.length) {
-			embed.setTitle('Commands List');
-			embed.addFields({
-				name: 'Important to Know❗',
-				value: `\nIf you want info on specific command send ${prefix}help [commandName] and don't send it here!`,
-			});
-			embed.setDescription(commands.map(cmd => cmd.name).join(', '));
+			commandInfoEmbed.setTitle('Commands List');
+			commandInfoEmbed.addField(
+				'Important to Know❗', `If you want info on specific command send ${prefix}help [commandName] and don't send it here!`,
+			);
+			commandInfoEmbed.setDescription(commands.map(cmd => cmd.name).join(', '));
 
 			try {
-				await message.author.send(embed);
+				await message.author.send(commandInfoEmbed);
 				return message.reply('Sent all of my commands to your DM.');
 			}
 			catch (error) {
 				console.error(error);
-				return message.reply('Can\'t send my commands to your DM! Is your DM closed?.');
+				return message.reply('Can\'t send my commands to your DM! Is your DM closed?');
 			}
 		}
 
@@ -48,9 +48,9 @@ module.exports = class HelpCommand extends CommandClass {
 			return message.reply('Make sure you type the correct command.');
 		}
 
-		embed.setColor('#EFFF00');
-		embed.setTitle('Command Information');
-		embed.addFields({
+		commandInfoEmbed.setColor('#EFFF00');
+		commandInfoEmbed.setTitle('Command Information');
+		commandInfoEmbed.addFields({
 			name: 'Command Name:',
 			value: `${command.name}`,
 		}, {
@@ -65,35 +65,20 @@ module.exports = class HelpCommand extends CommandClass {
 		});
 
 		if (command.example) {
-			embed.addFields({
-				name: 'Command Example:',
-				value: `${prefix}${command.example}`,
-			});
+			commandInfoEmbed.addField('Command Example:', `${prefix}${command.example}`);
 		}
 		if (command.aliases) {
-			embed.addFields({
-				name: 'Command Aliases:',
-				value: `${command.aliases.join(', ')}`,
-			});
+			commandInfoEmbed.addField('Command Aliases:', `${command.aliases.join(', ')}`);
 		}
 		if (command.args) {
-			embed.addFields({
-				name: 'Require arguments:',
-				value: true,
-			});
+			commandInfoEmbed.addField('Require arguments:', true);
 		}
 		if (command.guildOwnerOnly) {
-			embed.addFields({
-				name: 'Owner Only:',
-				value: true,
-			});
+			commandInfoEmbed.addField('Owner Only:', true);
 		}
 		if (command.permission) {
-			embed.addFields({
-				name: 'Require Permission:',
-				value: true,
-			});
+			commandInfoEmbed.addField('Require Permission:', true);
 		}
-		message.channel.send(embed);
+		message.channel.send(commandInfoEmbed);
 	}
 };
