@@ -12,26 +12,26 @@ const EmbededPermBanInfoMessage = class EmbededPermBanInfoMessage extends Messag
 		this.setTimestamp();
 		this.addFields({
 			name: 'Player Name',
-			value: `${playerName}`,
+			value: playerName,
 			inline: true,
 		}, {
 			name: 'Player Id',
-			value: `${playerId}`,
+			value: playerId,
 			inline: true,
 		}, {
 			name: '\u200B',
 			value: '\u200B',
 		}, {
 			name: 'Ban Reason',
-			value: `${banReason}`,
+			value: banReason,
 			inline: true,
 		}, {
 			name: 'Banned By',
-			value: `${bannedBy}`,
+			value: bannedBy,
 			inline: true,
 		}, {
 			name: 'Banned At',
-			value: `${bannedAt}`,
+			value: bannedAt,
 		});
 	}
 };
@@ -39,10 +39,7 @@ const EmbededPermBanInfoMessage = class EmbededPermBanInfoMessage extends Messag
 const EmbededTempBanInfoMessage = class EmbededTempBanInfoMessage extends EmbededPermBanInfoMessage {
 	constructor(bannedAt, bannedBy, playerName, playerId, banReason, userImage, bannedUntil) {
 		super(bannedAt, bannedBy, playerName, playerId, banReason, userImage);
-		this.addFields({
-			name: 'Banned Until',
-			value: `${bannedUntil}`,
-		});
+		this.addField('Banned Until', bannedUntil);
 	}
 };
 
