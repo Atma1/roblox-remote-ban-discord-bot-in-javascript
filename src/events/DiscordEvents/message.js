@@ -4,7 +4,7 @@ const {
 	checkPerm,
 	convertUserRolesToArray,
 } = require('@util/util');
-const EventClass = require('@util/EventClass');
+const EventClass = require('@class/EventClass');
 
 module.exports = class MessageEvent extends EventClass {
 	constructor(botClient) {
@@ -29,10 +29,6 @@ module.exports = class MessageEvent extends EventClass {
 				this.botClient.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 			if (!command) return;
-
-			if (command.guildonly && message.channel.type == 'dm') {
-				return message.reply('can\'t do that in DM!');
-			}
 
 			if (command.guildOwnerOnly && message.author.id != message.guild.ownerID) {
 				return message.reply('only the guild owner can run that command!');
