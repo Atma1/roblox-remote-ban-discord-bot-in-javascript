@@ -1,14 +1,13 @@
 const { EmbededTempBanInfoMessage } = require('@modules/EmbededBanMessage');
-const DataBaseRelatedCommandClass = require('@util/DataBaseRelatedCommandClass');
-const PlayerBanDocument = require('@util/PlayerBanDocumentClass');
+const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
+const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
 const {
 	seperateDurationAndBanReason,
-	parseDurationArraytoMs,
 	checkIfHasBanDuration,
 } = require('@util/util');
 
 
-module.exports = class TemporaryBanCommand extends DataBaseRelatedCommandClass {
+module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 	/**
 	 * @param {Class} botClient;
 	 */
@@ -22,7 +21,6 @@ module.exports = class TemporaryBanCommand extends DataBaseRelatedCommandClass {
 				example: 'tempban joemama 720y 666w 420d 42h joemama is too fat',
 				cooldown: 5,
 				args: true,
-				guildonly: true,
 				permission: true,
 				reqarglength: 3,
 			},
@@ -34,18 +32,18 @@ module.exports = class TemporaryBanCommand extends DataBaseRelatedCommandClass {
 	 * @returns Message Embed
 	 */
 	async execute(message, args) {
-		const banDuration = checkIfHasBanDuration(args);
+		const hasBanDuration = checkIfHasBanDuration(args);
 
-		if (!banDuration) {
+		if (!hasBanDuration) {
 			return message.reply('You need to specify the ban duration!');
 		}
 
 		const { id:guildId } = message.channel.guild;
 		const { tag: bannedBy } = message.author;
 		const playerName = args.shift();
-		const [banReason, ...banDurationArray] = seperateDurationAndBanReason(args);
+		const [banDuration, banReason] = seperateDurationAndBanReason(args);
 		const bannedAt = Date.now();
-		const bannedUntil = bannedAt + parseDurationArraytoMs(banDurationArray);
+		const bannedUntil = bannedAt + banDuration;
 		const formattedUnbanDate = this.dateformat(bannedUntil);
 		const formattedBanDate = this.dateformat(bannedAt);
 
@@ -57,14 +55,12 @@ module.exports = class TemporaryBanCommand extends DataBaseRelatedCommandClass {
 			const [playerImage] = await Promise.all([
 				this.getUserImg(playerId),
 				this.addPlayerToBanList(playerBanDoc, guildId),
-			])
-				.catch(error => {
-					throw (error);
-				});
-			const embed = new EmbededTempBanInfoMessage(
+			]);
+
+			const banInfoEmbed = new EmbededTempBanInfoMessage(
 				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage, formattedUnbanDate,
 			);
-			return message.channel.send(`\`Player: ${playerName} has been banned.\``, embed);
+			return message.channel.send(`\`Player: ${playerName} has been banned.\``, banInfoEmbed);
 		}
 		catch (error) {
 			console.error(error);
