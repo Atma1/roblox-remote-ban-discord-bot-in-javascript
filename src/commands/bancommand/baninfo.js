@@ -2,7 +2,7 @@ const {
 	EmbededPermBanInfoMessage,
 	EmbededTempBanInfoMessage,
 } = require('@modules/EmbededBanMessage');
-const DataBaseRelatedCommandClass = require('@util/DataBaseRelatedCommandClass');
+const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 
 module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -15,60 +15,54 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 				example: 'baninfo joemama',
 				cooldown: 5,
 				args: true,
-				guildonly: true,
 				permission: true,
 			});
 	}
 	async execute(message, arg) {
 		const { id:guildId } = message.channel.guild;
-		const [playername] = arg;
-		const msg = await message.channel.send('Attempting to retrive the document from the database...');
-		try {
-			const playerId = await this.getUserId(playername);
-			const [snapshot, userImage] = await Promise.all([
-				this.retriveBanDocument(playerId, guildId),
-				this.getUserImg(playerId),
-			])
-				.catch(err => {
-					throw (err);
-				});
+		const [playerName] = arg;
 
-			if (!snapshot.exists) {
-				throw new Error(`${playername} is not found in the database.`);
+		try {
+			const querySnapShot = await this.retriveBanDocument(playerName, guildId);
+
+			if (querySnapShot.empty) {
+				throw new Error(`${playerName} is not found in the database.`);
 			}
 
-			const data = snapshot.data();
+			const documents = querySnapShot.docs;
+			const [ banDocument ] = documents;
+			const data = banDocument.data();
 
 			const {
 				playerID,
-				playerName,
 				banReason,
 				bannedBy,
 				bannedAt,
-				bannedUntil,
 				banType,
 			} = data;
 
 			const formattedBanDate = this.dateformat(bannedAt);
-			let embed;
+			const userImage = await this.getUserImg(playerID);
+			let banInfoEmbed;
 
-			if (banType == 'permBan') {
-				embed = new EmbededPermBanInfoMessage(
+			if (banType == 'permaBan') {
+				banInfoEmbed = new EmbededPermBanInfoMessage(
 					formattedBanDate, bannedBy, playerName, playerID, banReason, userImage,
 				);
 			}
-			else if (banType == 'tempBan') {
+			else {
+				const { bannedUntil } = data;
 				const formattedUnbanDate = this.dateformat(bannedUntil);
-				embed = new EmbededTempBanInfoMessage(
+				banInfoEmbed = new EmbededTempBanInfoMessage(
 					formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
 				);
 			}
 
-			return msg.edit(null, embed);
+			return message.channel.send(banInfoEmbed);
 		}
 		catch (error) {
 			console.error(error);
-			return msg.edit(`There was an error while attempting to retrive the document!\n${error}`);
+			return message.reply(`There was an error while attempting to retrive the document!\n${error}`);
 		}
 	}
 };
