@@ -1,4 +1,5 @@
-const DataBaseRelatedCommandClass = require('@util/DataBaseRelatedCommandClass');
+const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
+const { checkIfRoleId } = require('@util/util');
 
 module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -11,13 +12,12 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 				example: 'auth @joemama',
 				cooldown: 5,
 				args: true,
-				guildonly: true,
 				permission: true,
 			});
 	}
 	async execute(message, args) {
 		const [role] = args;
-		const roleId = role.match(/[0-9]\d+/g);
+		const roleId = checkIfRoleId(role);
 		const { guildConfig, id } = message.guild;
 		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
