@@ -1,8 +1,8 @@
 const { MessageEmbed } = require('discord.js');
-const CommandClass = require('@util/CommandClass');
+const CommandClass = require('@class/CommandClass');
+const { trimString:trim } = require('@util/util');
 const axios = require('axios');
 const endPoint = 'https://api.quran.sutanlab.id/surah';
-const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
 
 module.exports = class QuranCommand extends CommandClass {
 	constructor(botClient) {
@@ -14,7 +14,6 @@ module.exports = class QuranCommand extends CommandClass {
 				example : 'quran 39:53',
 				args : true,
 				cooldown : 5,
-				guildOnly: true,
 			});
 	}
 	async execute(message, args) {

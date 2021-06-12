@@ -1,4 +1,4 @@
-const DataBaseRelatedCommandClass = require('@util/DataBaseRelatedCommandClass');
+const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 
 module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -12,7 +12,6 @@ module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
 				args: true,
 				cooldown: 5,
 				permission: true,
-				guildonly: true,
 			});
 	}
 	async execute(message, args) {
