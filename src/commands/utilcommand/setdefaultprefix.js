@@ -1,4 +1,4 @@
-const DataBaseRelatedCommandClass = require('@util/DataBaseRelatedCommandClass');
+const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 
 module.exports = class SetPrefixCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -12,7 +12,6 @@ module.exports = class SetPrefixCommand extends DataBaseRelatedCommandClass {
 				example: 'setdefaultprefix ε',
 				cooldown: 5,
 				args: true,
-				guildonly: true,
 				reqarglength: 1,
 				guildOwnerOnly: true,
 			});
