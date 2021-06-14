@@ -32,11 +32,11 @@ module.exports = class HelpCommand extends CommandClass {
 
 			try {
 				await message.author.send(commandInfoEmbed);
-				return message.reply('Sent all of my commands to your DM.');
+				return message.reply('sent all of my commands to your DM.');
 			}
 			catch (error) {
 				console.error(error);
-				return message.reply('Can\'t send my commands to your DM! Is your DM closed?');
+				return message.reply('can\'t send my commands to your DM! Is your DM closed?');
 			}
 		}
 
@@ -45,7 +45,7 @@ module.exports = class HelpCommand extends CommandClass {
 		const command = commands.get(cmdName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
 
 		if (!command) {
-			return message.reply('Make sure you type the correct command.');
+			return message.reply('make sure you type the correct command.');
 		}
 
 		commandInfoEmbed.setColor('#EFFF00');
