@@ -62,7 +62,7 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply(`There was an error while attempting to retrive the document!\n${error}`);
+			return message.reply(`there was an error while attempting to retrive the document!\n${error}`);
 		}
 	}
 };

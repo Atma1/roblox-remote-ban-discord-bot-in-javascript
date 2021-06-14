@@ -44,7 +44,7 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 		}
 		catch (error) {
 			console.error(error);
-			return message.channel.send(`There was an error while banning the player!\n${error}`);
+			return message.reply(`there was an error while banning the player!\n${error}`);
 		}
 	}
 };
