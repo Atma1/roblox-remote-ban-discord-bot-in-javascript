@@ -9,7 +9,6 @@ module.exports = class Command {
 		this.example = commandOptions.example || false;
 		this.cooldown = commandOptions.cooldown || 3;
 		this.args = commandOptions.args || false;
-		this.guildonly = commandOptions.guildonly || false;
 		this.permission = commandOptions.permission || false;
 		this.reqarglength = commandOptions.reqarglength || false;
 		this.guildOwnerOnly = commandOptions.guildOwnerOnly || false;
