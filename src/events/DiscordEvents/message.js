@@ -41,7 +41,7 @@ module.exports = class extends EventClass {
 
 			if (command.args && !args.length || args.length < command.reqarglength) {
 				let reply = 'Please provide the necessary amount of argument(s).';
-				reply += `\n Do this: \`${prefix}${command.usage}\``;
+				reply += `\n Do this: \`${prefix}${commandName} ${command.usage}\``;
 				return message.reply(reply);
 			}
 
@@ -56,12 +56,12 @@ module.exports = class extends EventClass {
 			const now = Date.now();
 			const cooldownAmount = (command.cooldown || 3) * 1000;
 			const timestamps = cooldowns.get(command.name);
-			console.log(lowerCaseMessage);
+
 
 			if (timestamps.has(message.author.id)) {
 				const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
-				if (now < expirationTime) {
+				if (expirationTime > now) {
 					const timeLeft = (expirationTime - now) / 1000;
 					return message.reply(`Please wait ${timeLeft.toFixed(1)} more second(s) before reusing!`);
 				}
@@ -71,7 +71,7 @@ module.exports = class extends EventClass {
 			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
 			try {
-				console.log(args);
+				console.log(args, lowerCaseMessage);
 				command.execute(message, args);
 			}
 			catch (error) {

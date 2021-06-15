@@ -24,8 +24,9 @@ module.exports = class extends DataBaseRelatedCommandClass {
 	async execute(message, args) {
 		const playerName = args.shift();
 		const banReason = args.join(' ');
-		const bannedAt = this.dateformat(Date.now());
+		const bannedAt = Date.now();
 		const bannedBy = message.author.tag;
+		const formattedDate = this.dateformat(bannedAt);
 
 		try {
 			const playerId = await this.getUserId(playerName);
@@ -40,7 +41,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 					throw (error);
 				});
 			const embed = new EmbededBanInfoMessage(
-				bannedAt, bannedBy, playerName, playerId, banReason, playerImage,
+				formattedDate, bannedBy, playerName, playerId, banReason, playerImage,
 			);
 			return message.channel.send(`\`Player: ${playerName} has been banned.\``, embed);
 		}

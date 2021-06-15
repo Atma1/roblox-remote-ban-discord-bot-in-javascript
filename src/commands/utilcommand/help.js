@@ -60,7 +60,7 @@ module.exports = class extends CommandClass {
 			value: `${command.cooldown || 3} second(s)`,
 		}, {
 			name: 'Command Usage:',
-			value: `${this.prefix}${command.usage}`,
+			value: `${this.prefix}${cmdName} ${command.usage}`,
 		});
 
 		if (command.example) {
@@ -73,6 +73,12 @@ module.exports = class extends CommandClass {
 			embed.addFields({
 				name: 'Command Aliases:',
 				value: `${command.aliases.join(', ')}`,
+			});
+		}
+		if (command.args) {
+			embed.addFields({
+				name: 'Require arguments:',
+				value: true,
 			});
 		}
 		if (command.permission) {

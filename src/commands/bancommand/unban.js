@@ -6,7 +6,7 @@ module.exports = class extends DataBaseRelatedCommandClass {
 			botClient,
 			'unban',
 			'remove the player from the database assuming the player is in the database',
-			'unban playerName', {
+			'playerName', {
 				aliases: ['ub', 'forgive', 'amnesty', 'remove'],
 				example: 'unban joemama',
 				args: true,

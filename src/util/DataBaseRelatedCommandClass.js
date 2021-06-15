@@ -51,7 +51,6 @@ module.exports = class DataBaseRelatedCommandClass extends genericCommandClass {
 	}
 
 	dateformat(date) {
-		const formattedDate = dateformat(date, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
-		return formattedDate;
+		return dateformat(date, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
 	}
 };
