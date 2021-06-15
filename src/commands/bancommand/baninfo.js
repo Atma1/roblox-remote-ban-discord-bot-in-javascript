@@ -23,13 +23,13 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 		const [playerName] = arg;
 
 		try {
-			const querySnapShot = await this.retriveBanDocument(playerName, guildId);
+			const querySnapshot = await this.retriveBanDocument(playerName, guildId);
 
-			if (querySnapShot.empty) {
+			if (querySnapshot.empty) {
 				throw new Error(`${playerName} is not found in the database.`);
 			}
 
-			const documents = querySnapShot.docs;
+			const documents = querySnapshot.docs;
 			const [ banDocument ] = documents;
 			const data = banDocument.data();
 
