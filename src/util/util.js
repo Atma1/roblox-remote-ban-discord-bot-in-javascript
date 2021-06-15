@@ -66,8 +66,12 @@ const trimString = (str, max) => {
 	return ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
 };
 
-const checkIfRoleId = (arg) => {
+const parseToRoleId = (arg) => {
 	return arg.match(/[0-9]\d+/g);
+};
+
+const checkIfRoleExists = (roleId, guildRoles) => {
+	return guildRoles.find(guildRole => guildRole.id == roleId);
 };
 
 const createNewGuildDataBase = async (id, DB) => {
@@ -145,7 +149,8 @@ module.exports = {
 	loadCommands: loadCommands,
 	loadEvents: loadEvents,
 	trimString: trimString,
-	checkIfRoleId: checkIfRoleId,
+	checkIfRoleId: parseToRoleId,
+	checkIfRoleExists: checkIfRoleExists,
 	createNewGuildDataBase: createNewGuildDataBase,
 	guildConfigDocConverter: guildConfigDocConverter,
 	playerBanDocConverter: playerDocConverter,
