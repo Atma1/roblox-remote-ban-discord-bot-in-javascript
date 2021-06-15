@@ -18,34 +18,33 @@ Structures.extend('Guild', (Guild) => {
 		}
 
 		async setupGuildConfig() {
-			const snap = await this.getGuildPrefixAndRole()
-				.catch(err => console.error(err));
+			try {
+				const snapshot = await this.getGuildPrefixAndRole();
 
-			if (!snap.exists) {
-				console.warn(`Guild config for guild ${this.id} is not avaible!`);
+				if (!snapshot.exists) {
+					console.warn(`Guild config for guild ${this.id} is not avaible!`);
+				}
+				else {
+					const {
+						defaultPrefix,
+						authorizedRoles,
+					} = snapshot.data();
+
+					this.guildConfig.set('defaultPrefix', defaultPrefix || '!');
+					this.guildConfig.set('authorizedRoles', authorizedRoles || []);
+				}
 			}
-			else {
-				const {
-					defaultPrefix,
-					authorizedRoles,
-				} = snap.data();
-
-				this.guildConfig.set('defaultPrefix', defaultPrefix || '!');
-				this.guildConfig.set('authorizedRoles', authorizedRoles || []);
+			catch (error) {
+				console.error(error);
 			}
 		}
 
 		getGuildPrefixAndRole() {
-			try {
-				return firestore
-					.collection(`guildDataBase:${this.id}`)
-					.doc('guildConfigurations')
-					.withConverter(guildConfigDocConverter)
-					.get();
-			}
-			catch (error) {
-				throw(`${error}`);
-			}
+			return firestore
+				.collection(`guildDataBase:${this.id}`)
+				.doc('guildConfigurations')
+				.withConverter(guildConfigDocConverter)
+				.get();
 		}
 	}
 	return GuildConfig;
