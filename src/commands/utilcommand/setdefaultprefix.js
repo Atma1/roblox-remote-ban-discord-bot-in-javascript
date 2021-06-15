@@ -17,20 +17,15 @@ module.exports = class SetPrefixCommand extends DataBaseRelatedCommandClass {
 			});
 	}
 	async execute(message, args) {
-		const { guildConfig, id } = message.guild;
+		const { guildConfig, id: guildId } = message.guild;
 		const [desiredDefaultPrefix] = args;
 
 		try {
-			await this.dataBase
-				.collection(`guildDataBase:${id}`)
-				.doc('guildConfigurations')
-				.update({
-					'guildConfig.defaultPrefix': desiredDefaultPrefix,
-				});
+			await this.setDefaultPrefix(desiredDefaultPrefix, guildId);
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply(`There was an error while adding the role!\n${error}`);
+			return message.reply(`there was an error while updating the prefix!\n${error}`);
 		}
 
 		guildConfig.set('defaultPrefix', desiredDefaultPrefix);

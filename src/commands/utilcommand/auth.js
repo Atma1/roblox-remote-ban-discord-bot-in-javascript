@@ -1,5 +1,8 @@
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
-const { checkIfRoleId } = require('@util/util');
+const {
+	parseToRoleId,
+	checkIfRoleExists,
+} = require('@util/util');
 
 module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -17,25 +20,25 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 	}
 	async execute(message, args) {
 		const [role] = args;
-		const roleId = checkIfRoleId(role);
-		const { guildConfig, id } = message.guild;
+		const roleId = parseToRoleId(role);
+		const {
+			guildConfig,
+			id: guildId,
+			roles,
+		} = message.guild;
 		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
 		if (!roleId) {
-			return message.reply('That is not a role Id!');
+			return message.reply('that is not a role Id!');
 		}
+		const roleExists = checkIfRoleExists(roles.cache, roleId);
 
-		if (!message.guild.roles.cache.find(guildRole => guildRole.id == roleId)) {
-			return message.reply('Make sure you input the correct role.');
+		if (!roleExists) {
+			return message.reply('make sure you input the role correctly.');
 		}
 
 		try {
-			await this.dataBase
-				.collection(`guildDataBase:${id}`)
-				.doc('guildConfigurations')
-				.update({
-					'guildConfig.authorizedRoles': this.firestore.FieldValue.arrayUnion(`${roleId}`),
-				});
+			await this.addAuthorizedRole(roleId, guildId);
 		}
 		catch (error) {
 			console.error(error);

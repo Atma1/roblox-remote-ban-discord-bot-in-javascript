@@ -1,5 +1,8 @@
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
-const { checkIfRoleId } = require('@util/util');
+const {
+	parseToRoleId,
+	checkIfRoleExists,
+} = require('@util/util');
 
 module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -15,31 +18,31 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 				permission: true,
 			});
 	}
-	async execute(msg, args) {
+	async execute(message, args) {
 		const [role] = args;
-		const roleId = checkIfRoleId(role);
-		const { guildConfig, id } = msg.guild;
+		const roleId = parseToRoleId(role);
+		const {
+			guildConfig,
+			id: guildId,
+			roles,
+		} = message.guild;
 		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
 		if (!roleId) {
-			return msg.reply('That is not a role Id!');
+			return message.reply('that is not a role Id!');
 		}
+		const roleExists = checkIfRoleExists(roles.cache, roleId);
 
-		if (!msg.guild.roles.cache.find(guildRole => guildRole.id == roleId)) {
-			return msg.reply('Make sure you input the correct role.');
+		if (!roleExists) {
+			return message.reply('make sure you input the role correctly.');
 		}
 
 		try {
-			await this.dataBase
-				.collection(`guildDataBase:${id}`)
-				.doc('guildConfigurations')
-				.update({
-					'guildConfig.authorizedRoles': this.firestore.FieldValue.arrayRemove(`${roleId}`),
-				});
+			await this.removeAuthorizedRole(roleId, guildId);
 		}
 		catch (error) {
 			console.error(error);
-			return msg.reply(`There was an error while removing the role!\n${error}`);
+			return message.reply(`There was an error while removing the role!\n${error}`);
 		}
 
 		for (const cachedRole of cachedAuthorizedRoles) {
@@ -49,6 +52,6 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 		}
 
 		guildConfig.set('authorizedRoles', cachedAuthorizedRoles);
-		return msg.channel.send(`${role} has been restricted to use permission restricted command!`);
+		return message.channel.send(`${role} has been restricted to use permission restricted command!`);
 	}
 };
