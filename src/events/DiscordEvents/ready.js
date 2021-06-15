@@ -1,7 +1,7 @@
-const EventClass = require('@util/EventClass');
-const ms = require('ms');
-const fireBaseAdmin = require('firebase-admin');
-const fireStore = fireBaseAdmin.firestore();
+const EventClass = require('@class/EventClass');
+const admin = require('firebase-admin');
+const readableToMs = require('readable-to-ms');
+const fireStore = admin.firestore();
 
 module.exports = class ReadyEvent extends EventClass {
 	constructor(botClient) {
@@ -14,30 +14,54 @@ module.exports = class ReadyEvent extends EventClass {
 	async execute() {
 		console.log(`${this.botClient.user.tag} is ready!`);
 
+		function runAutoUnban(client) {
+			const clientGuild = client.guilds.cache;
+			clientGuild.forEach(async guild => {
+				await checkBan(guild.id);
+			});
 
-		// const checkBan = async () => {
-		// 	// const now = Date.now();
-		// 	const playersToUnbanDoc = await fireStore
-		// 		.collection('serverDataBase')
-		// 		.doc('banList')
-		// 		.collection('bannedPlayerList')
-		// 		.where('banDetails.banReason', '==', 'tesuto')
-		// 		.get();
-		// 	return playersToUnbanDoc;
-		// };
+			setTimeout(() => {
+				runAutoUnban(client);
+			}, readableToMs('30s'));
+		}
 
-		// const unbanDocSnapShot = await checkBan();
+		async function checkBan(guildId) {
+			try {
+				const querySnapshot = await fetchBanDocument(guildId);
 
-		// if (!unbanDocSnapShot.empty) {
-		// 	// IMPLEMENT STAGED DELETE IF SIZE >= 500
-		// 	console.log(unbanDocSnapShot.size);
-		// 	const unbanBatch = fireStore.batch();
+				if (querySnapshot.size === 0) return;
 
-		// 	unbanDocSnapShot.forEach(doc => {
-		// 		console.log(`Unbanned ${doc.id}.`);
-		// 		unbanBatch.delete(doc.ref);
-		// 	});
-		// 	await unbanBatch.commit();
-		// }
+				await batchDelete(querySnapshot);
+
+				process.nextTick(() => {
+					checkBan(guildId);
+				});
+			}
+			catch (error) {
+				console.error(error);
+			}
+		}
+
+		function fetchBanDocument(guildId) {
+			const now = Date.now();
+			return fireStore
+				.collection(`guildDataBase:${guildId}`)
+				.doc('banList')
+				.collection('bannedPlayerList')
+				.where('banDetails.bannedUntil', '<=', now)
+				.limit(500)
+				.get();
+		}
+
+		async function batchDelete(snapshot) {
+			const batch = fireStore.batch();
+			snapshot.forEach(doc => {
+				console.log(`Deleted ${doc.id}.`);
+				batch.delete(doc.ref);
+			});
+			await batch.commit();
+		}
+
+		runAutoUnban(this.botClient);
 	}
 };
