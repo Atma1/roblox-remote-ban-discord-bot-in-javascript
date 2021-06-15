@@ -35,7 +35,7 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 		const hasBanDuration = checkIfHasBanDuration(args);
 
 		if (!hasBanDuration) {
-			return message.reply('You need to specify the ban duration!');
+			return message.reply('you need to specify the ban duration!');
 		}
 
 		const { id:guildId } = message.channel.guild;
