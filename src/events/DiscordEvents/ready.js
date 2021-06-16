@@ -1,7 +1,7 @@
 const EventClass = require('@class/EventClass');
 const admin = require('firebase-admin');
 const readableToMs = require('readable-to-ms');
-const fireStore = admin.firestore();
+const firestore = admin.firestore();
 
 module.exports = class ReadyEvent extends EventClass {
 	constructor(botClient) {
@@ -22,7 +22,7 @@ module.exports = class ReadyEvent extends EventClass {
 
 			setTimeout(() => {
 				runAutoUnban(client);
-			}, readableToMs('30s'));
+			}, readableToMs('10m'));
 		}
 
 		async function checkBan(guildId) {
@@ -44,7 +44,7 @@ module.exports = class ReadyEvent extends EventClass {
 
 		function fetchBanDocument(guildId) {
 			const now = Date.now();
-			return fireStore
+			return firestore
 				.collection(`guildDataBase:${guildId}`)
 				.doc('banList')
 				.collection('bannedPlayerList')
@@ -54,7 +54,7 @@ module.exports = class ReadyEvent extends EventClass {
 		}
 
 		async function batchDelete(snapshot) {
-			const batch = fireStore.batch();
+			const batch = firestore.batch();
 			snapshot.forEach(doc => {
 				console.log(`Deleted ${doc.id}.`);
 				batch.delete(doc.ref);
