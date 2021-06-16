@@ -1,6 +1,11 @@
 const fs = require('fs');
 const readableToMs = require('readable-to-ms');
+const dateformat = require('dateformat');
 const GuildConfigDocument = require('@class/GuildConfigDocumentClass');
+const {
+	EmbededPermBanInfoMessage,
+	EmbededTempBanInfoMessage,
+} = require('@modules/EmbededBanMessage');
 
 const playerDocConverter = {
 	toFirestore: (Doc) => {
@@ -50,6 +55,33 @@ const guildConfigDocConverter = {
 			defaultPrefix: guildConfig.defaultPrefix,
 		};
 	},
+};
+
+const createBanInfoEmbed = (data, userImage, playerName) =>{
+	const {
+		playerID,
+		banReason,
+		bannedBy,
+		bannedAt,
+		banType,
+	} = data;
+
+	const formattedBanDate = dateformat(bannedAt);
+	let banInfoEmbed;
+
+	if (banType == 'permaBan') {
+		banInfoEmbed = new EmbededPermBanInfoMessage(
+			formattedBanDate, bannedBy, playerName, playerID, banReason, userImage,
+		);
+	}
+	else {
+		const { bannedUntil } = data;
+		const formattedUnbanDate = this.dateformat(bannedUntil);
+		banInfoEmbed = new EmbededTempBanInfoMessage(
+			formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
+		);
+	}
+	return banInfoEmbed;
 };
 
 const seperateDurationAndBanReason = (args) => {
@@ -152,6 +184,7 @@ module.exports = {
 	parseToRoleId: parseToRoleId,
 	checkIfRoleExists: checkIfRoleExists,
 	createNewGuildDataBase: createNewGuildDataBase,
+	createBanInfoEmbed: createBanInfoEmbed,
 	guildConfigDocConverter: guildConfigDocConverter,
 	playerBanDocConverter: playerDocConverter,
 	seperateDurationAndBanReason: seperateDurationAndBanReason,
