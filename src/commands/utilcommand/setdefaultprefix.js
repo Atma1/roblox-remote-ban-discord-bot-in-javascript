@@ -29,6 +29,6 @@ module.exports = class SetPrefixCommand extends DataBaseRelatedCommandClass {
 		}
 
 		guildConfig.set('defaultPrefix', desiredDefaultPrefix);
-		return message.channel.send(`The defaultPrefix has been set to ${desiredDefaultPrefix}.`);
+		return message.channel.send(`The defaultPrefix has been set to \`${desiredDefaultPrefix}\``);
 	}
 };
