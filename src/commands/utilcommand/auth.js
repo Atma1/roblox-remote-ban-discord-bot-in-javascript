@@ -11,7 +11,7 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 			'authorizerole',
 			'authorize specific role to command that require permission',
 			'<@role>', {
-				aliases: ['auth', 'permit', 'authforrole'],
+				aliases: ['auth', 'permit', 'authforrole', 'at'],
 				example: 'auth @joemama',
 				cooldown: 5,
 				args: true,
