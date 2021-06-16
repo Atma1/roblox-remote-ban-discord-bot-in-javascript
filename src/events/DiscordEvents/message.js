@@ -85,7 +85,7 @@ module.exports = class MessageEvent extends EventClass {
 			}
 			catch (error) {
 				console.error(error);
-				message.reply(`There was an error while executing the command!\n${error}`);
+				message.reply(`there was an error while executing the command!\n${error}`);
 			}
 		}
 	}
