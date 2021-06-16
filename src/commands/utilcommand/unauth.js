@@ -8,10 +8,10 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
 		super(
 			botClient,
-			'unauthorizerole',
-			'unauthorize specific role to command that require permission assuming the role exits in the database',
+			'unauth',
+			'unauthorize specific role to command that require permission assuming the role exists in the database',
 			'<@role>', {
-				aliases: ['unauth', 'revoke', 'ut'],
+				aliases: ['revoke', 'ut'],
 				example: 'unauthorizerole @joemama',
 				cooldown: 5,
 				args: true,
@@ -52,6 +52,6 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 		}
 
 		guildConfig.set('authorizedRoles', cachedAuthorizedRoles);
-		return message.channel.send(`${role} has been restricted to use permission restricted command!`);
+		return message.channel.send(`\`${role}\` has been restricted to use permission restricted command!`);
 	}
 };
