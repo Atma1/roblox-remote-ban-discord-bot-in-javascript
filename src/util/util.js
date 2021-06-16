@@ -70,7 +70,7 @@ const parseToRoleId = (arg) => {
 	return arg.match(/[0-9]\d+/g);
 };
 
-const checkIfRoleExists = (roleId, guildRoles) => {
+const checkIfRoleExists = (guildRoles, roleId) => {
 	return guildRoles.find(guildRole => guildRole.id == roleId);
 };
 
@@ -149,7 +149,7 @@ module.exports = {
 	loadCommands: loadCommands,
 	loadEvents: loadEvents,
 	trimString: trimString,
-	checkIfRoleId: parseToRoleId,
+	parseToRoleId: parseToRoleId,
 	checkIfRoleExists: checkIfRoleExists,
 	createNewGuildDataBase: createNewGuildDataBase,
 	guildConfigDocConverter: guildConfigDocConverter,
