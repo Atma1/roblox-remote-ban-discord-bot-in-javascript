@@ -1,7 +1,4 @@
-const {
-	EmbededPermBanInfoMessage,
-	EmbededTempBanInfoMessage,
-} = require('@modules/EmbededBanMessage');
+const { createBanInfoEmbed } = require('@util/util');
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 
 module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
@@ -32,31 +29,9 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 			const documents = querySnapshot.docs;
 			const [ banDocument ] = documents;
 			const data = banDocument.data();
-
-			const {
-				playerID,
-				banReason,
-				bannedBy,
-				bannedAt,
-				banType,
-			} = data;
-
-			const formattedBanDate = this.dateformat(bannedAt);
+			const { playerID } = data;
 			const userImage = await this.getUserImg(playerID);
-			let banInfoEmbed;
-
-			if (banType == 'permaBan') {
-				banInfoEmbed = new EmbededPermBanInfoMessage(
-					formattedBanDate, bannedBy, playerName, playerID, banReason, userImage,
-				);
-			}
-			else {
-				const { bannedUntil } = data;
-				const formattedUnbanDate = this.dateformat(bannedUntil);
-				banInfoEmbed = new EmbededTempBanInfoMessage(
-					formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
-				);
-			}
+			const banInfoEmbed = createBanInfoEmbed(data, userImage, playerName);
 
 			return message.channel.send(banInfoEmbed);
 		}
