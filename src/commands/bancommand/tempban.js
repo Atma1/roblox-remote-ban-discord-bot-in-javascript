@@ -29,7 +29,7 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 	/**
 	 * @param {Class} message
 	 * @param {Array} args
-	 * @returns Message Embed
+	 * @returns Promise
 	 */
 	async execute(message, args) {
 		const hasBanDuration = checkIfHasBanDuration(args);
