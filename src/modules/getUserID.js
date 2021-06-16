@@ -4,16 +4,16 @@ const endpoint = 'https://api.roblox.com/users/get-by-username';
 module.exports = {
 	/**
 	 *
-	 * @param {String} requestedUserName;
+	 * @param {String} userId;
 	 * @return UserId
 	 */
-	getUserId: async (requestedUserName) => {
+	getUserId: async (userId) => {
 		try {
 			const response = await axios
 				.get(endpoint, {
 					timeout: 3000,
 					params: {
-						username: `${requestedUserName}`,
+						username: `${userId}`,
 					},
 				})
 				.then(res => res.data);
