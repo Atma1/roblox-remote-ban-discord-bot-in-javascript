@@ -89,21 +89,31 @@ const seperateDurationAndBanReason = (args) => {
 	return [banDuration, banReason];
 };
 
-const checkIfHasBanDuration = (args) => {
+const hasBanDuration = (args) => {
 	const durationRE = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y|dcd|c)?$/ig;
 	return args.some(arg => durationRE.test(arg));
 };
 
 const trimString = (str, max) => {
-	return ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
+	return (str.length > max) ? `${str.slice(0, max - 3)}...` : str;
 };
 
 const parseToRoleId = (arg) => {
 	return arg.match(/[0-9]\d+/g);
 };
 
-const checkIfRoleExists = (guildRoles, roleId) => {
+const roleExists = (guildRoles, roleId) => {
 	return guildRoles.find(guildRole => guildRole.id == roleId);
+};
+
+const removeRoleFromCache = (roleId, cachedRoles) =>{
+	let updatedCachedRoles;
+	for (const cachedRole of cachedRoles) {
+		if (cachedRoles[cachedRole] == roleId) {
+			updatedCachedRoles = cachedRoles.splice(cachedRole, 1);
+		}
+	}
+	return updatedCachedRoles;
 };
 
 const createNewGuildDataBase = async (id, DB) => {
@@ -114,7 +124,7 @@ const createNewGuildDataBase = async (id, DB) => {
 			.create(new GuildConfigDocument);
 
 		let successMessage = 'Collection containing your guild config has been created.';
-		successMessage += ' Be sure to add roles is authorized to use the commands!';
+		successMessage += ' Be sure to add roles that\'s authorized to use the commands using the auth command!';
 
 		console.log(`Database for guild ${id} has been created.`);
 		return successMessage;
@@ -182,11 +192,12 @@ module.exports = {
 	loadEvents: loadEvents,
 	trimString: trimString,
 	parseToRoleId: parseToRoleId,
-	checkIfRoleExists: checkIfRoleExists,
+	roleExists: roleExists,
+	removeRoleFromCache: removeRoleFromCache,
 	createNewGuildDataBase: createNewGuildDataBase,
 	createBanInfoEmbed: createBanInfoEmbed,
 	guildConfigDocConverter: guildConfigDocConverter,
 	playerBanDocConverter: playerDocConverter,
 	seperateDurationAndBanReason: seperateDurationAndBanReason,
-	checkIfHasBanDuration: checkIfHasBanDuration,
+	hasBanDuration: hasBanDuration,
 };
