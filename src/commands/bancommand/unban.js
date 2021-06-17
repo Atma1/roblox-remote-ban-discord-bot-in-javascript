@@ -19,7 +19,7 @@ module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
 		const { id:guildId } = message.channel.guild;
 		try {
 			const playerId = await this.getUserId(playerName);
-			this.deletePlayerBanDocument(playerId, guildId);
+			await this.deletePlayerBanDocument(playerId, guildId);
 		}
 		catch (error) {
 			console.error(error);
