@@ -11,7 +11,7 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 			'<playerName> <banReason>', {
 				aliases: ['addban', 'banplayer', 'bn', 'permban', 'pb'],
 				example: 'ban joemama joemama is too fat',
-				cooldown: 5,
+				cooldown: '5s',
 				args: true,
 				permission: true,
 				reqarglength: 2,
@@ -37,10 +37,10 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 				this.addPlayerToBanList(playerBanDoc, guildId),
 			]);
 
-			const embed = new EmbededPermBanInfoMessage(
+			const banInfoEmbed = new EmbededPermBanInfoMessage(
 				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage,
 			);
-			return message.channel.send(`\`${playerName} has been banned.\``, embed);
+			return message.channel.send(`\`${playerName} has been banned.\``, banInfoEmbed);
 		}
 		catch (error) {
 			console.error(error);
