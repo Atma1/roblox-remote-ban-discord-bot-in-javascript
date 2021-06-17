@@ -3,7 +3,7 @@ const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass'
 const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
 const {
 	seperateDurationAndBanReason,
-	checkIfHasBanDuration,
+	hasBanDuration,
 } = require('@util/util');
 
 
@@ -32,9 +32,8 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 	 * @returns Promise
 	 */
 	async execute(message, args) {
-		const hasBanDuration = checkIfHasBanDuration(args);
 
-		if (!hasBanDuration) {
+		if (!hasBanDuration(args)) {
 			return message.reply('you need to specify the ban duration!');
 		}
 
