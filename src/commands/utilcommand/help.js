@@ -12,7 +12,7 @@ module.exports = class HelpCommand extends CommandClass {
 			'<commandName/noCommandName>', {
 				aliases: ['cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
 				example: 'help ban or just help',
-				cooldown: 5,
+				cooldown: '5s',
 			},
 		);
 	}
@@ -58,7 +58,7 @@ module.exports = class HelpCommand extends CommandClass {
 			value: `${command.desc}`,
 		}, {
 			name: 'Command Cooldown:',
-			value: `${command.cooldown || 3} second(s)`,
+			value: `${command.cooldown}`,
 		}, {
 			name: 'Command Usage:',
 			value: `${prefix}${cmdName} ${command.usage}`,

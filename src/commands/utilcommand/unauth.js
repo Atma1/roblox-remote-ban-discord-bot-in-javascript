@@ -13,7 +13,7 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 			'<@role>', {
 				aliases: ['revoke', 'ut'],
 				example: 'unauthorizerole @joemama',
-				cooldown: 5,
+				cooldown: '5s',
 				args: true,
 				permission: true,
 			});

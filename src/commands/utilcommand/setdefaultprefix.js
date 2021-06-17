@@ -10,7 +10,7 @@ module.exports = class SetPrefixCommand extends DataBaseRelatedCommandClass {
 			{
 				aliases: ['sdf', 'defaultprefix', 'df'],
 				example: 'setdefaultprefix ε',
-				cooldown: 5,
+				cooldown: '5s',
 				args: true,
 				reqarglength: 1,
 				guildOwnerOnly: true,

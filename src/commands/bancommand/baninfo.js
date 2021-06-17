@@ -10,7 +10,7 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 			'<playerName>', {
 				aliases: ['checkban', 'cb', 'bi', 'retrive'],
 				example: 'baninfo joemama',
-				cooldown: 5,
+				cooldown: '5s',
 				args: true,
 				permission: true,
 			});

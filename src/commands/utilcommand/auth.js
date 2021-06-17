@@ -13,7 +13,7 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 			'<@role>', {
 				aliases: ['auth', 'permit', 'authforrole', 'at'],
 				example: 'auth @joemama',
-				cooldown: 5,
+				cooldown: '5s',
 				args: true,
 				permission: true,
 			});

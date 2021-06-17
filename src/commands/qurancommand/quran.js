@@ -13,7 +13,7 @@ module.exports = class QuranCommand extends CommandClass {
 			'<chapterNumber:verseNumber>', {
 				example : 'quran 39:53',
 				args : true,
-				cooldown : 5,
+				cooldown : '5s',
 			});
 	}
 	async execute(message, args) {

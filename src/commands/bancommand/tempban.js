@@ -19,7 +19,7 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 			'<playerName> <banDuration> <banReason>', {
 				aliases: ['tban', 'temppunish', 'tb', 'tbc', 'tp'],
 				example: 'tempban joemama 720y 666w 420d 42h joemama is too fat',
-				cooldown: 5,
+				cooldown: '5s',
 				args: true,
 				permission: true,
 				reqarglength: 3,

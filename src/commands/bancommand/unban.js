@@ -10,7 +10,7 @@ module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
 				aliases: ['ub', 'forgive', 'amnesty', 'remove'],
 				example: 'unban joemama',
 				args: true,
-				cooldown: 5,
+				cooldown: '5s',
 				permission: true,
 			});
 	}
