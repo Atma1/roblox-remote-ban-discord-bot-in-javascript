@@ -1,5 +1,7 @@
 require('dotenv').config();
 const Discord = require('discord.js');
+const ms = require('ms');
+// const { Permissions } = require('discord.js');
 const {
 	checkPerm,
 	convertUserRolesToArray,
@@ -64,15 +66,15 @@ module.exports = class MessageEvent extends EventClass {
 			}
 
 			const now = Date.now();
-			const cooldownAmount = (command.cooldown || 3) * 1000;
+			const cooldownAmount = command.cooldown ? ms(command.cooldown) : ms('3s');
 			const timestamps = cooldowns.get(command.name);
 
 			if (timestamps.has(message.author.id)) {
 				const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
 
 				if (expirationTime > now) {
-					const timeLeft = (expirationTime - now) / 1000;
-					return message.reply(`Please wait ${timeLeft.toFixed(1)} more second(s) before reusing!`);
+					const timeLeft = ms(expirationTime - now, { long: true });
+					return message.reply(`Please wait ${timeLeft} before reusing!`);
 				}
 			}
 
