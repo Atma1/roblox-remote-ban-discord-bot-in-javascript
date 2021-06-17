@@ -1,7 +1,8 @@
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 const {
 	parseToRoleId,
-	checkIfRoleExists,
+	roleExists,
+	removeRoleFromCache,
 } = require('@util/util');
 
 module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
@@ -24,16 +25,15 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 		const {
 			guildConfig,
 			id: guildId,
-			roles,
+			roles: guildRoles,
 		} = message.guild;
 		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
 		if (!roleId) {
 			return message.reply('that is not a role Id!');
 		}
-		const roleExists = checkIfRoleExists(roles.cache, roleId);
 
-		if (!roleExists) {
+		if (!roleExists(guildRoles.cache, roleId)) {
 			return message.reply('make sure you input the role correctly.');
 		}
 
@@ -45,13 +45,9 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 			return message.reply(`There was an error while removing the role!\n${error}`);
 		}
 
-		for (const cachedRole of cachedAuthorizedRoles) {
-			if (cachedAuthorizedRoles[cachedRole] == roleId) {
-				cachedAuthorizedRoles.splice(cachedRole, 1);
-			}
-		}
+		const updatedCachedRoles = removeRoleFromCache(roleId, cachedAuthorizedRoles);
 
-		guildConfig.set('authorizedRoles', cachedAuthorizedRoles);
+		guildConfig.set('authorizedRoles', updatedCachedRoles);
 		return message.channel.send(`\`${role}\` has been restricted to use permission restricted command!`);
 	}
 };
