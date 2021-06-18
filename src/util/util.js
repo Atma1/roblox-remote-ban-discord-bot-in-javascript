@@ -5,7 +5,7 @@ const GuildConfigDocument = require('@class/GuildConfigDocumentClass');
 const {
 	EmbededPermBanInfoMessage,
 	EmbededTempBanInfoMessage,
-} = require('@modules/EmbededBanMessage');
+} = require('@class/EmbededBanMessage');
 
 const playerDocConverter = {
 	toFirestore: (Doc) => {
