@@ -1,7 +1,6 @@
 const CommandClass = require('@class/CommandClass');
-const {
-	MessageEmbed,
-} = require('discord.js');
+const CommandInfoEmbed = require('@class/CommandInfoEmbed');
+const CommandListEmbed = require('@class/CommandListEmbed');
 
 module.exports = class HelpCommand extends CommandClass {
 	constructor(botClient) {
@@ -17,21 +16,15 @@ module.exports = class HelpCommand extends CommandClass {
 		);
 	}
 	async execute(message, args) {
-		const commandInfoEmbed = new MessageEmbed;
 		const prefix = message.guild.guildConfig.get('defaultPrefix');
 		const {
 			commands,
 		} = this.botClient;
 
 		if (!args.length) {
-			commandInfoEmbed.setTitle('Commands List');
-			commandInfoEmbed.addField(
-				'Important to Know❗', `If you want info on specific command send ${prefix}help [commandName] and don't send it here!`,
-			);
-			commandInfoEmbed.setDescription(commands.map(cmd => cmd.name).join(', '));
-
+			const commandListEmbed = new CommandListEmbed(commands, prefix);
 			try {
-				await message.author.send(commandInfoEmbed);
+				await message.author.send(commandListEmbed);
 				return message.reply('sent all of my commands to your DM.');
 			}
 			catch (error) {
@@ -40,45 +33,15 @@ module.exports = class HelpCommand extends CommandClass {
 			}
 		}
 
-		const [cmdName] = args;
-		cmdName.toLowerCase();
-		const command = commands.get(cmdName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(cmdName));
+		const [commandName] = args;
+		commandName.toLowerCase();
+		const command = commands.get(commandName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 		if (!command) {
 			return message.reply('make sure you type the correct command.');
 		}
+		const commandInfoEmbed = new CommandInfoEmbed(commands, commandName, prefix);
 
-		commandInfoEmbed.setColor('#EFFF00');
-		commandInfoEmbed.setTitle('Command Information');
-		commandInfoEmbed.addFields({
-			name: 'Command Name:',
-			value: `${command.name}`,
-		}, {
-			name: 'Command Desc:',
-			value: `${command.desc}`,
-		}, {
-			name: 'Command Cooldown:',
-			value: `${command.cooldown}`,
-		}, {
-			name: 'Command Usage:',
-			value: `${prefix}${cmdName} ${command.usage}`,
-		});
-
-		if (command.example) {
-			commandInfoEmbed.addField('Command Example:', `${prefix}${command.example}`);
-		}
-		if (command.aliases) {
-			commandInfoEmbed.addField('Command Aliases:', `${command.aliases.join(', ')}`);
-		}
-		if (command.args) {
-			commandInfoEmbed.addField('Require arguments:', true);
-		}
-		if (command.guildOwnerOnly) {
-			commandInfoEmbed.addField('Owner Only:', true);
-		}
-		if (command.permission) {
-			commandInfoEmbed.addField('Require Permission:', true);
-		}
 		message.channel.send(commandInfoEmbed);
 	}
 };
