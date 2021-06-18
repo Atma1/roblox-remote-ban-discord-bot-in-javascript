@@ -16,8 +16,12 @@ module.exports = class GuildCreateEvent extends EventClass {
 		const { id, ownerID } = guildData;
 		const guildOwner = await this.botClient.users.fetch(ownerID);
 
-		const response = await createNewGuildDataBase(id, DB);
-		guildOwner.send(response)
-			.catch(err => console.error(err));
+		try {
+			const response = await createNewGuildDataBase(id, DB);
+			guildOwner.send(response);
+		}
+		catch (error) {
+			console.error(error);
+		}
 	}
 };
