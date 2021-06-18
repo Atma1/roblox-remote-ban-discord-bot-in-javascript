@@ -66,7 +66,7 @@ const createBanInfoEmbed = (data, userImage, playerName) =>{
 		banType,
 	} = data;
 
-	const formattedBanDate = dateformat(bannedAt);
+	const formattedBanDate = dateformat(bannedAt, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
 	let banInfoEmbed;
 
 	if (banType == 'permaBan') {
@@ -76,7 +76,7 @@ const createBanInfoEmbed = (data, userImage, playerName) =>{
 	}
 	else {
 		const { bannedUntil } = data;
-		const formattedUnbanDate = this.dateformat(bannedUntil);
+		const formattedUnbanDate = dateformat(bannedUntil, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
 		banInfoEmbed = new EmbededTempBanInfoMessage(
 			formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
 		);
@@ -90,7 +90,7 @@ const seperateDurationAndBanReason = (args) => {
 };
 
 const hasBanDuration = (args) => {
-	const durationRE = /^(-?(?:\d+)?\.?\d+) *(milliseconds?|msecs?|ms|seconds?|secs?|s|minutes?|mins?|m|hours?|hrs?|h|days?|d|weeks?|w|years?|yrs?|y|dcd|c)?$/ig;
+	const durationRE = /(\d+)\s*(milliseconds|millisecond|millis|milli|ms|seconds|second|secs|sec|s|minutes|minute|mins|min|m|hours|hour|hrs|hr|h|days|day|d|weeks|week|w|months|month|mo|years|year|y)\s*/gy;
 	return args.some(arg => durationRE.test(arg));
 };
 
