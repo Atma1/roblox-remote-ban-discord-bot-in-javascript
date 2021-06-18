@@ -1,4 +1,4 @@
-const { EmbededTempBanInfoMessage } = require('@modules/EmbededBanMessage');
+const { EmbededTempBanInfoMessage } = require('@class/EmbededBanMessage');
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
 const {
