@@ -13,7 +13,7 @@ module.exports = {
 			userId: `${userId}`,
 			width: '60',
 			height: '62',
-			isCircular: 'false',
+			isCircular: 'true',
 		};
 
 		try {
