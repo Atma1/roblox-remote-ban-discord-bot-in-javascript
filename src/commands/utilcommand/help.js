@@ -40,7 +40,7 @@ module.exports = class HelpCommand extends CommandClass {
 		if (!command) {
 			return message.reply('make sure you type the correct command.');
 		}
-		const commandInfoEmbed = new CommandInfoEmbed(commands, commandName, prefix);
+		const commandInfoEmbed = new CommandInfoEmbed(command, commandName, prefix);
 
 		message.channel.send(commandInfoEmbed);
 	}
