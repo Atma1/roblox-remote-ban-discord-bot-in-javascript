@@ -1,30 +1,30 @@
-const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandClass');
+const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 
-module.exports = class extends DataBaseRelatedCommandClass {
+module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
 		super(
 			botClient,
 			'unban',
 			'remove the player from the database assuming the player is in the database',
-			'playerName', {
+			'<playerName>', {
 				aliases: ['ub', 'forgive', 'amnesty', 'remove'],
 				example: 'unban joemama',
 				args: true,
-				cooldown: 5,
+				cooldown: '5s',
 				permission: true,
-				guildonly: true,
 			});
 	}
-	async execute(msg, args) {
+	async execute(message, args) {
 		const [playerName] = args;
+		const { id:guildId } = message.channel.guild;
 		try {
 			const playerId = await this.getUserId(playerName);
-			this.deletePlayerBanDocument(playerId);
+			await this.deletePlayerBanDocument(playerId, guildId);
 		}
 		catch (error) {
 			console.error(error);
-			return msg.channel.send(`There was an error while removing ${playerName}!\n${error}`);
+			return message.channel.send(`There was an error while removing ${playerName}!\n${error}`);
 		}
-		return msg.channel.send(`Player: ${playerName}, removed from Firebase Firestore.`);
+		return message.channel.send(`Player: ${playerName}, removed from Firebase Firestore.`);
 	}
 };

@@ -1,41 +1,51 @@
-const DataBaseRelatedCommandClass = require('../../util/DataBaseRelatedCommandClass');
+const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
+const {
+	parseToRoleId,
+	roleExists,
+} = require('@util/util');
 
-module.exports = class extends DataBaseRelatedCommandClass {
+module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
 		super(
 			botClient,
 			'authorizerole',
 			'authorize specific role to command that require permission',
-			'authorizerole @role', {
-				aliases: ['auth', 'permit', 'authforrole'],
+			'<@role>', {
+				aliases: ['auth', 'permit', 'authforrole', 'at'],
 				example: 'auth @joemama',
-				cooldown: 5,
+				cooldown: '5s',
 				args: true,
-				guildonly: true,
 				permission: true,
 			});
 	}
-	async execute(msg, args) {
+	async execute(message, args) {
 		const [role] = args;
-		const roleId = role.match(/[0-9]\d+/g);
-		const { cachedAuthorizedRoles } = this.botClient;
+		const roleId = parseToRoleId(role);
+		const {
+			guildConfig,
+			id: guildId,
+			roles: guildRoles,
+		} = message.guild;
+		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
-		if (!msg.guild.roles.cache.find(guildRole => guildRole.id === `${roleId}`)) {
-			return msg.channel.send('Make sure you input the correct role.');
+		if (!roleId) {
+			return message.reply('that is not a role Id!');
+		}
+
+		if (!roleExists(guildRoles.cache, roleId)) {
+			return message.reply('make sure you input the role correctly.');
 		}
 
 		try {
-			await this.dataBase.collection('serverDataBase').doc('serverData')
-				.update({
-					authorizedRoles: this.firestore.FieldValue.arrayUnion(`${roleId}`),
-				});
+			await this.addAuthorizedRole(roleId, guildId);
 		}
 		catch (error) {
 			console.error(error);
-			return msg.channel.send(`There was an error while adding the role!\n${error}`);
+			return message.reply(`There was an error while adding the role!\n${error}`);
 		}
 
-		cachedAuthorizedRoles.push(roleId);
-		return msg.channel.send(`${role} has been authorized to use permission restricted command!`);
+		const updatedCachedRoles = cachedAuthorizedRoles.push(roleId);
+		guildConfig.set('authorizedRoles', updatedCachedRoles);
+		return message.channel.send(`${role} has been authorized to use permission restricted command!`);
 	}
 };

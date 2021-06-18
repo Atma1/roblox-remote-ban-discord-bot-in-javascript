@@ -1,8 +1,9 @@
 const admin = require('firebase-admin');
 const DB = admin.firestore();
-const EventClass = require('../../util/EventClass');
+const EventClass = require('@class/EventClass');
+const { createNewGuildDataBase } = require('@util/util');
 
-module.exports = class extends EventClass {
+module.exports = class GuildCreateEvent extends EventClass {
 	constructor(botClient) {
 		super(
 			botClient,
@@ -11,18 +12,13 @@ module.exports = class extends EventClass {
 		);
 	}
 	async execute(guildData) {
+
+		const { id, ownerID } = guildData;
+		const guildOwner = await this.botClient.users.fetch(ownerID);
+
 		try {
-			const guildId = guildData.id;
-			const ownerTag = await this.botClient.users.fetch(guildData.ownerID)
-				.then(user => user.tag);
-			await DB.collection('serverDataBase').doc('serverData').create({
-				'guildID': guildId,
-				'guildName': guildData.name,
-				'guildOwnerID': guildData.ownerID,
-				'guildOwnerTag': ownerTag,
-				'authorizedRoles': [],
-			});
-			console.log('Database created.');
+			const response = await createNewGuildDataBase(id, DB);
+			guildOwner.send(response);
 		}
 		catch (error) {
 			console.error(error);

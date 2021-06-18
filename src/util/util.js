@@ -1,35 +1,138 @@
 const fs = require('fs');
-
-const PlayerBanDocumentCreator = class PlayerBanDocument {
-	constructor(playerID, playerName, banReason, bannedBy, bannedAt) {
-		this.playerID = playerID;
-		this.playerName = playerName;
-		this.banReason = banReason;
-		this.bannedBy = bannedBy;
-		this.bannedAt = bannedAt;
-	}
-};
+const readableToMs = require('readable-to-ms');
+const dateformat = require('dateformat');
+const GuildConfigDocument = require('@class/GuildConfigDocumentClass');
+const {
+	EmbededPermBanInfoMessage,
+	EmbededTempBanInfoMessage,
+} = require('@class/EmbededBanMessage');
 
 const playerDocConverter = {
-	toFirestore: (banDoc) => {
+	toFirestore: (Doc) => {
+		const { banDetails } = Doc;
 		return {
-			playerID: banDoc.playerID,
-			playerName: banDoc.playerName,
-			banReason: banDoc.banReason,
-			bannedBy: banDoc.bannedBy,
-			bannedAt: banDoc.bannedAt,
+			banDetails: {
+				playerID: banDetails.playerID,
+				playerName: banDetails.playerName,
+				banReason: banDetails.banReason,
+				banType: banDetails.banType,
+				bannedBy: banDetails.bannedBy,
+				bannedAt: banDetails.bannedAt,
+				bannedUntil: banDetails.bannedUntil,
+			},
 		};
 	},
 	fromFirestore: (snapshot, options) => {
 		const banDoc = snapshot.data(options);
+		const { banDetails } = banDoc;
 		return {
-			playerID: banDoc.playerID,
-			playerName: banDoc.playerName,
-			banReason: banDoc.banReason,
-			bannedBy: banDoc.bannedBy,
-			bannedAt: banDoc.bannedAt,
+			playerID: banDetails.playerID,
+			playerName: banDetails.playerName,
+			banReason: banDetails.banReason,
+			banType: banDetails.banType,
+			bannedBy: banDetails.bannedBy,
+			bannedAt: banDetails.bannedAt,
+			bannedUntil: banDetails.bannedUntil,
 		};
 	},
+};
+
+const guildConfigDocConverter = {
+	toFirestore: (Doc) => {
+		const { guildConfig } = Doc;
+		return {
+			guildConfig: {
+				authorizedRoles: guildConfig.authorizedRoles,
+				defaultPrefix: guildConfig.defaultPrefix,
+			},
+		};
+	},
+	fromFirestore: (snapshot, options) => {
+		const guildConfigDoc = snapshot.data(options);
+		const { guildConfig } = guildConfigDoc;
+		return {
+			authorizedRoles: guildConfig.authorizedRoles,
+			defaultPrefix: guildConfig.defaultPrefix,
+		};
+	},
+};
+
+const createBanInfoEmbed = (data, userImage, playerName) =>{
+	const {
+		playerID,
+		banReason,
+		bannedBy,
+		bannedAt,
+		banType,
+	} = data;
+
+	const formattedBanDate = dateformat(bannedAt, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
+	let banInfoEmbed;
+
+	if (banType == 'permaBan') {
+		banInfoEmbed = new EmbededPermBanInfoMessage(
+			formattedBanDate, bannedBy, playerName, playerID, banReason, userImage,
+		);
+	}
+	else {
+		const { bannedUntil } = data;
+		const formattedUnbanDate = dateformat(bannedUntil, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
+		banInfoEmbed = new EmbededTempBanInfoMessage(
+			formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
+		);
+	}
+	return banInfoEmbed;
+};
+
+const seperateDurationAndBanReason = (args) => {
+	const { ms:banDuration, text:banReason } = readableToMs(args.join(' '));
+	return [banDuration, banReason];
+};
+
+const hasBanDuration = (args) => {
+	const durationRE = /(\d+)\s*(milliseconds|millisecond|millis|milli|ms|seconds|second|secs|sec|s|minutes|minute|mins|min|m|hours|hour|hrs|hr|h|days|day|d|weeks|week|w|months|month|mo|years|year|y)\s*/gy;
+	return args.some(arg => durationRE.test(arg));
+};
+
+const trimString = (str, max) => {
+	return (str.length > max) ? `${str.slice(0, max - 3)}...` : str;
+};
+
+const parseToRoleId = (arg) => {
+	return arg.match(/[0-9]\d+/g);
+};
+
+const roleExists = (guildRoles, roleId) => {
+	return guildRoles.find(guildRole => guildRole.id == roleId);
+};
+
+const removeRoleFromCache = (roleId, cachedRoles) =>{
+	let updatedCachedRoles;
+	for (const cachedRole of cachedRoles) {
+		if (cachedRoles[cachedRole] == roleId) {
+			updatedCachedRoles = cachedRoles.splice(cachedRole, 1);
+		}
+	}
+	return updatedCachedRoles;
+};
+
+const createNewGuildDataBase = async (id, DB) => {
+	try {
+		await DB.collection(`guildDataBase:${id}`)
+			.doc('guildConfigurations')
+			.withConverter(guildConfigDocConverter)
+			.create(new GuildConfigDocument);
+
+		let successMessage = 'Collection containing your guild config has been created.';
+		successMessage += ' Be sure to add roles that\'s authorized to use the commands using the auth command!';
+
+		console.log(`Database for guild ${id} has been created.`);
+		return successMessage;
+	}
+	catch (error) {
+		console.error(error);
+		return error;
+	}
 };
 
 const convertUserRolesToArray = (userRoles) => {
@@ -40,30 +143,8 @@ const convertUserRolesToArray = (userRoles) => {
 	return userRoleIds;
 };
 
-const checkPermission = (message, userRoles, authorizedRoles) => {
-	if (!authorizedRoles.length) {
-		return message.channel.send('No authorized roles found.\nThe owner needs to add roles that is authorized to use the commands.');
-	}
+const checkPermission = (userRoles, authorizedRoles) => {
 	return userRoles.some(userRole => authorizedRoles.includes(userRole));
-};
-
-const retriveAuthroles = async (DB) => {
-	try {
-		const snapshot = await DB.collection('serverDataBase').doc('serverData').get();
-		if (!snapshot.exists) {
-			throw new Error('No authorized roles found. Possiblity of an error during the creation of the server\'s database.');
-		}
-		const data = snapshot.data();
-		const { authorizedRoles } = data;
-		if (!authorizedRoles.length) {
-			return console.warn('Reminder❗ The owner needs to add roles that is authorized to use the commands.');
-		}
-		return authorizedRoles;
-	}
-	catch (error) {
-		console.error(error);
-	}
-
 };
 
 const loadCommands = (client) => {
@@ -74,7 +155,7 @@ const loadCommands = (client) => {
 		for (const commandFolders of mainCommandFolder) {
 			const commandFiles = fs.readdirSync(`./src/commands/${commandFolders}`).filter(file => file.endsWith('.js'));
 			for (const commandFile of commandFiles) {
-				const commandClass = require(`../../src/commands/${commandFolders}/${commandFile}`);
+				const commandClass = require(`@commands/${commandFolders}/${commandFile}`);
 				const command = new commandClass(client);
 				client.commands.set(command.name, command);
 				commandFilesAmount += 1;
@@ -89,10 +170,10 @@ const loadCommands = (client) => {
 };
 
 const loadEvents = (client) => {
-	const eventsFolder = fs.readdirSync('./src/events/DiscordEvents').filter(file => file.endsWith('.js'));
 	try {
+		const eventsFolder = fs.readdirSync('./src/events/DiscordEvents').filter(file => file.endsWith('.js'));
 		for (const eventFile of eventsFolder) {
-			const eventClass = require(`../../src/events/DiscordEvents/${eventFile}`);
+			const eventClass = require(`@events/DiscordEvents/${eventFile}`);
 			const event = new eventClass(client);
 			client[event.eventEmmiter](event.eventType, (...parameters) => event.execute(...parameters));
 			delete require.cache[eventClass];
@@ -107,9 +188,16 @@ const loadEvents = (client) => {
 module.exports = {
 	convertUserRolesToArray: convertUserRolesToArray,
 	checkPerm: checkPermission,
-	getAuthRoles: retriveAuthroles,
 	loadCommands: loadCommands,
 	loadEvents: loadEvents,
-	PlayerBanDocument: PlayerBanDocumentCreator,
+	trimString: trimString,
+	parseToRoleId: parseToRoleId,
+	roleExists: roleExists,
+	removeRoleFromCache: removeRoleFromCache,
+	createNewGuildDataBase: createNewGuildDataBase,
+	createBanInfoEmbed: createBanInfoEmbed,
+	guildConfigDocConverter: guildConfigDocConverter,
 	playerBanDocConverter: playerDocConverter,
+	seperateDurationAndBanReason: seperateDurationAndBanReason,
+	hasBanDuration: hasBanDuration,
 };

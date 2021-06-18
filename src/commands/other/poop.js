@@ -1,6 +1,6 @@
-const CommandClass = require('../../util/CommandClass');
+const CommandClass = require('@class/CommandClass');
 
-module.exports = class extends CommandClass {
+module.exports = class ThePoopCommand extends CommandClass {
 	constructor(botClient) {
 		super(
 			botClient,
