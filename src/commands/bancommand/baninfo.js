@@ -33,11 +33,11 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 			const userImage = await this.getUserImg(playerID);
 			const banInfoEmbed = createBanInfoEmbed(data, userImage, playerName);
 
-			return message.channel.send(banInfoEmbed);
+			return message.channel.send({ embed: banInfoEmbed });
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply(`there was an error while attempting to retrive the document!\n${error}`);
+			return message.reply({ content:`there was an error while attempting to retrive the document!\n${error}`, allowedMentions: { repliedUser: true } });
 		}
 	}
 };

@@ -6,10 +6,10 @@ module.exports = class ThePoopCommand extends CommandClass {
 			botClient,
 			'poop',
 			'make poop',
-			'poop',
+			'',
 		);
 	}
 	execute(message) {
-		return message.reply('pooper');
+		return message.reply({ content:'pooper', allowedMentions: { repliedUser: true } });
 	}
 };

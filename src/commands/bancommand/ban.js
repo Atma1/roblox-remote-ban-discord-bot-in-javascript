@@ -40,11 +40,11 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 			const banInfoEmbed = new EmbededPermBanInfoMessage(
 				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage,
 			);
-			return message.channel.send(`\`${playerName} has been banned.\``, banInfoEmbed);
+			return message.channel.send({ content:`\`${playerName} has been banned.\``, embed: banInfoEmbed });
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply(`there was an error while banning the player!\n${error}`);
+			return message.reply({ content:`there was an error while banning the player!\n${error}`, allowedMentions: { repliedUser: true } });
 		}
 	}
 };

@@ -8,7 +8,7 @@ module.exports = class HelpCommand extends CommandClass {
 			botClient,
 			'help',
 			'give help and info on the specified command',
-			'<commandName/noCommandName>', {
+			'<commandName(Optional)>', {
 				aliases: ['cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
 				example: 'help ban or just help',
 				cooldown: '5s',
@@ -25,11 +25,11 @@ module.exports = class HelpCommand extends CommandClass {
 			const commandListEmbed = new CommandListEmbed(commands, prefix);
 			try {
 				await message.author.send(commandListEmbed);
-				return message.reply('sent all of my commands to your DM.');
+				return message.reply({ content:'sent all of my commands to your DM.', allowedMentions: { repliedUser: true } });
 			}
 			catch (error) {
 				console.error(error);
-				return message.reply('can\'t send my commands to your DM! Is your DM closed?');
+				return message.reply({ content:'can\'t send my commands to your DM! Is your DM closed?', allowedMentions: { repliedUser: true } });
 			}
 		}
 
@@ -38,10 +38,10 @@ module.exports = class HelpCommand extends CommandClass {
 		const command = commands.get(commandName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 		if (!command) {
-			return message.reply('make sure you type the correct command.');
+			return message.reply({ content:'make sure you type the correct command.', allowedMentions: { repliedUser: true } });
 		}
 		const commandInfoEmbed = new CommandInfoEmbed(command, commandName, prefix);
 
-		message.channel.send(commandInfoEmbed);
+		message.channel.send({ embed:commandInfoEmbed });
 	}
 };

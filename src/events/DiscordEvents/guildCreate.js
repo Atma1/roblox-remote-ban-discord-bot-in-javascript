@@ -18,7 +18,7 @@ module.exports = class GuildCreateEvent extends EventClass {
 
 		try {
 			const response = await createNewGuildDataBase(id, DB);
-			guildOwner.send(response);
+			guildOwner.send({ content:response });
 		}
 		catch (error) {
 			console.error(error);

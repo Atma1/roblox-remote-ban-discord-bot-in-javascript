@@ -30,11 +30,11 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
 		if (!roleId) {
-			return message.reply('that is not a role Id!');
+			return message.reply({ content:'that is not a role Id!', allowedMentions: { repliedUser: true } });
 		}
 
 		if (!roleExists(guildRoles.cache, roleId)) {
-			return message.reply('make sure you input the role correctly.');
+			return message.reply({ content:'make sure you input the role correctly.', allowedMentions: { repliedUser: true } });
 		}
 
 		try {
@@ -42,12 +42,12 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply(`There was an error while removing the role!\n${error}`);
+			return message.reply({ content:`There was an error while removing the role!\n${error}`, allowedMentions: { repliedUser: true } });
 		}
 
 		const updatedCachedRoles = removeRoleFromCache(roleId, cachedAuthorizedRoles);
 
 		guildConfig.set('authorizedRoles', updatedCachedRoles);
-		return message.channel.send(`\`${role}\` has been restricted to use permission restricted command!`);
+		return message.channel.send({ content:`\`${role}\` has been restricted to use permission restricted command!` });
 	}
 };
