@@ -1,6 +1,7 @@
 const {
 	MessageEmbed,
 } = require('discord.js');
+const { trimString } = require('@util/util');
 
 const EmbededPermBanInfoMessage = class EmbededPermBanInfoMessage extends MessageEmbed {
 	constructor(bannedAt, bannedBy, playerName, playerId, banReason, userImage) {
@@ -11,24 +12,14 @@ const EmbededPermBanInfoMessage = class EmbededPermBanInfoMessage extends Messag
 		this.setColor('EFFF00');
 		this.setTimestamp();
 		this.addFields({
-			name: 'Player Name',
-			value: playerName,
-			inline: true,
-		}, {
 			name: 'Player Id',
 			value: playerId,
-			inline: true,
-		}, {
-			name: '\u200B',
-			value: '\u200B',
 		}, {
 			name: 'Ban Reason',
-			value: banReason,
-			inline: true,
+			value: trimString(banReason, 1024),
 		}, {
 			name: 'Banned By',
 			value: bannedBy,
-			inline: true,
 		}, {
 			name: 'Banned At',
 			value: bannedAt,
