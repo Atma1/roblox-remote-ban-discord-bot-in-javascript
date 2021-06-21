@@ -13,9 +13,9 @@
     "admin": "^1.4.1",
     "axios": "^0.21.1",
     "dateformat": "^4.5.1",
-    "discord.js": "^12.5.1",
-    "dotenv": "^8.2.0",
-    "firebase": "^8.6.5",
+    "discord.js": "^12.5.3",
+    "dotenv": "^8.6.0",
+    "firebase": "^8.6.8",
     "firebase-admin": "^9.9.0",
     "lodash": "^4.17.21",
     "lodash-migrate": "^0.3.16",
@@ -23,11 +23,11 @@
     "ms": "^2.1.3",
     "path": "^0.12.7",
     "readable-to-ms": "^1.0.3",
-    "ws": "^7.4.6"
+    "ws": "^7.5.0"
   },
   "devDependencies": {
     "@types/dateformat": "^3.0.1",
-    "eslint": "^7.28.0"
+    "eslint": "^7.29.0"
   },
   "_moduleAliases": {
     "@root": ".",
