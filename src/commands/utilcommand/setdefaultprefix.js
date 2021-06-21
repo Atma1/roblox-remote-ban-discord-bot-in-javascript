@@ -25,10 +25,10 @@ module.exports = class SetPrefixCommand extends DataBaseRelatedCommandClass {
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply(`there was an error while updating the prefix!\n${error}`);
+			return message.reply({ content:`there was an error while updating the prefix!\n${error}`, allowedMentions: { repliedUser: true } });
 		}
 
 		guildConfig.set('defaultPrefix', desiredDefaultPrefix);
-		return message.channel.send(`The defaultPrefix has been set to \`${desiredDefaultPrefix}\``);
+		return message.channel.send({ content:`The defaultPrefix has been set to \`${desiredDefaultPrefix}\`` });
 	}
 };

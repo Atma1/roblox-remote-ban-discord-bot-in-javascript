@@ -14,9 +14,14 @@ module.exports = class BotClient extends Client {
 		this.commands = new Collection();
 	}
 
-	async startBot() {
-		util.loadCommands(this);
-		util.loadEvents(this);
-		super.login(this.token);
+	startBot() {
+		try {
+			util.loadCommands(this);
+			util.loadEvents(this);
+			super.login(this.token);
+		}
+		catch (error) {
+			console.error(error);
+		}
 	}
 };

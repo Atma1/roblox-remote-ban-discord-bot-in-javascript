@@ -1,7 +1,6 @@
 require('dotenv').config();
-const Discord = require('discord.js');
+const { Collection, Permissions } = require('discord.js');
 const ms = require('ms');
-// const { Permissions } = require('discord.js');
 const {
 	checkPerm,
 	convertUserRolesToArray,
@@ -33,28 +32,28 @@ module.exports = class MessageEvent extends EventClass {
 			if (!command) return;
 
 			if (command.guildOwnerOnly && message.author.id != message.guild.ownerID) {
-				return message.reply('only the guild owner can run that command!');
+				return message.reply({ content:'only the guild owner can run that command!', allowedMentions: { repliedUser: true } });
 			}
 
-			if (command.permission && !message.member.hasPermission('ADMINISTRATOR')) {
+			if (command.permission && !message.member.hasPermission(Permissions.FLAGS.ADMINISTRATOR)) {
 				const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
 				if (!cachedAuthorizedRoles.length) {
-					return message.reply('cannot find this server authorized role!');
+					return message.reply({ content:'cannot find this server authorized role!', allowedMentions: { repliedUser: true } });
 				}
 
 				const userRoles = message.member.roles.cache;
-				const isUserAuthorized = checkPerm(convertUserRolesToArray(userRoles), cachedAuthorizedRoles);
+				const userAuthorized = checkPerm(convertUserRolesToArray(userRoles), cachedAuthorizedRoles);
 
-				if (!isUserAuthorized) {
-					return message.reply('you don\'t have permission to do that!');
+				if (!userAuthorized) {
+					return message.reply({ content:'you don\'t have permission to do that!', allowedMentions: { repliedUser: true } });
 				}
 			}
 
 			if (command.args && !args.length || args.length < command.reqarglength) {
 				let reply = 'please provide the necessary amount of argument(s)!';
 				reply += `\n Do this: \`${prefix}${commandName} ${command.usage}\``;
-				return message.reply(reply);
+				return message.reply({ content:reply, allowedMentions: { repliedUser: true } });
 			}
 
 			const {
@@ -62,7 +61,7 @@ module.exports = class MessageEvent extends EventClass {
 			} = this.botClient;
 
 			if (!cooldowns.has(command.name)) {
-				cooldowns.set(command.name, new Discord.Collection());
+				cooldowns.set(command.name, new Collection());
 			}
 
 			const now = Date.now();
@@ -74,7 +73,7 @@ module.exports = class MessageEvent extends EventClass {
 
 				if (expirationTime > now) {
 					const timeLeft = ms(expirationTime - now, { long: true });
-					return message.reply(`Please wait ${timeLeft} before reusing!`);
+					return message.reply({ content:`please wait ${timeLeft} before reusing!`, allowedMentions: { repliedUser: true } });
 				}
 			}
 
@@ -87,7 +86,7 @@ module.exports = class MessageEvent extends EventClass {
 			}
 			catch (error) {
 				console.error(error);
-				message.reply(`there was an error while executing the command!\n${error}`);
+				message.reply({ content:`there was an error while executing the command!\n${error}`, allowedMentions: { repliedUser: true } });
 			}
 		}
 	}

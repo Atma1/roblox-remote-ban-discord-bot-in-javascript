@@ -35,11 +35,11 @@ module.exports = class QuranCommand extends CommandClass {
 					{ name: 'Translation (EN)', value: trim(en, 1024) },
 					{ name: 'REST API', value: endPoint },
 				);
-			return message.channel.send(embed);
+			return message.channel.send({ embed:embed });
 		}
 		catch(error) {
 			console.error(error);
-			return message.channel.send(`${error}`);
+			return message.channel.send({ content:error });
 		}
 	}
 };

@@ -4,6 +4,7 @@ const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
 const {
 	seperateDurationAndBanReason,
 	hasBanDuration,
+	trimString:trim,
 } = require('@util/util');
 
 
@@ -34,7 +35,7 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 	async execute(message, args) {
 
 		if (!hasBanDuration(args)) {
-			return message.reply('you need to specify the ban duration!');
+			return message.reply({ content:'you need to specify the ban duration!', allowedMentions: { repliedUser: true } });
 		}
 
 		const { id:guildId } = message.channel.guild;
@@ -57,13 +58,13 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 			]);
 
 			const banInfoEmbed = new EmbededTempBanInfoMessage(
-				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage, formattedUnbanDate,
+				formattedBanDate, bannedBy, playerName, playerId, trim(banReason, 1024), playerImage, formattedUnbanDate,
 			);
-			return message.channel.send(`\`Player: ${playerName} has been banned.\``, banInfoEmbed);
+			return message.channel.send({ content:`\`${playerName} has been banned.\``, embed: banInfoEmbed });
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply(`There was an error while banning the player!\n${error}`);
+			return message.reply({ content:`There was an error while banning the player!\n${error}`, allowedMentions: { repliedUser: true } });
 		}
 	}
 };

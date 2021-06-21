@@ -11,24 +11,14 @@ const EmbededPermBanInfoMessage = class EmbededPermBanInfoMessage extends Messag
 		this.setColor('EFFF00');
 		this.setTimestamp();
 		this.addFields({
-			name: 'Player Name',
-			value: playerName,
-			inline: true,
-		}, {
 			name: 'Player Id',
 			value: playerId,
-			inline: true,
-		}, {
-			name: '\u200B',
-			value: '\u200B',
 		}, {
 			name: 'Ban Reason',
 			value: banReason,
-			inline: true,
 		}, {
 			name: 'Banned By',
 			value: bannedBy,
-			inline: true,
 		}, {
 			name: 'Banned At',
 			value: bannedAt,

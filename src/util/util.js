@@ -67,18 +67,19 @@ const createBanInfoEmbed = (data, userImage, playerName) =>{
 	} = data;
 
 	const formattedBanDate = dateformat(bannedAt, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
+	const trimmedBanReason = trimString(banReason, 1024);
 	let banInfoEmbed;
 
 	if (banType == 'permaBan') {
 		banInfoEmbed = new EmbededPermBanInfoMessage(
-			formattedBanDate, bannedBy, playerName, playerID, banReason, userImage,
+			formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage,
 		);
 	}
 	else {
 		const { bannedUntil } = data;
 		const formattedUnbanDate = dateformat(bannedUntil, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
 		banInfoEmbed = new EmbededTempBanInfoMessage(
-			formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
+			formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage, formattedUnbanDate,
 		);
 	}
 	return banInfoEmbed;
@@ -99,7 +100,7 @@ const trimString = (str, max) => {
 };
 
 const parseToRoleId = (arg) => {
-	return arg.match(/[0-9]\d+/g);
+	return arg.match(/^<@&?(\d+)>$/g);
 };
 
 const roleExists = (guildRoles, roleId) => {
@@ -148,41 +149,31 @@ const checkPermission = (userRoles, authorizedRoles) => {
 };
 
 const loadCommands = (client) => {
-	try {
-		const mainCommandFolder = fs.readdirSync('./src/commands');
-		let commandFilesAmount = 0;
+	const mainCommandFolder = fs.readdirSync('./src/commands');
+	let commandFilesAmount = 0;
 
-		for (const commandFolders of mainCommandFolder) {
-			const commandFiles = fs.readdirSync(`./src/commands/${commandFolders}`).filter(file => file.endsWith('.js'));
-			for (const commandFile of commandFiles) {
-				const commandClass = require(`@commands/${commandFolders}/${commandFile}`);
-				const command = new commandClass(client);
-				client.commands.set(command.name, command);
-				commandFilesAmount += 1;
-				delete require.cache[commandClass];
-			}
+	for (const commandFolders of mainCommandFolder) {
+		const commandFiles = fs.readdirSync(`./src/commands/${commandFolders}`).filter(file => file.endsWith('.js'));
+		for (const commandFile of commandFiles) {
+			const commandClass = require(`@commands/${commandFolders}/${commandFile}`);
+			const command = new commandClass(client);
+			client.commands.set(command.name, command);
+			commandFilesAmount += 1;
+			delete require.cache[commandClass];
 		}
-		console.log(`Loaded ${commandFilesAmount} commands.`);
 	}
-	catch (error) {
-		console.error(error);
-	}
+	console.log(`Loaded ${commandFilesAmount} commands.`);
 };
 
 const loadEvents = (client) => {
-	try {
-		const eventsFolder = fs.readdirSync('./src/events/DiscordEvents').filter(file => file.endsWith('.js'));
-		for (const eventFile of eventsFolder) {
-			const eventClass = require(`@events/DiscordEvents/${eventFile}`);
-			const event = new eventClass(client);
-			client[event.eventEmmiter](event.eventType, (...parameters) => event.execute(...parameters));
-			delete require.cache[eventClass];
-		}
-		console.log(`Loaded ${eventsFolder.length} events.`);
+	const eventsFolder = fs.readdirSync('./src/events/DiscordEvents').filter(file => file.endsWith('.js'));
+	for (const eventFile of eventsFolder) {
+		const eventClass = require(`@events/DiscordEvents/${eventFile}`);
+		const event = new eventClass(client);
+		client[event.eventEmmiter](event.eventType, (...parameters) => event.execute(...parameters));
+		delete require.cache[eventClass];
 	}
-	catch (error) {
-		console.error(error);
-	}
+	console.log(`Loaded ${eventsFolder.length} events.`);
 };
 
 module.exports = {

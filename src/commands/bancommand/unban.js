@@ -25,6 +25,6 @@ module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
 			console.error(error);
 			return message.channel.send(`There was an error while removing ${playerName}!\n${error}`);
 		}
-		return message.channel.send(`Player: ${playerName}, removed from Firebase Firestore.`);
+		return message.channel.send({ content:`Player: ${playerName}, removed from Firebase Firestore.` });
 	}
 };
