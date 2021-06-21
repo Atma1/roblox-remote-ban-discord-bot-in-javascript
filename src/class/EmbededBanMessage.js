@@ -1,7 +1,6 @@
 const {
 	MessageEmbed,
 } = require('discord.js');
-const { trimString } = require('@util/util');
 
 const EmbededPermBanInfoMessage = class EmbededPermBanInfoMessage extends MessageEmbed {
 	constructor(bannedAt, bannedBy, playerName, playerId, banReason, userImage) {
@@ -16,7 +15,7 @@ const EmbededPermBanInfoMessage = class EmbededPermBanInfoMessage extends Messag
 			value: playerId,
 		}, {
 			name: 'Ban Reason',
-			value: trimString(banReason, 1024),
+			value: banReason,
 		}, {
 			name: 'Banned By',
 			value: bannedBy,
