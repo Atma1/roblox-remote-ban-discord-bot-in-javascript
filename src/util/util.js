@@ -67,18 +67,19 @@ const createBanInfoEmbed = (data, userImage, playerName) =>{
 	} = data;
 
 	const formattedBanDate = dateformat(bannedAt, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
+	const trimmedBanReason = trimString(banReason, 1024);
 	let banInfoEmbed;
 
 	if (banType == 'permaBan') {
 		banInfoEmbed = new EmbededPermBanInfoMessage(
-			formattedBanDate, bannedBy, playerName, playerID, banReason, userImage,
+			formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage,
 		);
 	}
 	else {
 		const { bannedUntil } = data;
 		const formattedUnbanDate = dateformat(bannedUntil, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
 		banInfoEmbed = new EmbededTempBanInfoMessage(
-			formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
+			formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage, formattedUnbanDate,
 		);
 	}
 	return banInfoEmbed;
@@ -99,7 +100,7 @@ const trimString = (str, max) => {
 };
 
 const parseToRoleId = (arg) => {
-	return arg.match(/^<@!?(\d+)>$/g);
+	return arg.match(/^<@&?(\d+)>$/g);
 };
 
 const roleExists = (guildRoles, roleId) => {
