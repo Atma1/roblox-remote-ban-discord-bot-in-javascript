@@ -4,6 +4,7 @@ const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
 const {
 	seperateDurationAndBanReason,
 	hasBanDuration,
+	trimString:trim,
 } = require('@util/util');
 
 
@@ -57,7 +58,7 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 			]);
 
 			const banInfoEmbed = new EmbededTempBanInfoMessage(
-				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage, formattedUnbanDate,
+				formattedBanDate, bannedBy, playerName, playerId, trim(banReason, 1024), playerImage, formattedUnbanDate,
 			);
 			return message.channel.send({ content:`\`${playerName} has been banned.\``, embed: banInfoEmbed });
 		}

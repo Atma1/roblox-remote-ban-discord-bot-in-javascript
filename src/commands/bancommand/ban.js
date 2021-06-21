@@ -1,6 +1,7 @@
 const { EmbededPermBanInfoMessage } = require('@class/EmbededBanMessage');
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
+const { trimString:trim } = require('@util/util');
 
 module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -38,7 +39,7 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 			]);
 
 			const banInfoEmbed = new EmbededPermBanInfoMessage(
-				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage,
+				formattedBanDate, bannedBy, playerName, playerId, trim(banReason, 1024), playerImage,
 			);
 			return message.channel.send({ content:`\`${playerName} has been banned.\``, embed: banInfoEmbed });
 		}
