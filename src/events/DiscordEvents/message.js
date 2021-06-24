@@ -19,13 +19,13 @@ module.exports = class MessageEvent extends EventClass {
 
 		if (message.channel.type === 'dm') return;
 
-		const lowerCaseMessage = message.content.toLowerCase();
+		const { content:messageContent } = message;
 		const { guildConfig } = message.guild;
 		const prefix = guildConfig.get('defaultPrefix');
 
-		if (lowerCaseMessage.startsWith(prefix) && !message.author.bot) {
-			const args = message.content.slice(prefix.length).trim().split(/ +/);
-			const commandName = args.shift().toLowerCase();
+		if (messageContent.startsWith(prefix) && !message.author.bot) {
+			const [commandName, ...args] = messageContent.slice(prefix.length).trim().split(/ +/);
+			commandName.toLowerCase();
 			const command = this.botClient.commands.get(commandName) ||
 				this.botClient.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
@@ -42,7 +42,7 @@ module.exports = class MessageEvent extends EventClass {
 					return message.reply({ content:'cannot find this server authorized role!', allowedMentions: { repliedUser: true } });
 				}
 
-				const userRoles = message.member.roles.cache;
+				const { cache:userRoles } = message.member.roles;
 				const userAuthorized = checkPerm(convertUserRolesToArray(userRoles), cachedAuthorizedRoles);
 
 				if (!userAuthorized) {
@@ -81,7 +81,7 @@ module.exports = class MessageEvent extends EventClass {
 			setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
 			try {
-				console.log(args, lowerCaseMessage);
+				console.log(args, messageContent);
 				command.execute(message, args);
 			}
 			catch (error) {
