@@ -29,7 +29,7 @@ Structures.extend('Guild', Guild => {
 					]);
 					this.guildConfig.set('defaultPrefix', '!');
 					this.guildConfig.set('authorizedRoles', []);
-					await guildOwner.send({ content:response });
+					guildOwner.send({ content:response });
 				}
 				else {
 					const {
