@@ -4,31 +4,26 @@ const endpoint = 'https://api.roblox.com/users/get-by-username';
 module.exports = {
 	/**
 	 *
-	 * @param {String} userId;
+	 * @param {String} username;
 	 * @return UserId
 	 */
-	getUserId: async (userId) => {
-		try {
-			const response = await axios
-				.get(endpoint, {
-					timeout: 3000,
-					params: {
-						username: `${userId}`,
-					},
-				})
-				.then(res => res.data);
+	getUserId: async (username) => {
+		const response = await axios
+			.get(endpoint, {
+				timeout: 3000,
+				params: {
+					username: `${username}`,
+				},
+			})
+			.then(res => res.data);
 
-			if (response.success == false) {
-				const { errorMessage } = response;
-				throw new Error(errorMessage);
-			}
-
-			const { Id } = response;
-
-			return `${Id}`;
+		if (response.success == false) {
+			const { errorMessage } = response;
+			throw new Error(errorMessage);
 		}
-		catch (error) {
-			throw (`${error}`);
-		}
+
+		const { Id } = response;
+
+		return `${Id}`;
 	},
 };

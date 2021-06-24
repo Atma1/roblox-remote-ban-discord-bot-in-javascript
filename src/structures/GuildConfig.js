@@ -4,12 +4,13 @@ const {
 } = require('discord.js');
 const {
 	guildConfigDocConverter,
+	createNewGuildDataBase,
 } = require('@util/util');
 const admin = require('firebase-admin');
 const firestore = admin.firestore();
 
 
-Structures.extend('Guild', (Guild) => {
+Structures.extend('Guild', Guild => {
 	class GuildConfig extends Guild {
 		constructor(client, data) {
 			super(client, data);
@@ -22,7 +23,13 @@ Structures.extend('Guild', (Guild) => {
 				const snapshot = await this.getGuildPrefixAndRole();
 
 				if (!snapshot.exists) {
-					console.warn(`Guild config for guild ${this.id} is not avaible!`);
+					const [response, guildOwner] = await Promise.all([
+						createNewGuildDataBase(this.id, firestore),
+						this.client.users.fetch(this.ownerID),
+					]);
+					this.guildConfig.set('defaultPrefix', '!');
+					this.guildConfig.set('authorizedRoles', []);
+					guildOwner.send({ content:response });
 				}
 				else {
 					const {
