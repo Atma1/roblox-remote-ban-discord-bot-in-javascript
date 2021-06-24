@@ -9,7 +9,9 @@ const {
 
 const playerDocConverter = {
 	toFirestore: (Doc) => {
-		const { banDetails } = Doc;
+		const {
+			banDetails,
+		} = Doc;
 		return {
 			banDetails: {
 				playerID: banDetails.playerID,
@@ -24,7 +26,9 @@ const playerDocConverter = {
 	},
 	fromFirestore: (snapshot, options) => {
 		const banDoc = snapshot.data(options);
-		const { banDetails } = banDoc;
+		const {
+			banDetails,
+		} = banDoc;
 		return {
 			playerID: banDetails.playerID,
 			playerName: banDetails.playerName,
@@ -39,7 +43,9 @@ const playerDocConverter = {
 
 const guildConfigDocConverter = {
 	toFirestore: (Doc) => {
-		const { guildConfig } = Doc;
+		const {
+			guildConfig,
+		} = Doc;
 		return {
 			guildConfig: {
 				authorizedRoles: guildConfig.authorizedRoles,
@@ -49,7 +55,9 @@ const guildConfigDocConverter = {
 	},
 	fromFirestore: (snapshot, options) => {
 		const guildConfigDoc = snapshot.data(options);
-		const { guildConfig } = guildConfigDoc;
+		const {
+			guildConfig,
+		} = guildConfigDoc;
 		return {
 			authorizedRoles: guildConfig.authorizedRoles,
 			defaultPrefix: guildConfig.defaultPrefix,
@@ -57,7 +65,7 @@ const guildConfigDocConverter = {
 	},
 };
 
-const createBanInfoEmbed = (data, userImage, playerName) =>{
+const createBanInfoEmbed = (data, userImage, playerName) => {
 	const {
 		playerID,
 		banReason,
@@ -76,7 +84,9 @@ const createBanInfoEmbed = (data, userImage, playerName) =>{
 		);
 	}
 	else {
-		const { bannedUntil } = data;
+		const {
+			bannedUntil,
+		} = data;
 		const formattedUnbanDate = dateformat(bannedUntil, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
 		banInfoEmbed = new EmbededTempBanInfoMessage(
 			formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage, formattedUnbanDate,
@@ -86,7 +96,10 @@ const createBanInfoEmbed = (data, userImage, playerName) =>{
 };
 
 const seperateDurationAndBanReason = (args) => {
-	const { ms:banDuration, text:banReason } = readableToMs(args.join(' '));
+	const {
+		ms: banDuration,
+		text: banReason,
+	} = readableToMs(args.join(' '));
 	return [banDuration, banReason];
 };
 
@@ -104,17 +117,11 @@ const parseToRoleId = (arg) => {
 };
 
 const roleExists = (guildRoles, roleId) => {
-	return guildRoles.find(guildRole => guildRole.id == roleId);
+	return guildRoles.find(guildRole => `<@&${guildRole.id}>` == roleId);
 };
 
-const removeRoleFromCache = (roleId, cachedRoles) =>{
-	let updatedCachedRoles;
-	for (const cachedRole of cachedRoles) {
-		if (cachedRoles[cachedRole] == roleId) {
-			updatedCachedRoles = cachedRoles.splice(cachedRole, 1);
-		}
-	}
-	return updatedCachedRoles;
+const removeRoleFromCache = (roleId, cachedRoles) => {
+	return cachedRoles.filter(role => role != roleId);
 };
 
 const createNewGuildDataBase = async (id, DB) => {
@@ -124,8 +131,8 @@ const createNewGuildDataBase = async (id, DB) => {
 			.withConverter(guildConfigDocConverter)
 			.create(new GuildConfigDocument);
 
-		let successMessage = 'Collection containing your guild config has been created.';
-		successMessage += ' Be sure to add roles that\'s authorized to use the commands using the auth command!';
+		let successMessage = 'Collection containing your guild config has been created. ';
+		successMessage += 'Be sure to add roles that\'s authorized to use the commands using the auth command!';
 
 		console.log(`Database for guild ${id} has been created.`);
 		return successMessage;
@@ -137,11 +144,7 @@ const createNewGuildDataBase = async (id, DB) => {
 };
 
 const convertUserRolesToArray = (userRoles) => {
-	const userRoleIds = [];
-	userRoles.forEach(role => {
-		userRoleIds.push(role.id);
-	});
-	return userRoleIds;
+	return userRoles.map(role => `<@&${role.id}>`);
 };
 
 const checkPermission = (userRoles, authorizedRoles) => {
