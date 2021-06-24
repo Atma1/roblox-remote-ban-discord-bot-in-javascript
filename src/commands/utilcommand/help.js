@@ -24,7 +24,7 @@ module.exports = class HelpCommand extends CommandClass {
 		if (!args.length) {
 			const commandListEmbed = new CommandListEmbed(commands, prefix);
 			try {
-				await message.author.send(commandListEmbed);
+				await message.author.send({ embed:commandListEmbed });
 				return message.reply({ content:'sent all of my commands to your DM.', allowedMentions: { repliedUser: true } });
 			}
 			catch (error) {
