@@ -25,7 +25,6 @@ module.exports = class MessageEvent extends EventClass {
 
 		if (messageContent.startsWith(prefix) && !message.author.bot) {
 			const [commandName, ...args] = messageContent.slice(prefix.length).trim().split(/ +/);
-			commandName.toLowerCase();
 			const command = this.botClient.commands.get(commandName) ||
 				this.botClient.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
