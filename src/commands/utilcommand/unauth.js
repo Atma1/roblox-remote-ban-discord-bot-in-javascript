@@ -29,6 +29,10 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 		} = message.guild;
 		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
+		if (!cachedAuthorizedRoles.length) {
+			return message.reply({ content:'this server doesn\'t have cachedroles to remove!', allowedMentions: { repliedUser: true } });
+		}
+
 		if (!roleId) {
 			return message.reply({ content:'that is not a role Id!', allowedMentions: { repliedUser: true } });
 		}
@@ -46,8 +50,8 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 		}
 
 		const updatedCachedRoles = removeRoleFromCache(roleId, cachedAuthorizedRoles);
-
 		guildConfig.set('authorizedRoles', updatedCachedRoles);
-		return message.channel.send({ content:`\`${role}\` has been restricted to use permission restricted command!` });
+
+		return message.channel.send({ content:`\`${role}\` is no longer authorized to use permission restricted command!` });
 	}
 };

@@ -8,10 +8,10 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
 		super(
 			botClient,
-			'authorizerole',
+			'auth',
 			'authorize specific role to command that require permission',
 			'<@role>', {
-				aliases: ['auth', 'permit', 'authforrole', 'at'],
+				aliases: ['permit', 'authforrole', 'at'],
 				example: 'auth @joemama',
 				cooldown: '5s',
 				args: true,
@@ -20,12 +20,13 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 	}
 	async execute(message, args) {
 		const [role] = args;
-		const roleId = parseToRoleId(role);
+		const [roleId] = parseToRoleId(role);
 		const {
 			guildConfig,
 			id: guildId,
 			roles: guildRoles,
 		} = message.guild;
+
 		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
 		if (!roleId) {
@@ -44,8 +45,9 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 			return message.reply({ content:`there was an error while adding the role!\n${error}`, allowedMentions: { repliedUser: true } });
 		}
 
-		const updatedCachedRoles = cachedAuthorizedRoles.push(roleId);
-		guildConfig.set('authorizedRoles', updatedCachedRoles);
+		cachedAuthorizedRoles.push(roleId);
+		guildConfig.set('authorizedRoles', cachedAuthorizedRoles);
+
 		return message.channel.send({ content:`\`${role}\` has been authorized to use permission restricted command!` });
 	}
 };
