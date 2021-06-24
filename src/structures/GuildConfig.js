@@ -23,9 +23,13 @@ Structures.extend('Guild', Guild => {
 				const snapshot = await this.getGuildPrefixAndRole();
 
 				if (!snapshot.exists) {
-					const response = await createNewGuildDataBase(this.id, firestore);
-					const guildOwner = await this.client.users.fetch(this.ownerID);
-					guildOwner.send({ content:response });
+					const [response, guildOwner] = await Promise.all([
+						createNewGuildDataBase(this.id, firestore),
+						this.client.users.fetch(this.ownerID),
+					]);
+					this.guildConfig.set('defaultPrefix', '!');
+					this.guildConfig.set('authorizedRoles', []);
+					await guildOwner.send({ content:response });
 				}
 				else {
 					const {
