@@ -26,11 +26,11 @@ module.exports = class DataBaseRelatedCommandClass extends genericCommandClass {
 	}
 
 	retriveBanDocument(playerName, guildId) {
-		const lowercaseUserName = playerName.toLowerCase();
+		const lowercasePlayerName = playerName.toLowerCase();
 		return this.database.collection(`guildDataBase:${guildId}`)
 			.doc('banList')
 			.collection('bannedPlayerList')
-			.where('banDetails.playerName', '==', lowercaseUserName)
+			.where('banDetails.playerName', '==', lowercasePlayerName)
 			.withConverter(playerBanDocConverter)
 			.get();
 	}
