@@ -29,7 +29,7 @@ module.exports = class ReadyEvent extends EventClass {
 			try {
 				const querySnapshot = await fetchBanDocument(guildId);
 
-				if (querySnapshot.size === 0) return;
+				if (querySnapshot.empty) return;
 
 				await batchDelete(querySnapshot);
 
