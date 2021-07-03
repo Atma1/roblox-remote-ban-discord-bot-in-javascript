@@ -95,12 +95,18 @@ const createBanInfoEmbed = (data, userImage, playerName) => {
 	return banInfoEmbed;
 };
 
-const seperateDurationAndBanReason = (args) => {
+const getBanDurationAndBanReason = (args) => {
 	const {
 		ms: banDuration,
 		text: banReason,
 	} = readableToMs(args.join(' '));
-	return [banDuration, banReason];
+
+	if (banDuration && banReason) {
+		return [banDuration, banReason];
+	}
+	else {
+		return [readableToMs(args.join(' ')), 'No ban reason was specified.'];
+	}
 };
 
 const hasBanDuration = (args) => {
@@ -192,6 +198,6 @@ module.exports = {
 	createBanInfoEmbed: createBanInfoEmbed,
 	guildConfigDocConverter: guildConfigDocConverter,
 	playerBanDocConverter: playerDocConverter,
-	seperateDurationAndBanReason: seperateDurationAndBanReason,
+	getBanDurationAndBanReason: getBanDurationAndBanReason,
 	hasBanDuration: hasBanDuration,
 };
