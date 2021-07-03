@@ -9,8 +9,8 @@ module.exports = class HelpCommand extends CommandClass {
 			'help',
 			'give help and info on the specified command',
 			'<commandName(Optional)>', {
-				aliases: ['cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds'],
-				example: 'help ban or just help',
+				aliases: ['cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds', 'commands'],
+				example: 'help ban',
 				cooldown: '5s',
 			},
 		);

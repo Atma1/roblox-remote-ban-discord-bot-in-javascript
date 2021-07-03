@@ -37,6 +37,10 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 			return message.reply({ content: 'make sure you input the role correctly.', allowedMentions: { repliedUser: true } });
 		}
 
+		if (roleExists(guildRoles.cache, roleId)) {
+			return message.reply({ content: 'that role is already authorized!', allowedMentions: { repliedUser: true } });
+		}
+
 		try {
 			await this.addAuthorizedRole(roleId, guildId);
 		}
