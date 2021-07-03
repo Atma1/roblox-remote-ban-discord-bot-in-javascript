@@ -2,7 +2,7 @@ const { EmbededTempBanInfoMessage } = require('@class/EmbededBanMessage');
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
 const {
-	seperateDurationAndBanReason,
+	getBanDurationAndBanReason,
 	hasBanDuration,
 	trimString:trim,
 } = require('@util/util');
@@ -17,13 +17,13 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 			botClient,
 			'tempban',
 			'temp ban the player. to edit the ban, just rerun the command',
-			'<playerName> <banDuration> <banReason>', {
+			'<playerName> <banDuration> <banReason(Optional)>', {
 				aliases: ['tban', 'temppunish', 'tb', 'tbc', 'tp'],
 				example: 'tempban joemama 720y 666w 420d 42h joemama is too fat',
 				cooldown: '5s',
 				args: true,
 				permission: true,
-				reqarglength: 3,
+				reqarglength: 2,
 			},
 		);
 	}
@@ -41,7 +41,7 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 		const { id:guildId } = message.channel.guild;
 		const { tag: bannedBy } = message.author;
 		const playerName = args.shift();
-		const [banDuration, banReason] = seperateDurationAndBanReason(args);
+		const [banDuration, banReason] = getBanDurationAndBanReason(args);
 		const bannedAt = Date.now();
 		const bannedUntil = bannedAt + banDuration;
 		const formattedUnbanDate = this.dateformat(bannedUntil);
