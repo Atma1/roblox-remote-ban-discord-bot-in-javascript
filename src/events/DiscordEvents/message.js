@@ -1,10 +1,6 @@
-require('dotenv').config();
 const { Collection, Permissions } = require('discord.js');
 const ms = require('ms');
-const {
-	checkPerm,
-	convertUserRolesToArray,
-} = require('@util/util');
+const { checkPerm, convertUserRolesToArray } = require('@util/util');
 const EventClass = require('@class/EventClass');
 
 module.exports = class MessageEvent extends EventClass {
@@ -55,9 +51,7 @@ module.exports = class MessageEvent extends EventClass {
 				return message.reply({ content:reply, allowedMentions: { repliedUser: true } });
 			}
 
-			const {
-				cooldowns,
-			} = this.botClient;
+			const { cooldowns } = this.botClient;
 
 			if (!cooldowns.has(command.name)) {
 				cooldowns.set(command.name, new Collection());
