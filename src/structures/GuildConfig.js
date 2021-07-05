@@ -27,18 +27,12 @@ Structures.extend('Guild', Guild => {
 						createNewGuildDataBase(this.id, firestore),
 						this.client.users.fetch(this.ownerID),
 					]);
-					this.guildConfig.set('defaultPrefix', '!');
-					this.guildConfig.set('authorizedRoles', []);
+					this.setPrefixAndRole('!', []);
 					guildOwner.send({ content:response });
 				}
 				else {
-					const {
-						defaultPrefix,
-						authorizedRoles,
-					} = snapshot.data();
-
-					this.guildConfig.set('defaultPrefix', defaultPrefix || '!');
-					this.guildConfig.set('authorizedRoles', authorizedRoles || []);
+					const { defaultPrefix, authorizedRoles } = snapshot.data();
+					this.setPrefixAndRole(defaultPrefix, authorizedRoles);
 				}
 			}
 			catch (error) {
@@ -52,6 +46,11 @@ Structures.extend('Guild', Guild => {
 				.doc('guildConfigurations')
 				.withConverter(guildConfigDocConverter)
 				.get();
+		}
+
+		setPrefixAndRole(defaultPrefix, authorizedRoles) {
+			this.guildConfig.set('defaultPrefix', defaultPrefix || '!');
+			this.guildConfig.set('authorizedRoles', authorizedRoles || []);
 		}
 	}
 	return GuildConfig;
