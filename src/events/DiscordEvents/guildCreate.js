@@ -8,7 +8,7 @@ module.exports = class GuildCreateEvent extends EventClass {
 			'on',
 		);
 	}
-	async execute(guildData) {
+	execute(guildData) {
 		console.log(`This bot has been added to guild with an ID of ${guildData.id}`);
 	}
 };

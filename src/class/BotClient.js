@@ -18,7 +18,7 @@ module.exports = class BotClient extends Client {
 		try {
 			util.loadCommands(this);
 			util.loadEvents(this);
-			super.login(this.token);
+			this.login(this.token);
 		}
 		catch (error) {
 			console.error(error);

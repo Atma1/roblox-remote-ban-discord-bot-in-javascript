@@ -9,9 +9,7 @@ const {
 
 const playerDocConverter = {
 	toFirestore: (Doc) => {
-		const {
-			banDetails,
-		} = Doc;
+		const { banDetails } = Doc;
 		return {
 			banDetails: {
 				playerID: banDetails.playerID,
@@ -26,9 +24,7 @@ const playerDocConverter = {
 	},
 	fromFirestore: (snapshot, options) => {
 		const banDoc = snapshot.data(options);
-		const {
-			banDetails,
-		} = banDoc;
+		const { banDetails } = banDoc;
 		return {
 			playerID: banDetails.playerID,
 			playerName: banDetails.playerName,
@@ -43,9 +39,7 @@ const playerDocConverter = {
 
 const guildConfigDocConverter = {
 	toFirestore: (Doc) => {
-		const {
-			guildConfig,
-		} = Doc;
+		const { guildConfig } = Doc;
 		return {
 			guildConfig: {
 				authorizedRoles: guildConfig.authorizedRoles,
@@ -55,9 +49,7 @@ const guildConfigDocConverter = {
 	},
 	fromFirestore: (snapshot, options) => {
 		const guildConfigDoc = snapshot.data(options);
-		const {
-			guildConfig,
-		} = guildConfigDoc;
+		const { guildConfig } = guildConfigDoc;
 		return {
 			authorizedRoles: guildConfig.authorizedRoles,
 			defaultPrefix: guildConfig.defaultPrefix,
@@ -72,26 +64,17 @@ const createBanInfoEmbed = (data, userImage, playerName) => {
 		bannedBy,
 		bannedAt,
 		banType,
+		bannedUntil,
 	} = data;
 
 	const formattedBanDate = dateformat(bannedAt, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
+	const formattedUnbanDate = dateformat(bannedUntil, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
 	const trimmedBanReason = trimString(banReason, 1024);
-	let banInfoEmbed;
-
-	if (banType == 'permaBan') {
-		banInfoEmbed = new EmbededPermBanInfoMessage(
-			formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage,
-		);
-	}
-	else {
-		const {
-			bannedUntil,
-		} = data;
-		const formattedUnbanDate = dateformat(bannedUntil, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
-		banInfoEmbed = new EmbededTempBanInfoMessage(
-			formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage, formattedUnbanDate,
-		);
-	}
+	const banInfoEmbed = banType == 'permaBan' ? new EmbededPermBanInfoMessage(
+		formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage,
+	) : new EmbededTempBanInfoMessage(
+		formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
+	);
 	return banInfoEmbed;
 };
 
