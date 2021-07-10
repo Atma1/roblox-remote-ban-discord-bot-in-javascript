@@ -14,6 +14,7 @@ The things you need before installing the bot.
 * Firebase Firestore account(The spark plan is free)
 * Discord bot(Head to the discord dev portal to create one)
 * Able to prepare for failures
+* Have Node.Js on your device
 
 ### Installation
 
