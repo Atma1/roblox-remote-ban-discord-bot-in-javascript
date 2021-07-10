@@ -28,7 +28,7 @@ The things you need before installing the bot.
 7. Insert the SDK to the bot's folder and rename it to serviceAccount and keep the .json.
 8. Install the dependencies. If you are using a code editor type in the shell/command prompt npm i or if you are using Repl it'll auto install all the dependencies after you've run the bot.
 9. Deploy the bot to your server using the bot's invite link located in your discord developer portal and make sure every thing is norminal.
-10. Make sure in firebase firestore rules tab anyone can read the database otherwise you'll have to create a system on the roblox side to retrive the database authorization token(very tedious but worth the extra security).
+10. Make sure in firebase firestore rules tab anyone can read the database otherwise you'll have to create a system on the roblox side to retrive the database authorization token(bit hard but worth the extra security).
 11. Create a connection from your roblox game to your Firebase Firestore database using firebase Firestore REST API.
 12. Add role for permission restricted command by using auth command.
 13. Type !help for all  of the bot's commands.
