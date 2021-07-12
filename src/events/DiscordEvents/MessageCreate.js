@@ -7,7 +7,7 @@ module.exports = class MessageEvent extends EventClass {
 	constructor(botClient) {
 		super(
 			botClient,
-			'message',
+			'messageCreate',
 			'on',
 		);
 	}
@@ -30,7 +30,7 @@ module.exports = class MessageEvent extends EventClass {
 				return message.reply({ content:'only the guild owner can run that command!', allowedMentions: { repliedUser: true } });
 			}
 
-			if (command.permission && !message.member.hasPermission(Permissions.FLAGS.ADMINISTRATOR)) {
+			if (command.permission && !message.member.permission.has(Permissions.FLAGS.ADMINISTRATOR)) {
 				const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
 				if (!cachedAuthorizedRoles.length) {
