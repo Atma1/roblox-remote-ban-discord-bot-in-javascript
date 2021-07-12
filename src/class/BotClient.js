@@ -10,7 +10,7 @@ require('@structures/GuildConfig');
 module.exports = class BotClient extends Client {
 
 	constructor(token) {
-		super({ ws: botIntents });
+		super({ intents: botIntents });
 		this.token = token;
 		this.cooldowns = new Collection();
 		this.commands = new Collection();
