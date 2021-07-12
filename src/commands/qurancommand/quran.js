@@ -14,6 +14,7 @@ module.exports = class QuranCommand extends CommandClass {
 				example : 'quran 39:53',
 				args : true,
 				cooldown : '5s',
+				permission: true,
 			});
 	}
 	async execute(message, args) {
