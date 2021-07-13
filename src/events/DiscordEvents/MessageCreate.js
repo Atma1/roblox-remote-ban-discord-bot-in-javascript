@@ -17,12 +17,12 @@ module.exports = class MessageEvent extends EventClass {
 
 		const { content:messageContent } = message;
 		const { guildConfig } = message.guild;
+		const { commands } = this.botClient;
 		const prefix = guildConfig.get('defaultPrefix');
 
 		if (messageContent.startsWith(prefix) && !message.author.bot) {
 			const [commandName, ...args] = messageContent.slice(prefix.length).trim().split(/ +/);
-			const command = this.botClient.commands.get(commandName) ||
-				this.botClient.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+			const command = commands.get(commandName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 			if (!command) return;
 
