@@ -30,7 +30,7 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
 
 		if (!cachedAuthorizedRoles.length) {
-			return message.reply({ content:'this server doesn\'t have cachedroles to remove!', allowedMentions: { repliedUser: true } });
+			return message.reply({ content:'this server doesn\'t have cached roles to remove!', allowedMentions: { repliedUser: true } });
 		}
 
 		if (!roleId) {
