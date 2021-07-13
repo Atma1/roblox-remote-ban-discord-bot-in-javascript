@@ -67,8 +67,8 @@ const createBanInfoEmbed = (data, userImage, playerName) => {
 		bannedUntil,
 	} = data;
 
-	const formattedBanDate = dateformat(bannedAt, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
-	const formattedUnbanDate = dateformat(bannedUntil, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
+	const formattedBanDate = formatToUTC(bannedAt);
+	const formattedUnbanDate = formatToUTC(bannedUntil);
 	const trimmedBanReason = trimString(banReason, 1024);
 	const banInfoEmbed = banType == 'permaBan' ? new EmbededPermBanInfoMessage(
 		formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage,
@@ -113,9 +113,13 @@ const removeRoleFromCache = (roleId, cachedRoles) => {
 	return cachedRoles.filter(role => role != roleId);
 };
 
-const createNewGuildDataBase = async (id, DB) => {
+const formatToUTC = (date) => {
+	return dateformat(date, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
+};
+
+const createNewGuildDataBase = async (id, firestore) => {
 	try {
-		await DB.collection(`guildDataBase:${id}`)
+		await firestore.collection(`guildDataBase:${id}`)
 			.doc('guildConfigurations')
 			.withConverter(guildConfigDocConverter)
 			.create(new GuildConfigDocument);
@@ -170,6 +174,7 @@ const loadEvents = (client) => {
 
 module.exports = {
 	convertUserRolesToArray: convertUserRolesToArray,
+	formatToUTC: formatToUTC,
 	checkPerm: checkPermission,
 	loadCommands: loadCommands,
 	loadEvents: loadEvents,
