@@ -1,5 +1,6 @@
 const { createBanInfoEmbed } = require('@util/util');
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
+const { getUserImg } = require('@modules/getUserImg');
 
 module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -30,7 +31,7 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 			const [ banDocument ] = documents;
 			const data = banDocument.data();
 			const { playerID } = data;
-			const userImage = await this.getUserImg(playerID);
+			const userImage = await getUserImg(playerID);
 			const banInfoEmbed = createBanInfoEmbed(data, userImage, playerName);
 
 			return message.channel.send({ embed: banInfoEmbed });

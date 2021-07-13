@@ -1,4 +1,5 @@
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
+const { getUserId } = require('@modules/getUserId');
 
 module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -18,7 +19,7 @@ module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
 		const [playerName] = args;
 		const { id:guildId } = message.channel.guild;
 		try {
-			const playerId = await this.getUserId(playerName);
+			const playerId = await getUserId(playerName);
 			await this.deletePlayerBanDocument(playerId, guildId);
 		}
 		catch (error) {

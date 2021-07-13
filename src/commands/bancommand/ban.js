@@ -1,7 +1,9 @@
 const { EmbededPermBanInfoMessage } = require('@class/EmbededBanMessage');
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
-const { trimString:trim } = require('@util/util');
+const { getUserId } = require('@modules/getUserId');
+const { getUserImg } = require('@modules/getUserImg');
+const { trimString:trim, formatToUTC } = require('@util/util');
 
 module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -25,16 +27,16 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 		const playerName = args.shift();
 		const bannedAt = Date.now();
 		const banReason = args ? args.join(' ') : 'No ban reason was specified';
-		const formattedBanDate = this.dateformat(bannedAt);
+		const formattedBanDate = formatToUTC(bannedAt);
 
 		try {
-			const playerId = await this.getUserId(playerName);
+			const playerId = await getUserId(playerName);
 			const playerBanDoc = new PlayerBanDocument(
 				playerId, playerName, banReason, bannedBy, 'permaBan', bannedAt,
 			);
 
 			const [playerImage] = await Promise.all([
-				this.getUserImg(playerId),
+				getUserImg(playerId),
 				this.addPlayerToBanList(playerBanDoc, guildId),
 			]);
 

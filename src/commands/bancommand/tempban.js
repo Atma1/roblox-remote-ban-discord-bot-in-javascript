@@ -1,10 +1,13 @@
 const { EmbededTempBanInfoMessage } = require('@class/EmbededBanMessage');
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
+const { getUserId } = require('@modules/getUserId');
+const { getUserImg } = require('@modules/getUserImg');
 const {
 	getBanDurationAndBanReason,
 	hasBanDuration,
 	trimString:trim,
+	formatToUTC,
 } = require('@util/util');
 
 
@@ -44,16 +47,16 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 		const [banDuration, banReason] = getBanDurationAndBanReason(args);
 		const bannedAt = Date.now();
 		const bannedUntil = bannedAt + banDuration;
-		const formattedUnbanDate = this.dateformat(bannedUntil);
-		const formattedBanDate = this.dateformat(bannedAt);
+		const formattedUnbanDate = formatToUTC(bannedUntil);
+		const formattedBanDate = formatToUTC(bannedAt);
 
 		try {
-			const playerId = await this.getUserId(playerName);
+			const playerId = await getUserId(playerName);
 			const playerBanDoc = new PlayerBanDocument(
 				playerId, playerName, banReason, bannedBy, 'tempBan', bannedAt, bannedUntil,
 			);
 			const [playerImage] = await Promise.all([
-				this.getUserImg(playerId),
+				getUserImg(playerId),
 				this.addPlayerToBanList(playerBanDoc, guildId),
 			]);
 
