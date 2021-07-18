@@ -38,9 +38,8 @@ async function batchDelete(snapshot) {
 	await batch.commit();
 }
 
-module.exports = function runAutoUnban(client) {
-	const clientGuild = client.guilds.cache;
-	clientGuild.forEach(async guild => {
+module.exports = function runAutoUnban(guilds) {
+	guilds.forEach(async guild => {
 		await checkBan(guild.id);
 	});
 };
