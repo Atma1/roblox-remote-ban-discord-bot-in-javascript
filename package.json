@@ -1,13 +1,13 @@
 {
-  "name": "deskord",
-  "version": "1.7.0",
+  "name": "roblox-remote-ban-discord-bot",
+  "version": "1.7.1.4",
   "description": "roblox-remote-ban-discord.js",
   "main": "index.js",
   "scripts": {},
   "keywords": [
     "yes"
   ],
-  "author": "fresh",
+  "author": "Atma1",
   "license": "MIT",
   "dependencies": {
     "admin": "^1.4.1",
@@ -37,7 +37,6 @@
     "@commands": "src/commands",
     "@util": "src/util",
     "@modules": "src/modules",
-    "@events": "src/events",
-    "@structures": "src/structures"
+    "@events": "src/events"
   }
 }
