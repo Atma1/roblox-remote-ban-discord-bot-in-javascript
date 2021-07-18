@@ -98,7 +98,7 @@ const hasBanDuration = (args) => {
 };
 
 const trimString = (str, max) => {
-	return (str.length > max) ? `${str.slice(0, max - 3)}...` : str;
+	return str.length > max ? `${str.slice(0, max - 3)}...` : str;
 };
 
 const parseToRoleId = (arg) => {
