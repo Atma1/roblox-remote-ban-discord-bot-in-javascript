@@ -19,22 +19,18 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 	async execute(message, arg) {
 		const { id:guildId } = message.channel.guild;
 		const [playerName] = arg;
-
 		try {
 			const querySnapshot = await this.retriveBanDocument(playerName, guildId);
-
 			if (querySnapshot.empty) {
 				return message.reply({ content:`${playerName} is not found in the database.`, allowedMentions: { repliedUser: true } });
 			}
-
 			const documents = querySnapshot.docs;
 			const [ banDocument ] = documents;
 			const data = banDocument.data();
 			const { playerID } = data;
 			const userImage = await getUserImg(playerID);
 			const banInfoEmbed = createBanInfoEmbed(data, userImage, playerName);
-
-			return message.channel.send({ embed: banInfoEmbed });
+			return message.channel.send({ embeds: [banInfoEmbed] });
 		}
 		catch (error) {
 			console.error(error);

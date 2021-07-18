@@ -36,11 +36,9 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 	 * @returns Promise
 	 */
 	async execute(message, args) {
-
 		if (!hasBanDuration(args)) {
 			return message.reply({ content:'you need to specify the ban duration!', allowedMentions: { repliedUser: true } });
 		}
-
 		const { id:guildId } = message.channel.guild;
 		const { tag: bannedBy } = message.author;
 		const playerName = args.shift();
@@ -49,7 +47,6 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 		const bannedUntil = bannedAt + banDuration;
 		const formattedUnbanDate = formatToUTC(bannedUntil);
 		const formattedBanDate = formatToUTC(bannedAt);
-
 		try {
 			const playerId = await getUserId(playerName);
 			const playerBanDoc = new PlayerBanDocument(
@@ -63,7 +60,7 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 			const banInfoEmbed = new EmbededTempBanInfoMessage(
 				formattedBanDate, bannedBy, playerName, playerId, trim(banReason, 1024), playerImage, formattedUnbanDate,
 			);
-			return message.channel.send({ content:`\`${playerName} has been banned.\``, embed: banInfoEmbed });
+			return message.channel.send({ content:`\`${playerName} has been banned.\``, embeds: [banInfoEmbed] });
 		}
 		catch (error) {
 			console.error(error);

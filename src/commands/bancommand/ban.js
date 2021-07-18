@@ -34,16 +34,14 @@ module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
 			const playerBanDoc = new PlayerBanDocument(
 				playerId, playerName, banReason, bannedBy, 'permaBan', bannedAt,
 			);
-
 			const [playerImage] = await Promise.all([
 				getUserImg(playerId),
 				this.addPlayerToBanList(playerBanDoc, guildId),
 			]);
-
 			const banInfoEmbed = new EmbededPermBanInfoMessage(
 				formattedBanDate, bannedBy, playerName, playerId, trim(banReason, 1024), playerImage,
 			);
-			return message.channel.send({ content:`\`${playerName} has been banned.\``, embed: banInfoEmbed });
+			return message.channel.send({ content:`\`${playerName} has been banned.\``, embeds: [banInfoEmbed] });
 		}
 		catch (error) {
 			console.error(error);
