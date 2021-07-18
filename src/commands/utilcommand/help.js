@@ -1,6 +1,7 @@
 const CommandClass = require('@class/CommandClass');
 const CommandInfoEmbed = require('@class/CommandInfoEmbed');
 const CommandListEmbed = require('@class/CommandListEmbed');
+const { getGuildConfigCollection } = require('@modules/GuildConfig');
 
 module.exports = class HelpCommand extends CommandClass {
 	constructor(botClient) {
@@ -16,7 +17,9 @@ module.exports = class HelpCommand extends CommandClass {
 		);
 	}
 	async execute(message, args) {
-		const prefix = message.guild.guildConfig.get('defaultPrefix');
+		const { id: guildId } = message.guild;
+		const guildConfigCollection = getGuildConfigCollection(guildId, this.botClient);
+		const prefix = guildConfigCollection.get('prefix');
 		const {
 			commands,
 		} = this.botClient;
@@ -24,7 +27,7 @@ module.exports = class HelpCommand extends CommandClass {
 		if (!args.length) {
 			const commandListEmbed = new CommandListEmbed(commands, prefix);
 			try {
-				await message.author.send({ embed:commandListEmbed });
+				await message.author.send({ embeds:[commandListEmbed] });
 				return message.reply({ content:'sent all of my commands to your DM.', allowedMentions: { repliedUser: true } });
 			}
 			catch (error) {
@@ -42,6 +45,6 @@ module.exports = class HelpCommand extends CommandClass {
 		}
 		const commandInfoEmbed = new CommandInfoEmbed(command, commandName, prefix);
 
-		message.channel.send({ embed:commandInfoEmbed });
+		message.channel.send({ embeds:[commandInfoEmbed] });
 	}
 };

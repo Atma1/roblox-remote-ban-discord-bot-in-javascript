@@ -4,6 +4,7 @@ const {
 	roleExists,
 	removeRoleFromCache,
 } = require('@util/util');
+const { getGuildConfigCollection } = require('@modules/GuildConfig');
 
 module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -22,12 +23,9 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 	async execute(message, args) {
 		const [role] = args;
 		const roleId = parseToRoleId(role);
-		const {
-			guildConfig,
-			id: guildId,
-			roles: guildRoles,
-		} = message.guild;
-		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
+		const { id: guildId, roles: guildRoles } = message.guild;
+		const guildConfigCollection = getGuildConfigCollection(guildId, this.botClient);
+		const cachedAuthorizedRoles = guildConfigCollection.get('authorizedRoles');
 
 		if (!cachedAuthorizedRoles.length) {
 			return message.reply({ content:'this server doesn\'t have cached roles to remove!', allowedMentions: { repliedUser: true } });
@@ -50,7 +48,7 @@ module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
 		}
 
 		const updatedCachedRoles = removeRoleFromCache(roleId, cachedAuthorizedRoles);
-		guildConfig.set('authorizedRoles', updatedCachedRoles);
+		guildConfigCollection.set('authorizedRoles', updatedCachedRoles);
 
 		return message.channel.send({ content:`\`${role}\` is no longer authorized to use permission restricted command!` });
 	}

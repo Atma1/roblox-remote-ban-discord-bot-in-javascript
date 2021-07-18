@@ -1,4 +1,5 @@
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
+const { getGuildConfigCollection } = require('@modules/GuildConfig');
 
 module.exports = class SetPrefixCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -17,7 +18,8 @@ module.exports = class SetPrefixCommand extends DataBaseRelatedCommandClass {
 			});
 	}
 	async execute(message, args) {
-		const { guildConfig, id: guildId } = message.guild;
+		const { id: guildId } = message.guild;
+		const guildConfigCollection = getGuildConfigCollection(guildId, this.botClient);
 		const [newDefaultPrefix] = args;
 
 		try {
@@ -28,7 +30,7 @@ module.exports = class SetPrefixCommand extends DataBaseRelatedCommandClass {
 			return message.reply({ content:`there was an error while updating the prefix!\n${error}`, allowedMentions: { repliedUser: true } });
 		}
 
-		guildConfig.set('defaultPrefix', newDefaultPrefix);
+		guildConfigCollection.set('prefix', newDefaultPrefix);
 		return message.channel.send({ content:`The defaultPrefix has been set to \`${newDefaultPrefix}\`` });
 	}
 };

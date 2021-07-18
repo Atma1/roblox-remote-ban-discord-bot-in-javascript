@@ -3,6 +3,7 @@ const {
 	parseToRoleId,
 	roleExists,
 } = require('@util/util');
+const { getGuildConfigCollection } = require('@modules/GuildConfig');
 
 module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -21,13 +22,9 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 	async execute(message, args) {
 		const [role] = args;
 		const [roleId] = parseToRoleId(role);
-		const {
-			guildConfig,
-			id: guildId,
-			roles: guildRoles,
-		} = message.guild;
-
-		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
+		const { id: guildId, roles: guildRoles } = message.guild;
+		const guildConfigCollection = getGuildConfigCollection(guildId, this.botClient);
+		const cachedAuthorizedRoles = guildConfigCollection.get('authorizedRoles');
 
 		if (!roleId) {
 			return message.reply({ content:'that is not a role Id!', allowedMentions: { repliedUser: true } });
@@ -50,7 +47,7 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 		}
 
 		cachedAuthorizedRoles.push(roleId);
-		guildConfig.set('authorizedRoles', cachedAuthorizedRoles);
+		guildConfigCollection.set('authorizedRoles', cachedAuthorizedRoles);
 
 		return message.channel.send({ content:`\`${role}\` has been authorized to use permission restricted command!` });
 	}
