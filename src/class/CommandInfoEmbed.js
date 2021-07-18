@@ -8,11 +8,9 @@ module.exports = class EmbededCommandInfoMessage extends MessageEmbed {
 		this.addFields({
 			name: 'Command Name:',
 			value: command.name,
-			inline: true,
 		}, {
 			name: 'Command Desc:',
 			value: command.desc,
-			inline: true,
 		}, {
 			name: 'Command Usage:',
 			value: `${prefix}${commnandName} ${command.usage}`,
@@ -27,10 +25,10 @@ module.exports = class EmbededCommandInfoMessage extends MessageEmbed {
 			value: command.cooldown,
 		}, {
 			name: 'Owner Only:',
-			value: command.guildOwnerOnly ? true : false,
+			value: command.guildOwnerOnly ? 'True' : 'False',
 		}, {
 			name: 'Require Permission:',
-			value: command.permission ? true : false,
+			value: command.permission ? 'True' : 'False',
 		});
 	}
 };
