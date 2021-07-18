@@ -2,6 +2,7 @@ const { Collection, Permissions } = require('discord.js');
 const ms = require('ms');
 const { checkPerm, convertUserRolesToArray } = require('@util/util');
 const EventClass = require('@class/EventClass');
+const { getGuildConfigCollection } = require('@modules/GuildConfig');
 
 module.exports = class MessageEvent extends EventClass {
 	constructor(botClient) {
@@ -15,10 +16,11 @@ module.exports = class MessageEvent extends EventClass {
 
 		if (message.channel.type === 'dm') return;
 
-		const { content:messageContent } = message;
-		const { guildConfig } = message.guild;
+		const { content:messageContent, guild:messageGuild } = message;
+		const { id:guildId } = messageGuild;
 		const { commands } = this.botClient;
-		const prefix = guildConfig.get('defaultPrefix');
+		const guildConfigCollection = getGuildConfigCollection(guildId, this.botClient);
+		const prefix = guildConfigCollection.get('prefix');
 
 		if (messageContent.startsWith(prefix) && !message.author.bot) {
 			const [commandName, ...args] = messageContent.slice(prefix.length).trim().split(/ +/);
@@ -26,12 +28,12 @@ module.exports = class MessageEvent extends EventClass {
 
 			if (!command) return;
 
-			if (command.guildOwnerOnly && message.author.id != message.guild.ownerID) {
+			if (command.guildOwnerOnly && message.author.id != message.guild.ownerId) {
 				return message.reply({ content:'only the guild owner can run that command!', allowedMentions: { repliedUser: true } });
 			}
 
-			if (command.permission && !message.member.permission.has(Permissions.FLAGS.ADMINISTRATOR)) {
-				const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
+			if (command.permission && !message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+				const cachedAuthorizedRoles = guildConfigCollection.get('authorizedRoles');
 
 				if (!cachedAuthorizedRoles.length) {
 					return message.reply({ content:'cannot find this server authorized role!', allowedMentions: { repliedUser: true } });
