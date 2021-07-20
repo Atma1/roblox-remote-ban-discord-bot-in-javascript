@@ -20,19 +20,17 @@ module.exports = class HelpCommand extends CommandClass {
 		const { id: guildId } = message.guild;
 		const guildConfigCollection = getGuildConfigCollection(guildId, this.botClient);
 		const prefix = guildConfigCollection.get('prefix');
-		const {
-			commands,
-		} = this.botClient;
+		const { commands } = this.botClient;
 
 		if (!args.length) {
 			const commandListEmbed = new CommandListEmbed(commands, prefix);
 			try {
 				await message.author.send({ embeds:[commandListEmbed] });
-				return message.reply({ content:'sent all of my commands to your DM.', allowedMentions: { repliedUser: true } });
+				return message.reply({ content: 'Sent all of my commands to your DM.', allowedMentions: { repliedUser: true } });
 			}
 			catch (error) {
 				console.error(error);
-				return message.reply({ content:'can\'t send my commands to your DM! Is your DM closed?', allowedMentions: { repliedUser: true } });
+				return message.reply({ content: 'Can\'t send my commands to your DM! Is your DM closed?', allowedMentions: { repliedUser: true } });
 			}
 		}
 
@@ -41,7 +39,7 @@ module.exports = class HelpCommand extends CommandClass {
 		const command = commands.get(commandName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 		if (!command) {
-			return message.reply({ content:'make sure you type the correct command.', allowedMentions: { repliedUser: true } });
+			return message.reply({ content: 'Make sure you type the correct command.', allowedMentions: { repliedUser: true } });
 		}
 		const commandInfoEmbed = new CommandInfoEmbed(command, commandName, prefix);
 

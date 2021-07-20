@@ -27,15 +27,15 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 		const cachedAuthorizedRoles = guildConfigCollection.get('authorizedRoles');
 
 		if (!roleId) {
-			return message.reply({ content:'that is not a role Id!', allowedMentions: { repliedUser: true } });
+			return message.reply({ content: 'That is not a role Id!', allowedMentions: { repliedUser: true } });
 		}
 
 		if (!roleExists(guildRoles.cache, roleId)) {
-			return message.reply({ content: 'make sure you input the role correctly.', allowedMentions: { repliedUser: true } });
+			return message.reply({ content: 'Make sure you input the role correctly.', allowedMentions: { repliedUser: true } });
 		}
 
 		if (roleExists(guildRoles.cache, roleId)) {
-			return message.reply({ content: 'that role is already authorized!', allowedMentions: { repliedUser: true } });
+			return message.reply({ content: 'That role is already authorized!', allowedMentions: { repliedUser: true } });
 		}
 
 		try {
@@ -43,7 +43,7 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply({ content:`there was an error while adding the role!\n${error}`, allowedMentions: { repliedUser: true } });
+			return message.reply({ content:`There was an error while adding the role!\n${error}`, allowedMentions: { repliedUser: true } });
 		}
 
 		cachedAuthorizedRoles.push(roleId);

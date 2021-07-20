@@ -27,7 +27,7 @@ module.exports = class SetPrefixCommand extends DataBaseRelatedCommandClass {
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply({ content:`there was an error while updating the prefix!\n${error}`, allowedMentions: { repliedUser: true } });
+			return message.reply({ content: `There was an error while updating the prefix!\n${error}`, allowedMentions: { repliedUser: true } });
 		}
 
 		guildConfigCollection.set('prefix', newDefaultPrefix);
