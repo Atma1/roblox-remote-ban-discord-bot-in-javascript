@@ -1,8 +1,5 @@
 const { Collection } = require('discord.js');
-const {
-	guildConfigDocConverter,
-	createNewGuildDataBase,
-} = require('@util/util');
+const { guildConfigDocConverter, createNewGuildDataBase } = require('@util/util');
 const admin = require('firebase-admin');
 const firestore = admin.firestore();
 
