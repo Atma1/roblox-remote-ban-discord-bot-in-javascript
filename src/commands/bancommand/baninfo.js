@@ -1,6 +1,7 @@
 const { createBanInfoEmbed } = require('@util/util');
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 const { getUserImg } = require('@modules/getUserImg');
+const PlayerProfileButton = require('@class/PlayerProfileButton');
 
 module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 	constructor(botClient) {
@@ -29,12 +30,13 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 			const data = banDocument.data();
 			const { playerID } = data;
 			const userImage = await getUserImg(playerID);
+			const playerProfileButton = new PlayerProfileButton(playerID);
 			const banInfoEmbed = createBanInfoEmbed(data, userImage, playerName);
-			return message.channel.send({ embeds: [banInfoEmbed] });
+			return message.channel.send({ embeds: [banInfoEmbed], components: [[playerProfileButton]] });
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply({ content:`there was an error while attempting to retrive the document!\n${error}`, allowedMentions: { repliedUser: true } });
+			return message.reply({ content:`There was an error while attempting to retrive the document!\n${error}`, allowedMentions: { repliedUser: true } });
 		}
 	}
 };

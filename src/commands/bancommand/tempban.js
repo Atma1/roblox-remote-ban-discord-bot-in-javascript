@@ -1,6 +1,7 @@
 const { EmbededTempBanInfoMessage } = require('@class/EmbededBanMessage');
 const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
 const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
+const PlayerProfileButton = require('@class/PlayerProfileButton');
 const { getUserId } = require('@modules/getUserId');
 const { getUserImg } = require('@modules/getUserImg');
 const {
@@ -60,11 +61,12 @@ module.exports = class TempBanCommand extends DataBaseRelatedCommandClass {
 			const banInfoEmbed = new EmbededTempBanInfoMessage(
 				formattedBanDate, bannedBy, playerName, playerId, trim(banReason, 1024), playerImage, formattedUnbanDate,
 			);
-			return message.channel.send({ content:`\`${playerName} has been banned.\``, embeds: [banInfoEmbed] });
+			const playerProfileButton = new PlayerProfileButton(playerId);
+			return message.channel.send({ content:`\`${playerName} has been banned.\``, embeds: [banInfoEmbed], components: [[playerProfileButton]] });
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply({ content:`there was an error while banning the player!\n${error}`, allowedMentions: { repliedUser: true } });
+			return message.reply({ content:`There was an error while banning the player!\n${error}`, allowedMentions: { repliedUser: true } });
 		}
 	}
 };
