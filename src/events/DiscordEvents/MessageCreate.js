@@ -29,26 +29,26 @@ module.exports = class MessageEvent extends EventClass {
 			if (!command) return;
 
 			if (command.guildOwnerOnly && message.author.id != message.guild.ownerId) {
-				return message.reply({ content:'only the guild owner can run that command!', allowedMentions: { repliedUser: true } });
+				return message.reply({ content: 'Only the guild owner can run that command!', allowedMentions: { repliedUser: true } });
 			}
 
 			if (command.permission && !message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
 				const cachedAuthorizedRoles = guildConfigCollection.get('authorizedRoles');
 
 				if (!cachedAuthorizedRoles.length) {
-					return message.reply({ content:'cannot find this server authorized role!', allowedMentions: { repliedUser: true } });
+					return message.reply({ content: 'Cannot find this server\'s authorized role!', allowedMentions: { repliedUser: true } });
 				}
 
 				const { cache:userRoles } = message.member.roles;
 				const userAuthorized = checkPerm(convertUserRolesToArray(userRoles), cachedAuthorizedRoles);
 
 				if (!userAuthorized) {
-					return message.reply({ content:'you don\'t have permission to do that!', allowedMentions: { repliedUser: true } });
+					return message.reply({ content: 'You don\'t have permission to do that!', allowedMentions: { repliedUser: true } });
 				}
 			}
 
 			if (command.args && !args.length || args.length < command.reqarglength) {
-				let reply = 'please provide the necessary amount of argument(s)!';
+				let reply = 'Please provide the necessary amount of argument(s)!';
 				reply += `\n Do this: \`${prefix}${commandName} ${command.usage}\``;
 				return message.reply({ content:reply, allowedMentions: { repliedUser: true } });
 			}
@@ -68,7 +68,7 @@ module.exports = class MessageEvent extends EventClass {
 
 				if (expirationTime > now) {
 					const timeLeft = ms(expirationTime - now, { long: true });
-					return message.reply({ content:`please wait ${timeLeft} before reusing!`, allowedMentions: { repliedUser: true } });
+					return message.reply({ content: `Please wait ${timeLeft} before reusing!`, allowedMentions: { repliedUser: true } });
 				}
 			}
 
@@ -81,7 +81,7 @@ module.exports = class MessageEvent extends EventClass {
 			}
 			catch (error) {
 				console.error(error);
-				message.reply({ content:`there was an error while executing the command!\n${error}`, allowedMentions: { repliedUser: true } });
+				message.reply({ content: `There was an error while executing the command!\n${error}`, allowedMentions: { repliedUser: true } });
 			}
 		}
 	}
