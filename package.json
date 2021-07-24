@@ -13,7 +13,7 @@
     "admin": "^1.4.1",
     "axios": "^0.21.1",
     "dateformat": "^4.5.1",
-    "discord.js": "^13.0.0-dev.a8984bc.1626048234",
+    "discord.js": "^13.0.0-dev.870a0de.1626998625",
     "dotenv": "^8.6.0",
     "firebase": "^8.7.1",
     "firebase-admin": "^9.10.0",
