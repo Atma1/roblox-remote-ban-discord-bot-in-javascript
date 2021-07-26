@@ -20,7 +20,7 @@ async function setupGuildConfig(guildId, botClient) {
 		}
 		else {
 			const { defaultPrefix, authorizedRoles } = snapshot.data();
-			guildConfigCollection.set('prefix', defaultPrefix || '!');
+			guildConfigCollection.set('prefix', defaultPrefix ?? '!');
 			guildConfigCollection.set('authorizedRoles', authorizedRoles);
 		}
 	}
