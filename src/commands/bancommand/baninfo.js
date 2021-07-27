@@ -1,29 +1,38 @@
 const { createBanInfoEmbed } = require('@util/util');
-const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
+const { MessageActionRow } = require('discord.js');
+const DataBaseRelatedSlashCommandClass = require('@class/DataBaseRelatedSlashCommandClass');
 const { getUserImg } = require('@modules/getUserImg');
 const PlayerProfileButton = require('@class/PlayerProfileButton');
 
-module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
+module.exports = class BanInfoCommand extends DataBaseRelatedSlashCommandClass {
 	constructor(botClient) {
 		super(
 			botClient,
 			'baninfo',
-			'check ban information for the player specified assuming the player is in the database',
+			'Check ban information for the player specified if exists.',
 			'<playerName>', {
 				aliases: ['checkban', 'cb', 'bi', 'retrive'],
 				example: 'baninfo joemama',
 				cooldown: '5s',
-				args: true,
 				permission: true,
+				slashCommandOptions: [{
+					name: 'playername',
+					description: 'The player of the name to search. Case sensitive!',
+					type: 'STRING',
+					required: true,
+				}],
 			});
 	}
-	async execute(message, arg) {
-		const { id:guildId } = message.channel.guild;
-		const [playerName] = arg;
+	async execute(interaction, interactionOptions) {
+		const { guildId } = interaction;
+		const playerName = interactionOptions.getString('playername');
+
 		try {
+			await interaction.defer();
 			const querySnapshot = await this.retriveBanDocument(playerName, guildId);
 			if (querySnapshot.empty) {
-				return message.reply({ content:`${playerName} is not found in the database.`, allowedMentions: { repliedUser: true } });
+				return interaction.editReply({ content:`${playerName} is not found in the database.`,
+					allowedMentions: { repliedUser: true } });
 			}
 			const documents = querySnapshot.docs;
 			const [ banDocument ] = documents;
@@ -31,12 +40,14 @@ module.exports = class BanInfoCommand extends DataBaseRelatedCommandClass {
 			const { playerID } = data;
 			const userImage = await getUserImg(playerID);
 			const playerProfileButton = new PlayerProfileButton(playerID);
+			const messageRow = new MessageActionRow({ components: [playerProfileButton] });
 			const banInfoEmbed = createBanInfoEmbed(data, userImage, playerName);
-			return message.channel.send({ embeds: [banInfoEmbed], components: [[playerProfileButton]] });
+			return interaction.editReply({ embeds: [banInfoEmbed], components: [messageRow] });
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply({ content:`There was an error while attempting to retrive the document!\n${error}`, allowedMentions: { repliedUser: true } });
+			return interaction.editReply({ content:`There was an error while attempting to retrive the document!\n${error}`,
+				ephemeral: true, allowedMentions: { repliedUser: true } });
 		}
 	}
 };

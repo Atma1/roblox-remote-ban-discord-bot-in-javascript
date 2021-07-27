@@ -1,55 +1,50 @@
-const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
-const {
-	parseToRoleId,
-	roleExists,
-	removeRoleFromCache,
-} = require('@util/util');
+const DataBaseRelatedSlashCommandClass = require('@class/DataBaseRelatedSlashCommandClass');
+const { roleExistsInCache, removeRoleFromCache } = require('@util/util');
 const { getGuildConfigCollection } = require('@modules/GuildConfig');
 
-module.exports = class UnauthorzieCommand extends DataBaseRelatedCommandClass {
+module.exports = class AuthorizeCommand extends DataBaseRelatedSlashCommandClass {
 	constructor(botClient) {
 		super(
 			botClient,
 			'unauth',
-			'unauthorize specific role to command that require permission assuming the role exists in the database',
+			'authorize specific role to command that require permission',
 			'<@role>', {
-				aliases: ['revoke', 'ut'],
-				example: 'unauthorizerole @joemama',
+				aliases: ['permit', 'authforrole', 'at'],
+				example: 'auth @joemama',
 				cooldown: '5s',
-				args: true,
 				permission: true,
+				slashCommandOptions: [{
+					name: 'role',
+					description: 'The role to unauthorize.',
+					type: 'ROLE',
+					required: true,
+				}],
 			});
 	}
-	async execute(message, args) {
-		const [role] = args;
-		const roleId = parseToRoleId(role);
-		const { id: guildId, roles: guildRoles } = message.guild;
+	async execute(interaction, interactionOptions) {
+		const Role = interactionOptions.getRole('role');
+		const { id:roleId } = Role;
+		const { id: guildId, roles: guildRoles } = interaction.guild;
 		const guildConfigCollection = getGuildConfigCollection(guildId, this.botClient);
 		const cachedAuthorizedRoles = guildConfigCollection.get('authorizedRoles');
 
-		if (!cachedAuthorizedRoles.length) {
-			return message.reply({ content: 'This server doesn\'t have cached roles to remove!', allowedMentions: { repliedUser: true } });
-		}
-
-		if (!roleId) {
-			return message.reply({ content: 'That is not a role Id!', allowedMentions: { repliedUser: true } });
-		}
-
-		if (!roleExists(guildRoles.cache, roleId)) {
-			return message.reply({ content: 'Make sure you input the role correctly.', allowedMentions: { repliedUser: true } });
+		if (!roleExistsInCache(guildRoles.cache, roleId)) {
+			return interaction.reply({ content: 'That role is not even authorized!', allowedMentions: { repliedUser: true } });
 		}
 
 		try {
-			await this.removeAuthorizedRole(roleId, guildId);
+			await interaction.defer();
+			await this.addAuthorizedRole(roleId, guildId);
 		}
 		catch (error) {
-			console.error(error);
-			return message.reply({ content: `There was an error while removing the role!\n${error}`, allowedMentions: { repliedUser: true } });
+			console.error;
+			return interaction.editReply({ content:`There was an error while removing the role!\n${error}`,
+				ephemeral: true, allowedMentions: { repliedUser: true } });
 		}
 
 		const updatedCachedRoles = removeRoleFromCache(roleId, cachedAuthorizedRoles);
 		guildConfigCollection.set('authorizedRoles', updatedCachedRoles);
-
-		return message.channel.send({ content:`\`${role}\` is no longer authorized to use permission restricted command!` });
+		return interaction.editReply({ content:`<@&${roleId}> has been has been removed from authorized role list!` });
 	}
 };
+
