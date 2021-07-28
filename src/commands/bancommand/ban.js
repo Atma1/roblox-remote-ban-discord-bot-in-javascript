@@ -44,7 +44,7 @@ module.exports = class PermBanCommand extends DataBaseRelatedSlashCommandClass {
 			await interaction.defer();
 			const playerId = await getUserId(playerName);
 			const playerBanDoc = new PlayerBanDocument(
-				playerId, playerName, banReason, bannedBy, 'permaBan', bannedAt,
+				playerId, playerName, trim(banReason, 1024), bannedBy, 'permaBan', bannedAt,
 			);
 			const [playerImage] = await Promise.all([
 				getUserImg(playerId),

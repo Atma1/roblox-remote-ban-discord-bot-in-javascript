@@ -67,7 +67,7 @@ module.exports = class TempBanCommand extends DataBaseRelatedSlashCommandClass {
 			await interaction.defer();
 			const playerId = await getUserId(playerName);
 			const playerBanDoc = new PlayerBanDocument(
-				playerId, playerName, banReason, bannedBy, 'tempBan', bannedAt, bannedUntil,
+				playerId, playerName, trim(banReason, 1024), bannedBy, 'tempBan', bannedAt, bannedUntil,
 			);
 			const [playerImage] = await Promise.all([
 				getUserImg(playerId),
