@@ -1,7 +1,7 @@
 const { MessageEmbed } = require('discord.js');
 
 module.exports = class EmbededCommandInfoMessage extends MessageEmbed {
-	constructor(command, commnandName, prefix) {
+	constructor(command, commnandName) {
 		super();
 		this.setColor('#EFFF00');
 		this.setTitle('Command Information');
@@ -13,10 +13,10 @@ module.exports = class EmbededCommandInfoMessage extends MessageEmbed {
 			value: command.desc,
 		}, {
 			name: 'Command Usage:',
-			value: `${prefix}${commnandName} ${command.usage}`,
+			value: `/${commnandName} ${command.usage}`,
 		}, {
 			name: 'Command Example:',
-			value: command.example ? `${prefix}${command.example}` : 'No example',
+			value: command.example ? `/${command.example}` : 'No example',
 		}, {
 			name: 'Command Aliases:',
 			value: command.aliases ? command.aliases.join(', ') : 'No aliases',
