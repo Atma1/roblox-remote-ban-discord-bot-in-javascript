@@ -8,15 +8,14 @@ module.exports = class GuildCreateEvent extends EventClass {
 			'on',
 		);
 	}
-	async execute(interaction) {
+	execute(interaction) {
 		if (!interaction.isCommand()) return;
 
 		if (!interaction.inGuild()) return;
 
-		const { slashCommandsData } = this.botClient;
+		const { slashCommands } = this.botClient;
 		const { commandName } = interaction;
-		const slashCommand = slashCommandsData.get(commandName) ||
-		slashCommandsData.find(command => command.aliases && command.aliases.includes(commandName));
+		const slashCommand = slashCommands.get(commandName);
 
 		if (!slashCommand) return;
 
