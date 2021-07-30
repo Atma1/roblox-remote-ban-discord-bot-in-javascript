@@ -1,18 +1,18 @@
-const DataBaseRelatedSlashCommandClass = require('@class/DataBaseRelatedSlashCommandClass');
+const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
 const { roleExistsInCache, removeRoleFromCache } = require('@util/util');
 const { getGuildConfigCollection } = require('@modules/GuildConfig');
 
-module.exports = class AuthorizeCommand extends DataBaseRelatedSlashCommandClass {
+module.exports = class AuthorizeCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
 			'unauth',
-			'authorize specific role to command that require permission',
+			'authorize specific role to command that require defaultPermission',
 			'<@role>', {
 				aliases: ['permit', 'authforrole', 'at'],
 				example: 'auth @joemama',
 				cooldown: '5s',
-				permission: true,
+				defaultPermission: false,
 				slashCommandOptions: [{
 					name: 'role',
 					description: 'The role to unauthorize.',

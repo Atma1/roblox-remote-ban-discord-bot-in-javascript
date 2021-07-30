@@ -1,7 +1,7 @@
-const DataBaseRelatedSlashCommandClass = require('@class/DataBaseRelatedSlashCommandClass');
+const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
 const { getUserId } = require('@modules/getUserId');
 
-module.exports = class UnbanCommand extends DataBaseRelatedSlashCommandClass {
+module.exports = class UnbanCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
@@ -11,7 +11,7 @@ module.exports = class UnbanCommand extends DataBaseRelatedSlashCommandClass {
 				aliases: ['ub', 'forgive', 'amnesty', 'remove'],
 				example: 'unban joemama',
 				cooldown: '5s',
-				permission: true,
+				defaultPermission: false,
 				slashCommandOptions: [{
 					name: 'playername',
 					description: 'The player of the name to unban. Case sensitive!',

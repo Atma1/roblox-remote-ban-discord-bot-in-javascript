@@ -1,7 +1,7 @@
-const { TempBanInfoEmbed } = require('@class/EmbedBanMessage');
+const { TempBanInfoEmbed } = require('@class/Embed/EmbedBanMessage');
 const { MessageActionRow } = require('discord.js');
-const DataBaseRelatedSlashCommandClass = require('@class/DataBaseRelatedSlashCommandClass');
-const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
+const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
+const PlayerBanDocument = require('@class/Firestore Document/PlayerBanDocument');
 const PlayerProfileButton = require('@class/PlayerProfileButton');
 const ms = require('ms');
 const { getUserId } = require('@modules/getUserId');
@@ -12,7 +12,7 @@ const {
 	formatToUTC,
 } = require('@util/util');
 
-module.exports = class TempBanCommand extends DataBaseRelatedSlashCommandClass {
+module.exports = class TempBanCommand extends DatabaseSlashCommand {
 	/**
 	 * @param {Client} botClient;
 	 */
@@ -25,7 +25,7 @@ module.exports = class TempBanCommand extends DataBaseRelatedSlashCommandClass {
 				aliases: ['tban', 'temppunish', 'tb', 'tbc', 'tp'],
 				example: 'tempban joemama 720y 666w 420d 42h joemama is too fat',
 				cooldown: '5s',
-				permission: true,
+				defaultPermission: false,
 				slashCommandOptions: [{
 					name: 'playername',
 					description: 'The name of the player to ban. Case sensitive!',

@@ -1,18 +1,18 @@
-const DataBaseRelatedSlashCommandClass = require('@class/DataBaseRelatedSlashCommandClass');
+const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
 const { roleExistsInCache } = require('@util/util');
 const { getGuildConfigCollection } = require('@modules/GuildConfig');
 
-module.exports = class AuthorizeCommand extends DataBaseRelatedSlashCommandClass {
+module.exports = class AuthorizeCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
 			'auth',
-			'authorize specific role to command that require permission',
+			'authorize specific role to command that require defaultPermission',
 			'<@role>', {
 				aliases: ['permit', 'authforrole', 'at'],
 				example: 'auth @joemama',
 				cooldown: '5s',
-				permission: true,
+				defaultPermission: false,
 				slashCommandOptions: [{
 					name: 'role',
 					description: 'The role to authorize.',
@@ -45,6 +45,6 @@ module.exports = class AuthorizeCommand extends DataBaseRelatedSlashCommandClass
 		cachedAuthorizedRoles.push(roleId);
 		guildConfigCollection.set('authorizedRoles', cachedAuthorizedRoles);
 
-		return interaction.editReply({ content:`<@&${roleId}> has been authorized to use permission restricted command!` });
+		return interaction.editReply({ content:`<@&${roleId}> has been authorized to use defaultPermission restricted command!` });
 	}
 };

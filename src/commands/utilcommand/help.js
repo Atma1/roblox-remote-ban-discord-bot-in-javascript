@@ -1,8 +1,8 @@
-const DataBaseRelatedSlashCommandClass = require('@class/DataBaseRelatedSlashCommandClass');
-const CommandInfoEmbed = require('@class/CommandInfoEmbed');
-const CommandListEmbed = require('@class/CommandListEmbed');
+const SlashCommand = require('@class/Command/SlashCommand');
+const CommandInfoEmbed = require('@class/Embed/CommandInfoEmbed');
+const CommandListEmbed = require('@class/Embed/CommandListEmbed');
 
-module.exports = class HelpCommand extends DataBaseRelatedSlashCommandClass {
+module.exports = class HelpCommand extends SlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
@@ -22,11 +22,11 @@ module.exports = class HelpCommand extends DataBaseRelatedSlashCommandClass {
 		);
 	}
 	async execute(interaction, interactionOptions) {
-		const { slashCommandsData } = this.botClient;
+		const { slashCommands } = this.botClient;
 		const commandName = interactionOptions.getString('command');
 
 		if (!commandName) {
-			const commandListEmbed = new CommandListEmbed(slashCommandsData);
+			const commandListEmbed = new CommandListEmbed(slashCommands);
 			try {
 				await interaction.defer();
 				await interaction.user.send({ embeds:[commandListEmbed] });
@@ -39,7 +39,7 @@ module.exports = class HelpCommand extends DataBaseRelatedSlashCommandClass {
 		}
 
 		commandName.toLowerCase();
-		const command = slashCommandsData.get(commandName) || slashCommandsData.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+		const command = slashCommands.get(commandName) || slashCommands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 		if (!command) {
 			return interaction.reply({ content: 'Make sure you type the correct command.', allowedMentions: { repliedUser: true } });

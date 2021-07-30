@@ -1,13 +1,13 @@
-const { PermBanInfoEmbed } = require('@class/EmbedBanMessage');
+const { PermBanInfoEmbed } = require('@class/Embed/EmbedBanMessage');
 const { MessageActionRow } = require('discord.js');
-const DataBaseRelatedSlashCommandClass = require('@class/DataBaseRelatedSlashCommandClass');
-const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
+const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
+const PlayerBanDocument = require('@class/Firestore Document/PlayerBanDocument');
 const PlayerProfileButton = require('@class/PlayerProfileButton');
 const { getUserId } = require('@modules/getUserId');
 const { getUserImg } = require('@modules/getUserImg');
 const { trimString:trim, formatToUTC } = require('@util/util');
 
-module.exports = class PermBanCommand extends DataBaseRelatedSlashCommandClass {
+module.exports = class PermBanCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
@@ -17,7 +17,7 @@ module.exports = class PermBanCommand extends DataBaseRelatedSlashCommandClass {
 				aliases: ['addban', 'banplayer', 'bn', 'permban', 'pb'],
 				example: 'ban joemama joemama is too fat',
 				cooldown: '5s',
-				permission: true,
+				defaultPermission: false,
 				slashCommandOptions: [{
 					name: 'playername',
 					description: 'The name of the player to ban. Case sensitive!',

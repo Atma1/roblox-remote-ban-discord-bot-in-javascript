@@ -1,10 +1,10 @@
 const { createBanInfoEmbed } = require('@util/util');
 const { MessageActionRow } = require('discord.js');
-const DataBaseRelatedSlashCommandClass = require('@class/DataBaseRelatedSlashCommandClass');
+const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
 const { getUserImg } = require('@modules/getUserImg');
 const PlayerProfileButton = require('@class/PlayerProfileButton');
 
-module.exports = class BanInfoCommand extends DataBaseRelatedSlashCommandClass {
+module.exports = class BanInfoCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
@@ -14,7 +14,7 @@ module.exports = class BanInfoCommand extends DataBaseRelatedSlashCommandClass {
 				aliases: ['checkban', 'cb', 'bi', 'retrive'],
 				example: 'baninfo joemama',
 				cooldown: '5s',
-				permission: true,
+				defaultPermission: false,
 				slashCommandOptions: [{
 					name: 'playername',
 					description: 'The player of the name to search. Case sensitive!',
