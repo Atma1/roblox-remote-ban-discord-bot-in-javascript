@@ -1,11 +1,10 @@
 const fs = require('fs');
-const readableToMs = require('readable-to-ms');
 const dateformat = require('dateformat');
-const GuildConfigDocument = require('@class/GuildConfigDocumentClass');
+const GuildConfigDocument = require('@class/Firestore Document/GuildConfigDocument');
 const {
-	EmbededPermBanInfoMessage,
-	EmbededTempBanInfoMessage,
-} = require('@class/EmbededBanMessage');
+	PermBanInfoEmbed,
+	TempBanInfoEmbed,
+} = require('@class/Embed/EmbedBanMessage');
 
 const playerDocConverter = {
 	toFirestore: (Doc) => {
@@ -70,31 +69,19 @@ const createBanInfoEmbed = (data, userImage, playerName) => {
 	const formattedBanDate = formatToUTC(bannedAt);
 	const formattedUnbanDate = formatToUTC(bannedUntil);
 	const trimmedBanReason = trimString(banReason, 1024);
-	const banInfoEmbed = banType == 'permaBan' ? new EmbededPermBanInfoMessage(
+	const banInfoEmbed = banType == 'permaBan' ? new PermBanInfoEmbed(
 		formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage,
-	) : new EmbededTempBanInfoMessage(
+	) : new TempBanInfoEmbed(
 		formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
 	);
 	return banInfoEmbed;
 };
 
-const getBanDurationAndBanReason = (args) => {
-	const {
-		ms: banDuration,
-		text: banReason,
-	} = readableToMs(args.join(' '));
-
-	if (banDuration && banReason) {
-		return [banDuration, banReason];
-	}
-	else {
-		return [readableToMs(args.join(' ')), 'No ban reason was specified.'];
-	}
-};
-
-const hasBanDuration = (args) => {
+const isBanDuration = (args) => {
+	const splittedArgs = args.split(' ');
+	if (splittedArgs.length >= 2) return false;
 	const durationRE = /(\d+)\s*(milliseconds|millisecond|millis|milli|ms|seconds|second|secs|sec|s|minutes|minute|mins|min|m|hours|hour|hrs|hr|h|days|day|d|weeks|week|w|months|month|mo|years|year|y)\s*/gy;
-	return args.some(arg => durationRE.test(arg));
+	return splittedArgs.some(arg => durationRE.test(arg));
 };
 
 const trimString = (str, max) => {
@@ -105,12 +92,12 @@ const parseToRoleId = (arg) => {
 	return arg.match(/^<@&?(\d+)>$/g);
 };
 
-const roleExists = (guildRoles, roleId) => {
-	return guildRoles.find(guildRole => `<@&${guildRole.id}>` == roleId);
+const roleExistsInCache = (guildRolesCache, roleId) => {
+	return guildRolesCache.find(guildRole => `<@&${guildRole.id}>` == `<@&${roleId}>`);
 };
 
 const removeRoleFromCache = (roleId, cachedRoles) => {
-	return cachedRoles.filter(role => role != roleId);
+	return cachedRoles.filter(role => role != `<@&${roleId}>`);
 };
 
 const formatToUTC = (date) => {
@@ -160,6 +147,36 @@ const loadCommands = (client) => {
 	}
 	console.log(`Loaded ${commandFilesAmount} commands.`);
 };
+// 347291257665486858
+const loadSlashCommands = async (client) => {
+	const mainCommandFolder = fs.readdirSync('./src/commands');
+	let commandFilesAmount = 0;
+	const { slashCommands } = client;
+
+	for (const commandFolders of mainCommandFolder) {
+		const commandFiles = fs.readdirSync(`./src/commands/${commandFolders}`).filter(file => file.endsWith('.js'));
+		for (const commandFile of commandFiles) {
+			const commandClass = require(`@commands/${commandFolders}/${commandFile}`);
+			const command = new commandClass(client);
+			slashCommands.set(command.name, command);
+			commandFilesAmount += 1;
+			delete require.cache[commandClass];
+		}
+	}
+	console.log(`Loaded ${commandFilesAmount} commands.`);
+};
+
+const setSlashCommands = (guilds, slashCommands) => {
+	const slashCommandDatas = slashCommands.map(cmd => cmd.slashCommandData);
+	guilds.forEach(async guild => {
+		try {
+			await guild?.commands.set(slashCommandDatas);
+		}
+		catch (error) {
+			console.error(error);
+		}
+	});
+};
 
 const loadEvents = (client) => {
 	const eventsFolder = fs.readdirSync('./src/events/DiscordEvents').filter(file => file.endsWith('.js'));
@@ -177,15 +194,16 @@ module.exports = {
 	formatToUTC: formatToUTC,
 	checkPerm: checkPermission,
 	loadCommands: loadCommands,
+	loadSlashCommands: loadSlashCommands,
+	setSlashCommands: setSlashCommands,
 	loadEvents: loadEvents,
 	trimString: trimString,
 	parseToRoleId: parseToRoleId,
-	roleExists: roleExists,
+	roleExists: roleExistsInCache,
 	removeRoleFromCache: removeRoleFromCache,
 	createNewGuildDataBase: createNewGuildDataBase,
 	createBanInfoEmbed: createBanInfoEmbed,
 	guildConfigDocConverter: guildConfigDocConverter,
 	playerBanDocConverter: playerDocConverter,
-	getBanDurationAndBanReason: getBanDurationAndBanReason,
-	hasBanDuration: hasBanDuration,
+	isBanDuration: isBanDuration,
 };
