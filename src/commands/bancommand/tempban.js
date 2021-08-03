@@ -23,7 +23,7 @@ module.exports = class TempBanCommand extends DatabaseSlashCommand {
 			'Temporary ban the player. To edit the ban, just rerun the command.',
 			'<playerName> <banDuration> <banReason(Optional)>', {
 				aliases: ['tban', 'temppunish', 'tb', 'tbc', 'tp'],
-				example: 'tempban joemama 720y 666w 420d 42h joemama is too fat',
+				example: 'tempban joemama 420d joemama is too fat',
 				cooldown: '5s',
 				defaultPermission: false,
 				slashCommandOptions: [{
@@ -38,7 +38,7 @@ module.exports = class TempBanCommand extends DatabaseSlashCommand {
 					required: true,
 				}, {
 					name: 'reason',
-					description: 'Why the player is banned. If longer than 1024 text it will be shortened.',
+					description: 'Why the player is banned. If longer than 1024 text it will be trimmed.',
 					type: 'STRING',
 					required: false,
 				}],
@@ -54,7 +54,7 @@ module.exports = class TempBanCommand extends DatabaseSlashCommand {
 		const { guildId } = interaction;
 		const { tag: bannedBy } = interaction.user;
 		const playerName = interactionOptions.getString('playername');
-		const banReason = interactionOptions.getString('reason') ?? 'No ban reason was specified.';
+		const banReason = trim(interactionOptions.getString('reason'), 1024) ?? 'No ban reason was specified.';
 		const banDuration = interactionOptions.getString('duration');
 		if (!isBanDuration(banDuration)) {
 			return interaction.reply('Make sure the ban duration is formatted correctly!');
@@ -67,14 +67,14 @@ module.exports = class TempBanCommand extends DatabaseSlashCommand {
 			await interaction.defer();
 			const playerId = await getUserId(playerName);
 			const playerBanDoc = new PlayerBanDocument(
-				playerId, playerName, trim(banReason, 1024), bannedBy, 'tempBan', bannedAt, bannedUntil,
+				playerId, playerName, banReason, bannedBy, 'tempBan', bannedAt, bannedUntil,
 			);
 			const [playerImage] = await Promise.all([
 				getUserImg(playerId),
 				this.addPlayerToBanList(playerBanDoc, guildId),
 			]);
 			const banInfoEmbed = new TempBanInfoEmbed(
-				formattedBanDate, bannedBy, playerName, playerId, trim(banReason, 1024), playerImage, formattedUnbanDate,
+				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage, formattedUnbanDate,
 			);
 			const playerProfileButton = new PlayerProfileButton(playerId);
 			const messageRow = new MessageActionRow({ components: [playerProfileButton] });

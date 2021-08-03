@@ -36,7 +36,7 @@ module.exports = class PermBanCommand extends DatabaseSlashCommand {
 		const { guildId } = interaction;
 		const { tag: bannedBy } = interaction.user;
 		const playerName = interactionOptions.getString('playername');
-		const banReason = interactionOptions.getString('reason') ?? 'No ban reason was specified';
+		const banReason = trim(interactionOptions.getString('reason'), 1024) ?? 'No ban reason was specified';
 		const bannedAt = Date.now();
 		const formattedBanDate = formatToUTC(bannedAt);
 
@@ -44,18 +44,19 @@ module.exports = class PermBanCommand extends DatabaseSlashCommand {
 			await interaction.defer();
 			const playerId = await getUserId(playerName);
 			const playerBanDoc = new PlayerBanDocument(
-				playerId, playerName, trim(banReason, 1024), bannedBy, 'permaBan', bannedAt,
+				playerId, playerName, banReason, bannedBy, 'permaBan', bannedAt,
 			);
 			const [playerImage] = await Promise.all([
 				getUserImg(playerId),
 				this.addPlayerToBanList(playerBanDoc, guildId),
 			]);
 			const banInfoEmbed = new PermBanInfoEmbed(
-				formattedBanDate, bannedBy, playerName, playerId, trim(banReason, 1024), playerImage,
+				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage,
 			);
 			const playerProfileButton = new PlayerProfileButton(playerId);
 			const messageRow = new MessageActionRow({ components: [playerProfileButton] });
-			return interaction.editReply({ content:`\`${playerName} has been banned.\``, embeds: [banInfoEmbed], components: [messageRow] });
+			return interaction.editReply({ content:`\`${playerName} has been banned.\``,
+				embeds: [banInfoEmbed], components: [messageRow] });
 		}
 		catch (error) {
 			console.error(error);
