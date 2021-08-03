@@ -1,13 +1,15 @@
 const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
+const PermissionData = require('@class/Permission Data/PermissionData');
 const { roleExistsInCache } = require('@util/util');
 const { getGuildConfigCollection } = require('@modules/GuildConfig');
+const { updateSlashCommandPermission } = require('@modules/guildCommandPermission');
 
 module.exports = class AuthorizeCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
 			'auth',
-			'authorize specific role to command that require defaultPermission',
+			'Authorize specific role to command that require defaultPermission',
 			'<@role>', {
 				aliases: ['permit', 'authforrole', 'at'],
 				example: 'auth @joemama',
@@ -24,27 +26,33 @@ module.exports = class AuthorizeCommand extends DatabaseSlashCommand {
 	async execute(interaction, interactionOptions) {
 		const Role = interactionOptions.getRole('role');
 		const { id:roleId } = Role;
-		const { id: guildId, roles: guildRoles } = interaction.guild;
+		const { guild } = interaction;
+		const { id:guildId, ownerId } = guild;
 		const guildConfigCollection = getGuildConfigCollection(guildId, this.botClient);
 		const cachedAuthorizedRoles = guildConfigCollection.get('authorizedRoles');
+		const guildSlashCommandIds = guildConfigCollection.get('guildSlashCommandIds');
 
-		if (roleExistsInCache(guildRoles.cache, roleId)) {
+		if (roleExistsInCache(cachedAuthorizedRoles, roleId)) {
 			return interaction.reply({ content: 'That role is already authorized!', allowedMentions: { repliedUser: true } });
 		}
 
+		cachedAuthorizedRoles.push(roleId);
+		const authorizedPermission = cachedAuthorizedRoles.map(Id => new PermissionData(Id, 'ROLE', true));
+		authorizedPermission.push(new PermissionData(ownerId, 'USER', true));
+
 		try {
 			await interaction.defer();
-			await this.addAuthorizedRole(roleId, guildId);
+			await Promise.all([
+				this.addAuthorizedRole(roleId, guildId),
+				updateSlashCommandPermission(guild, authorizedPermission, guildSlashCommandIds),
+			]);
+			guildConfigCollection.set('authorizedRoles', cachedAuthorizedRoles);
+			return interaction.editReply({ content:`<@&${roleId}> has been authorized to use defaultPermission restricted command!` });
 		}
 		catch (error) {
 			console.error(error);
 			return interaction.editReply({ content:`There was an error while adding the role!\n${error}`,
 				ephemeral: true, allowedMentions: { repliedUser: true } });
 		}
-
-		cachedAuthorizedRoles.push(roleId);
-		guildConfigCollection.set('authorizedRoles', cachedAuthorizedRoles);
-
-		return interaction.editReply({ content:`<@&${roleId}> has been authorized to use defaultPermission restricted command!` });
 	}
 };
