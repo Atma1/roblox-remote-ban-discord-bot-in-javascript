@@ -7,10 +7,10 @@ module.exports = class HelpCommand extends SlashCommand {
 		super(
 			botClient,
 			'help',
-			'give help and info on the specified command',
+			'Give help or info on the specified command',
 			'<commandName(Optional)>', {
 				aliases: ['cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds', 'commands'],
-				example: 'help ban',
+				example: '/help ban',
 				cooldown: '5s',
 				slashCommandOptions: [{
 					name: 'command',
