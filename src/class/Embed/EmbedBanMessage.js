@@ -1,6 +1,4 @@
-const {
-	MessageEmbed,
-} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 const PermBanInfoEmbed = class PermBanInfoEmbed extends MessageEmbed {
 	constructor(bannedAt, bannedBy, playerName, playerId, banReason, userImage) {

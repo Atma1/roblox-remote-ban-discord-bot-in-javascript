@@ -1,9 +1,9 @@
 const admin = require('firebase-admin');
 const { playerBanDocConverter } = require('@util/util');
 const { firestore } = admin;
-const genericSlashCommandClass = require('./SlashCommandClass');
+const SlashCommandClass = require('./SlashCommand');
 
-module.exports = class DataBaseRelatedSlashCommandClass extends genericSlashCommandClass {
+module.exports = class DatabaseSlashCommand extends SlashCommandClass {
 
 	constructor(botClient, name, desc, usage, commandOptions = {}) {
 		super(botClient, name, desc, usage, commandOptions);
