@@ -1,28 +1,34 @@
 const { Collection } = require('discord.js');
-const { guildConfigDocConverter, createNewGuildDataBase } = require('@util/util');
+const {
+	guildConfigDocConverter,
+	createNewGuildDataBase,
+	setSlashCommands,
+} = require('@util/util');
+const { setupCommandPermission } = require('./guildCommandPermission');
 const admin = require('firebase-admin');
 const firestore = admin.firestore();
 
-async function setupGuildConfig(guildId, botClient) {
+async function setupGuildConfig(guild, botClient) {
 	try {
-		const { guildConfig } = botClient;
-		guildConfig.set(guildId, new Collection);
-		const guildConfigCollection = guildConfig.get(guildId);
+		const { guildConfigCollection, slashCommands } = botClient;
+		const { id:guildId } = guild;
+		guildConfigCollection.set(guildId, new Collection);
+		const guildConfig = guildConfigCollection.get(guildId);
 		const snapshot = await fetchGuildPrefixAndRole(guildId);
 		if (!snapshot.exists) {
 			const [response, guildOwner] = await Promise.all([
 				createNewGuildDataBase(this.id, firestore),
 				botClient.users.fetch(this.ownerID),
 			]);
-			guildConfigCollection.set(guildId, 'prefix', '!');
-			guildConfigCollection.set(guildId, 'authorizedRoles', []);
+			guildConfig.set('authorizedRoles', []);
 			directMessageGuildOwner(guildOwner, response);
 		}
 		else {
-			const { defaultPrefix, authorizedRoles } = snapshot.data();
-			guildConfigCollection.set('prefix', defaultPrefix ?? '!');
-			guildConfigCollection.set('authorizedRoles', authorizedRoles);
+			const { authorizedRoles } = snapshot.data();
+			guildConfig.set('authorizedRoles', authorizedRoles);
 		}
+		await setSlashCommands(guild, slashCommands, guildConfig);
+		await setupCommandPermission(guildConfig, guild);
 	}
 	catch (error) {
 		console.error(error);
@@ -30,12 +36,12 @@ async function setupGuildConfig(guildId, botClient) {
 }
 
 function directMessageGuildOwner(guildOwner, message) {
-	guildOwner.send({ content:message });
+	guildOwner.send({ content: message });
 }
 
 function getGuildConfigCollection(guildId, botClient) {
-	const { guildConfig } = botClient;
-	return guildConfig.get(guildId);
+	const { guildConfigCollection } = botClient;
+	return guildConfigCollection.get(guildId);
 }
 
 function fetchGuildPrefixAndRole(guildId) {
@@ -47,6 +53,7 @@ function fetchGuildPrefixAndRole(guildId) {
 }
 
 module.exports = {
+	fetchGuildPrefixAndRole: fetchGuildPrefixAndRole,
 	getGuildConfigCollection: getGuildConfigCollection,
 	setupGuildConfig: setupGuildConfig,
 };
