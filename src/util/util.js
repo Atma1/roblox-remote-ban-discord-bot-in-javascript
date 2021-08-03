@@ -1,10 +1,7 @@
 const fs = require('fs');
 const dateformat = require('dateformat');
 const GuildConfigDocument = require('@class/Firestore Document/GuildConfigDocument');
-const {
-	PermBanInfoEmbed,
-	TempBanInfoEmbed,
-} = require('@class/Embed/EmbedBanMessage');
+const { PermBanInfoEmbed, TempBanInfoEmbed } = require('@class/Embed/EmbedBanMessage');
 
 const playerDocConverter = {
 	toFirestore: (Doc) => {
@@ -93,20 +90,20 @@ const parseToRoleId = (arg) => {
 };
 
 const roleExistsInCache = (guildRolesCache, roleId) => {
-	return guildRolesCache.find(guildRole => `<@&${guildRole.id}>` == `<@&${roleId}>`);
+	return guildRolesCache.find(guildRole => guildRole == roleId);
 };
 
-const removeRoleFromCache = (roleId, cachedRoles) => {
-	return cachedRoles.filter(role => role != `<@&${roleId}>`);
+const removeRoleFromCache = (cachedRoles, roleId) => {
+	return cachedRoles.filter(role => role != roleId);
 };
 
 const formatToUTC = (date) => {
 	return dateformat(date, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
 };
 
-const createNewGuildDataBase = async (id, firestore) => {
+const createNewGuildDataBase = async (guildId, firestore) => {
 	try {
-		await firestore.collection(`guildDataBase:${id}`)
+		await firestore.collection(`guildDataBase:${guildId}`)
 			.doc('guildConfigurations')
 			.withConverter(guildConfigDocConverter)
 			.create(new GuildConfigDocument);
@@ -114,7 +111,7 @@ const createNewGuildDataBase = async (id, firestore) => {
 		let successMessage = 'Collection containing your guild config has been created. ';
 		successMessage += 'Be sure to add roles that\'s authorized to use the commands using the auth command!';
 
-		console.log(`Database for guild ${id} has been created.`);
+		console.log(`Database for guild ${guildId} has been created.`);
 		return successMessage;
 	}
 	catch (error) {
@@ -147,7 +144,7 @@ const loadCommands = (client) => {
 	}
 	console.log(`Loaded ${commandFilesAmount} commands.`);
 };
-// 347291257665486858
+
 const loadSlashCommands = async (client) => {
 	const mainCommandFolder = fs.readdirSync('./src/commands');
 	let commandFilesAmount = 0;
@@ -166,16 +163,11 @@ const loadSlashCommands = async (client) => {
 	console.log(`Loaded ${commandFilesAmount} commands.`);
 };
 
-const setSlashCommands = (guilds, slashCommands) => {
-	const slashCommandDatas = slashCommands.map(cmd => cmd.slashCommandData);
-	guilds.forEach(async guild => {
-		try {
-			await guild?.commands.set(slashCommandDatas);
-		}
-		catch (error) {
-			console.error(error);
-		}
-	});
+const setSlashCommands = async (guild, slashCommand, guildConfig) => {
+	const slashCommandDatas = slashCommand.map(command => command.slashCommandData);
+	const guildSlashCommands = await guild?.commands.set(slashCommandDatas);
+	const slashCommandIds = guildSlashCommands.map(command => command.id);
+	guildConfig.set('guildSlashCommandIds', slashCommandIds);
 };
 
 const loadEvents = (client) => {
@@ -199,7 +191,7 @@ module.exports = {
 	loadEvents: loadEvents,
 	trimString: trimString,
 	parseToRoleId: parseToRoleId,
-	roleExists: roleExistsInCache,
+	roleExistsInCache: roleExistsInCache,
 	removeRoleFromCache: removeRoleFromCache,
 	createNewGuildDataBase: createNewGuildDataBase,
 	createBanInfoEmbed: createBanInfoEmbed,
