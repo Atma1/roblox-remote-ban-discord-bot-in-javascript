@@ -4,7 +4,6 @@ module.exports = class SlashCommand {
 		this.desc = desc;
 		this.usage = usage;
 		this.botClient = botClient;
-		this.aliases = commandOptions.aliases || false;
 		this.example = commandOptions.example || false;
 		this.cooldown = commandOptions.cooldown || '3s';
 		this.reqarglength = commandOptions.reqarglength || false;
