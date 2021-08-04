@@ -14,7 +14,6 @@ module.exports = class PermBanCommand extends DatabaseSlashCommand {
 			'ban',
 			'Ban player permanently. To edit the ban, just rerun the command.',
 			'<playerName> <banReason(Optional)>', {
-				aliases: ['addban', 'banplayer', 'bn', 'permban', 'pb'],
 				example: 'ban joemama joemama is too fat',
 				cooldown: '5s',
 				defaultPermission: false,

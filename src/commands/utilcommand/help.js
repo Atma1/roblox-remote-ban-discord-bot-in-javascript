@@ -9,7 +9,6 @@ module.exports = class HelpCommand extends SlashCommand {
 			'help',
 			'Give help or info on the specified command',
 			'<commandName(Optional)>', {
-				aliases: ['cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds', 'commands'],
 				example: '/help ban',
 				cooldown: '5s',
 				slashCommandOptions: [{

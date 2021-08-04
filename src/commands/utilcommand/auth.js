@@ -11,7 +11,6 @@ module.exports = class AuthorizeCommand extends DatabaseSlashCommand {
 			'auth',
 			'Authorize specific role to command that require defaultPermission',
 			'<@role>', {
-				aliases: ['permit', 'authforrole', 'at'],
 				example: 'auth @joemama',
 				cooldown: '5s',
 				defaultPermission: false,

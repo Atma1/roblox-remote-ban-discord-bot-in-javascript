@@ -22,7 +22,6 @@ module.exports = class TempBanCommand extends DatabaseSlashCommand {
 			'tempban',
 			'Temporary ban the player. To edit the ban, just rerun the command.',
 			'<playerName> <banDuration> <banReason(Optional)>', {
-				aliases: ['tban', 'temppunish', 'tb', 'tbc', 'tp'],
 				example: 'tempban joemama 420d joemama is too fat',
 				cooldown: '5s',
 				defaultPermission: false,

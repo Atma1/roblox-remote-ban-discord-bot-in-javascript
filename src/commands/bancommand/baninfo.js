@@ -11,7 +11,6 @@ module.exports = class BanInfoCommand extends DatabaseSlashCommand {
 			'baninfo',
 			'Check ban information for the player specified if exists.',
 			'<playerName>', {
-				aliases: ['checkban', 'cb', 'bi', 'retrive'],
 				example: 'baninfo joemama',
 				cooldown: '5s',
 				defaultPermission: false,

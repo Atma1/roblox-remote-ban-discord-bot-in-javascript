@@ -11,7 +11,6 @@ module.exports = class AuthorizeCommand extends DatabaseSlashCommand {
 			'unauth',
 			'Unauthorize specific role to command that require defaultPermission',
 			'<@role>', {
-				aliases: ['permit', 'authforrole', 'at'],
 				example: 'auth @joemama',
 				cooldown: '5s',
 				defaultPermission: false,
@@ -51,7 +50,7 @@ module.exports = class AuthorizeCommand extends DatabaseSlashCommand {
 				updateSlashCommandPermission(guild, authorizedPermission, guildSlashCommandIds),
 			]);
 			guildConfigCollection.set('authorizedRoles', updatedCachedAuthorizedRoles);
-			interaction.editReply({ content:`<@&${roleId}> has been has been removed from authorized role list!` });
+			interaction.editReply({ content:`<@&${roleId}> has been removed from authorized role list!` });
 		}
 		catch (error) {
 			console.error(error);
