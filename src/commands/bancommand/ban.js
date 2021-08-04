@@ -35,7 +35,7 @@ module.exports = class PermBanCommand extends DatabaseSlashCommand {
 		const { guildId } = interaction;
 		const { tag: bannedBy } = interaction.user;
 		const playerName = interactionOptions.getString('playername');
-		const banReason = trim(interactionOptions.getString('reason'), 1024) ?? 'No ban reason was specified';
+		const banReason = trim(interactionOptions.getString('reason') ?? 'No ban reason was specified', 1024);
 		const bannedAt = Date.now();
 		const formattedBanDate = formatToUTC(bannedAt);
 

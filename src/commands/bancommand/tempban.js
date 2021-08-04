@@ -53,7 +53,7 @@ module.exports = class TempBanCommand extends DatabaseSlashCommand {
 		const { guildId } = interaction;
 		const { tag: bannedBy } = interaction.user;
 		const playerName = interactionOptions.getString('playername');
-		const banReason = trim(interactionOptions.getString('reason'), 1024) ?? 'No ban reason was specified.';
+		const banReason = trim(interactionOptions.getString('reason') ?? 'No ban reason was specified', 1024);
 		const banDuration = interactionOptions.getString('duration');
 		if (!isBanDuration(banDuration)) {
 			return interaction.reply('Make sure the ban duration is formatted correctly!');
