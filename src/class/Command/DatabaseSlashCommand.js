@@ -56,11 +56,4 @@ module.exports = class DatabaseSlashCommand extends SlashCommandClass {
 			});
 	}
 
-	setDefaultPrefix(newDefaultPrefix, guildId) {
-		this.database.collection(`guildDataBase:${guildId}`)
-			.doc('guildConfigurations')
-			.update({
-				'guildConfig.defaultPrefix': newDefaultPrefix,
-			});
-	}
 };
