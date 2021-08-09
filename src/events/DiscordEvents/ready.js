@@ -1,6 +1,6 @@
 const EventClass = require('@class/EventClass');
 const runAutoUnban = require('@modules/runAutoUnban');
-const { setupGuildConfig } = require('@modules/GuildConfig');
+const { setupGuildConfigAndCommand } = require('@modules/guildConfig');
 const ms = require('ms');
 
 module.exports = class ReadyEvent extends EventClass {
@@ -16,7 +16,7 @@ module.exports = class ReadyEvent extends EventClass {
 		const { cache:clientGuilds } = this.botClient.guilds;
 
 		clientGuilds.forEach(async guild =>
-			await setupGuildConfig(guild.id, this.botClient));
+			await setupGuildConfigAndCommand(guild, this.botClient));
 
 		runAutoUnban(clientGuilds);
 		setTimeout(() => runAutoUnban(clientGuilds), ms('10m'));
