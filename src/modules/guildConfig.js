@@ -8,7 +8,7 @@ const { setupCommandPermission } = require('./guildCommandPermission');
 const admin = require('firebase-admin');
 const firestore = admin.firestore();
 
-async function setupGuildConfig(guild, botClient) {
+async function setupGuildConfigAndCommand(guild, botClient) {
 	try {
 		const { guildConfigCollection, slashCommands } = botClient;
 		const { id:guildId } = guild;
@@ -55,5 +55,5 @@ function fetchGuildPrefixAndRole(guildId) {
 module.exports = {
 	fetchGuildPrefixAndRole: fetchGuildPrefixAndRole,
 	getGuildConfigCollection: getGuildConfigCollection,
-	setupGuildConfig: setupGuildConfig,
+	setupGuildConfigAndCommand: setupGuildConfigAndCommand,
 };
