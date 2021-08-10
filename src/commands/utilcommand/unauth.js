@@ -4,7 +4,7 @@ const { roleExistsInCache, removeRoleFromCache } = require('@util/util');
 const { getGuildConfigCollection } = require('@modules/GuildConfig');
 const { updateSlashCommandPermission } = require('@modules/guildCommandPermission');
 
-module.exports = class AuthorizeCommand extends DatabaseSlashCommand {
+module.exports = class UnauthorizeCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,

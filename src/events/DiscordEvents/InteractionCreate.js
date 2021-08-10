@@ -1,6 +1,6 @@
 const EventClass = require('@class/EventClass');
 
-module.exports = class GuildCreateEvent extends EventClass {
+module.exports = class InteractionCreateEvent extends EventClass {
 	constructor(botClient) {
 		super(
 			botClient,
