@@ -63,7 +63,7 @@ module.exports = class TempBanCommand extends DatabaseSlashCommand {
 		const formattedUnbanDate = formatToUTC(bannedUntil);
 		const formattedBanDate = formatToUTC(bannedAt);
 		try {
-			await interaction.defer();
+			await interaction.deferReply();
 			const playerId = await getUserId(playerName);
 			const playerBanDoc = new PlayerBanDocument(
 				playerId, playerName, banReason, bannedBy, 'tempBan', bannedAt, bannedUntil,

@@ -44,7 +44,7 @@ module.exports = class UnauthorizeCommand extends DatabaseSlashCommand {
 		authorizedPermission.push(new PermissionData(ownerId, 'USER', true));
 
 		try {
-			await interaction.defer();
+			await interaction.deferReply();
 			await Promise.all([
 				this.removeAuthorizedRole(roleId, guildId),
 				updateSlashCommandPermission(guild, authorizedPermission, guildSlashCommandIds),

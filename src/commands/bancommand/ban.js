@@ -40,7 +40,7 @@ module.exports = class PermBanCommand extends DatabaseSlashCommand {
 		const formattedBanDate = formatToUTC(bannedAt);
 
 		try {
-			await interaction.defer();
+			await interaction.deferReply();
 			const playerId = await getUserId(playerName);
 			const playerBanDoc = new PlayerBanDocument(
 				playerId, playerName, banReason, bannedBy, 'permaBan', bannedAt,

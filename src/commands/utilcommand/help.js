@@ -28,7 +28,7 @@ module.exports = class HelpCommand extends SlashCommand {
 		if (!commandName) {
 			const commandListEmbed = new CommandListEmbed(slashCommands);
 			try {
-				await interaction.defer();
+				await interaction.deferReply();
 				await interaction.user.send({ embeds:[commandListEmbed] });
 				return interaction.editReply({ content: 'Sent all of my commands to your DM.', allowedMentions: { repliedUser: true } });
 			}

@@ -23,7 +23,7 @@ module.exports = class UnbanCommand extends DatabaseSlashCommand {
 		const playerName = interactionOptions.getString('playername');
 		const { guildId } = interaction;
 		try {
-			await interaction.defer();
+			await interaction.deferReply();
 			const playerId = await getUserId(playerName);
 			await this.deletePlayerBanDocument(playerId, guildId);
 			return interaction.editReply({ content:`Player: ${playerName}, removed from Firebase Firestore.` });
