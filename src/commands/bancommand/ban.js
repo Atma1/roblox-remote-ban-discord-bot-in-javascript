@@ -1,51 +1,66 @@
-const { EmbededPermBanInfoMessage } = require('@class/EmbededBanMessage');
-const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
-const PlayerBanDocument = require('@class/PlayerBanDocumentClass');
-const { trimString:trim } = require('@util/util');
+const { PermBanInfoEmbed } = require('@class/Embed/EmbedBanMessage');
+const { MessageActionRow } = require('discord.js');
+const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
+const PlayerBanDocument = require('@class/Firestore Document/PlayerBanDocument');
+const PlayerProfileButton = require('@class/PlayerProfileButton');
+const { getUserId } = require('@modules/getUserId');
+const { getUserImg } = require('@modules/getUserImg');
+const { trimString:trim, formatToUTC } = require('@util/util');
 
-module.exports = class PermBanCommand extends DataBaseRelatedCommandClass {
+module.exports = class PermBanCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
 			'ban',
-			'ban player until who know when. to edit the ban, just rerun the command',
+			'Ban player permanently. To edit the ban, just rerun the command.',
 			'<playerName> <banReason(Optional)>', {
-				aliases: ['addban', 'banplayer', 'bn', 'permban', 'pb'],
 				example: 'ban joemama joemama is too fat',
 				cooldown: '5s',
-				args: true,
-				permission: true,
-				reqarglength: 1,
+				defaultPermission: false,
+				slashCommandOptions: [{
+					name: 'playername',
+					description: 'The name of the player to ban. Case sensitive!',
+					type: 'STRING',
+					required: true,
+				}, {
+					name: 'reason',
+					description: 'The reason why the player is banned. If longer than 1024 text it will be shortened',
+					type: 'STRING',
+					required: false,
+				}],
 			},
 		);
 	}
-	async execute(message, args) {
-		const { id:guildId } = message.channel.guild;
-		const { tag: bannedBy } = message.author;
-		const playerName = args.shift();
+	async execute(interaction, interactionOptions) {
+		const { guildId } = interaction;
+		const { tag: bannedBy } = interaction.user;
+		const playerName = interactionOptions.getString('playername');
+		const banReason = trim(interactionOptions.getString('reason') ?? 'No ban reason was specified', 1024);
 		const bannedAt = Date.now();
-		const banReason = args ? args.join(' ') : 'No ban reason was specified';
-		const formattedBanDate = this.dateformat(bannedAt);
+		const formattedBanDate = formatToUTC(bannedAt);
 
 		try {
-			const playerId = await this.getUserId(playerName);
+			await interaction.deferReply();
+			const playerId = await getUserId(playerName);
 			const playerBanDoc = new PlayerBanDocument(
 				playerId, playerName, banReason, bannedBy, 'permaBan', bannedAt,
 			);
-
 			const [playerImage] = await Promise.all([
-				this.getUserImg(playerId),
+				getUserImg(playerId),
 				this.addPlayerToBanList(playerBanDoc, guildId),
 			]);
-
-			const banInfoEmbed = new EmbededPermBanInfoMessage(
-				formattedBanDate, bannedBy, playerName, playerId, trim(banReason, 1024), playerImage,
+			const banInfoEmbed = new PermBanInfoEmbed(
+				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage,
 			);
-			return message.channel.send({ content:`\`${playerName} has been banned.\``, embed: banInfoEmbed });
+			const playerProfileButton = new PlayerProfileButton(playerId);
+			const messageRow = new MessageActionRow({ components: [playerProfileButton] });
+			return interaction.editReply({ content:`\`${playerName} has been banned.\``,
+				embeds: [banInfoEmbed], components: [messageRow] });
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply({ content:`there was an error while banning the player!\n${error}`, allowedMentions: { repliedUser: true } });
+			return interaction.editReply({ content:`There was an error while banning the player!\n${error}`,
+				ephemeral: true, allowedMentions: { repliedUser: true } });
 		}
 	}
 };

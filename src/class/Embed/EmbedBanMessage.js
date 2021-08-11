@@ -1,8 +1,6 @@
-const {
-	MessageEmbed,
-} = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
-const EmbededPermBanInfoMessage = class EmbededPermBanInfoMessage extends MessageEmbed {
+const PermBanInfoEmbed = class PermBanInfoEmbed extends MessageEmbed {
 	constructor(bannedAt, bannedBy, playerName, playerId, banReason, userImage) {
 		super();
 		this.setTitle(`${playerName} Ban Information`);
@@ -26,7 +24,7 @@ const EmbededPermBanInfoMessage = class EmbededPermBanInfoMessage extends Messag
 	}
 };
 
-const EmbededTempBanInfoMessage = class EmbededTempBanInfoMessage extends EmbededPermBanInfoMessage {
+const TempBanInfoEmbed = class TempBanInfoEmbed extends PermBanInfoEmbed {
 	constructor(bannedAt, bannedBy, playerName, playerId, banReason, userImage, bannedUntil) {
 		super(bannedAt, bannedBy, playerName, playerId, banReason, userImage);
 		this.addField('Banned Until', bannedUntil);
@@ -34,6 +32,6 @@ const EmbededTempBanInfoMessage = class EmbededTempBanInfoMessage extends Embede
 };
 
 module.exports = {
-	EmbededPermBanInfoMessage: EmbededPermBanInfoMessage,
-	EmbededTempBanInfoMessage: EmbededTempBanInfoMessage,
+	PermBanInfoEmbed: PermBanInfoEmbed,
+	TempBanInfoEmbed: TempBanInfoEmbed,
 };

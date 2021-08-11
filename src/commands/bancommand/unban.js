@@ -1,30 +1,37 @@
-const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
+const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
+const { getUserId } = require('@modules/getUserId');
 
-module.exports = class UnbanCommand extends DataBaseRelatedCommandClass {
+module.exports = class UnbanCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
 			'unban',
-			'remove the player from the database assuming the player is in the database',
+			'Delete the player from the database.',
 			'<playerName>', {
-				aliases: ['ub', 'forgive', 'amnesty', 'remove'],
 				example: 'unban joemama',
-				args: true,
 				cooldown: '5s',
-				permission: true,
+				defaultPermission: false,
+				slashCommandOptions: [{
+					name: 'playername',
+					description: 'The player of the name to unban. Case sensitive!',
+					type: 'STRING',
+					required: true,
+				}],
 			});
 	}
-	async execute(message, args) {
-		const [playerName] = args;
-		const { id:guildId } = message.channel.guild;
+	async execute(interaction, interactionOptions) {
+		const playerName = interactionOptions.getString('playername');
+		const { guildId } = interaction;
 		try {
-			const playerId = await this.getUserId(playerName);
+			await interaction.deferReply();
+			const playerId = await getUserId(playerName);
 			await this.deletePlayerBanDocument(playerId, guildId);
+			return interaction.editReply({ content:`Player: ${playerName}, removed from Firebase Firestore.` });
 		}
 		catch (error) {
 			console.error(error);
-			return message.reply({ content:`there was an error while banning the player!\n${error}`, allowedMentions: { repliedUser: true } });
+			return interaction.editReply({ content: `There was an error while banning the player!\n${error}`,
+				ephemeral: true, allowedMentions: { repliedUser: true } });
 		}
-		return message.channel.send({ content:`Player: ${playerName}, removed from Firebase Firestore.` });
 	}
 };

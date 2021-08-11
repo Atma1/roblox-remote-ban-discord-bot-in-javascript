@@ -1,22 +1,24 @@
 const {
 	Client,
 	Collection,
+	Intents,
 } = require('discord.js');
 const util = require('@util/util');
-require('@structures/GuildConfig');
+const botIntents = new Intents(['GUILDS', 'GUILD_MESSAGES']);
 
 module.exports = class BotClient extends Client {
 
 	constructor(token) {
-		super();
+		super({ intents: botIntents });
 		this.token = token;
 		this.cooldowns = new Collection();
-		this.commands = new Collection();
+		this.guildConfigCollection = new Collection();
+		this.slashCommands = new Collection();
 	}
 
 	startBot() {
 		try {
-			util.loadCommands(this);
+			util.loadSlashCommands(this);
 			util.loadEvents(this);
 			this.login(this.token);
 		}

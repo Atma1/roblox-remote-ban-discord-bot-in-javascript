@@ -1,12 +1,9 @@
 const admin = require('firebase-admin');
-const { getUserId } = require('@modules/getUserId');
-const { getUserImg } = require('@modules/getUserImg');
 const { playerBanDocConverter } = require('@util/util');
 const { firestore } = admin;
-const dateformat = require('dateformat');
-const genericCommandClass = require('./CommandClass');
+const SlashCommandClass = require('./SlashCommand');
 
-module.exports = class DataBaseRelatedCommandClass extends genericCommandClass {
+module.exports = class DatabaseSlashCommand extends SlashCommandClass {
 
 	constructor(botClient, name, desc, usage, commandOptions = {}) {
 		super(botClient, name, desc, usage, commandOptions);
@@ -59,23 +56,4 @@ module.exports = class DataBaseRelatedCommandClass extends genericCommandClass {
 			});
 	}
 
-	setDefaultPrefix(desiredDefaultPrefix, guildId) {
-		this.database.collection(`guildDataBase:${guildId}`)
-			.doc('guildConfigurations')
-			.update({
-				'guildConfig.defaultPrefix': desiredDefaultPrefix,
-			});
-	}
-
-	getUserId(playerName) {
-		return getUserId(playerName);
-	}
-
-	getUserImg(playerId) {
-		return getUserImg(playerId);
-	}
-
-	dateformat(date) {
-		return dateformat(date, 'UTC:ddd, mmm dS, yyyy, HH:MM:ss TT Z');
-	}
 };

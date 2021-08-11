@@ -1,57 +1,57 @@
-const DataBaseRelatedCommandClass = require('@class/DataBaseRelatedCommandClass');
-const {
-	parseToRoleId,
-	roleExists,
-} = require('@util/util');
+const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
+const PermissionData = require('@class/Permission Data/PermissionData');
+const { roleExistsInCache } = require('@util/util');
+const { getGuildConfigCollection } = require('@modules/GuildConfig');
+const { updateSlashCommandPermission } = require('@modules/guildCommandPermission');
 
-module.exports = class AuthorizeCommand extends DataBaseRelatedCommandClass {
+module.exports = class AuthorizeCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
 			'auth',
-			'authorize specific role to command that require permission',
+			'Authorize specific role to command that require defaultPermission',
 			'<@role>', {
-				aliases: ['permit', 'authforrole', 'at'],
 				example: 'auth @joemama',
 				cooldown: '5s',
-				args: true,
-				permission: true,
+				defaultPermission: false,
+				slashCommandOptions: [{
+					name: 'role',
+					description: 'The role to authorize.',
+					type: 'ROLE',
+					required: true,
+				}],
 			});
 	}
-	async execute(message, args) {
-		const [role] = args;
-		const [roleId] = parseToRoleId(role);
-		const {
-			guildConfig,
-			id: guildId,
-			roles: guildRoles,
-		} = message.guild;
+	async execute(interaction, interactionOptions) {
+		const Role = interactionOptions.getRole('role');
+		const { id:roleId } = Role;
+		const { guild } = interaction;
+		const { id:guildId, ownerId } = guild;
+		const guildConfigCollection = getGuildConfigCollection(guildId, this.botClient);
+		const cachedAuthorizedRoles = guildConfigCollection.get('authorizedRoles');
+		const guildSlashCommandIds = guildConfigCollection.get('guildSlashCommandIds');
 
-		const cachedAuthorizedRoles = guildConfig.get('authorizedRoles');
-
-		if (!roleId) {
-			return message.reply({ content:'that is not a role Id!', allowedMentions: { repliedUser: true } });
-		}
-
-		if (!roleExists(guildRoles.cache, roleId)) {
-			return message.reply({ content: 'make sure you input the role correctly.', allowedMentions: { repliedUser: true } });
-		}
-
-		if (roleExists(guildRoles.cache, roleId)) {
-			return message.reply({ content: 'that role is already authorized!', allowedMentions: { repliedUser: true } });
-		}
-
-		try {
-			await this.addAuthorizedRole(roleId, guildId);
-		}
-		catch (error) {
-			console.error(error);
-			return message.reply({ content:`there was an error while adding the role!\n${error}`, allowedMentions: { repliedUser: true } });
+		if (roleExistsInCache(cachedAuthorizedRoles, roleId)) {
+			return interaction.reply({ content: 'That role is already authorized!', allowedMentions: { repliedUser: true } });
 		}
 
 		cachedAuthorizedRoles.push(roleId);
-		guildConfig.set('authorizedRoles', cachedAuthorizedRoles);
+		const authorizedPermission = cachedAuthorizedRoles.map(Id => new PermissionData(Id, 'ROLE', true));
+		authorizedPermission.push(new PermissionData(ownerId, 'USER', true));
 
-		return message.channel.send({ content:`\`${role}\` has been authorized to use permission restricted command!` });
+		try {
+			await interaction.deferReply();
+			await Promise.all([
+				this.addAuthorizedRole(roleId, guildId),
+				updateSlashCommandPermission(guild, authorizedPermission, guildSlashCommandIds),
+			]);
+			guildConfigCollection.set('authorizedRoles', cachedAuthorizedRoles);
+			return interaction.editReply({ content:`<@&${roleId}> has been authorized to use defaultPermission restricted command!` });
+		}
+		catch (error) {
+			console.error(error);
+			return interaction.editReply({ content:`There was an error while adding the role!\n${error}`,
+				ephemeral: true, allowedMentions: { repliedUser: true } });
+		}
 	}
 };

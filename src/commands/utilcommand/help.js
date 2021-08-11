@@ -1,47 +1,51 @@
-const CommandClass = require('@class/CommandClass');
-const CommandInfoEmbed = require('@class/CommandInfoEmbed');
-const CommandListEmbed = require('@class/CommandListEmbed');
+const SlashCommand = require('@class/Command/SlashCommand');
+const CommandInfoEmbed = require('@class/Embed/CommandInfoEmbed');
+const CommandListEmbed = require('@class/Embed/CommandListEmbed');
 
-module.exports = class HelpCommand extends CommandClass {
+module.exports = class HelpCommand extends SlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
 			'help',
-			'give help and info on the specified command',
+			'Give help or info on the specified command',
 			'<commandName(Optional)>', {
-				aliases: ['cmdinfo', 'command', 'cmd', 'commandinfo', 'cmds', 'commands'],
-				example: 'help ban',
+				example: '/help ban',
 				cooldown: '5s',
+				defaultPermission: false,
+				slashCommandOptions: [{
+					name: 'command',
+					description: 'The name of the command to look up.',
+					type: 'STRING',
+					required: false,
+				}],
 			},
 		);
 	}
-	async execute(message, args) {
-		const prefix = message.guild.guildConfig.get('defaultPrefix');
-		const {
-			commands,
-		} = this.botClient;
+	async execute(interaction, interactionOptions) {
+		const { slashCommands } = this.botClient;
+		const commandName = interactionOptions.getString('command');
 
-		if (!args.length) {
-			const commandListEmbed = new CommandListEmbed(commands, prefix);
+		if (!commandName) {
+			const commandListEmbed = new CommandListEmbed(slashCommands);
 			try {
-				await message.author.send({ embed:commandListEmbed });
-				return message.reply({ content:'sent all of my commands to your DM.', allowedMentions: { repliedUser: true } });
+				await interaction.deferReply();
+				await interaction.user.send({ embeds:[commandListEmbed] });
+				return interaction.editReply({ content: 'Sent all of my commands to your DM.', allowedMentions: { repliedUser: true } });
 			}
 			catch (error) {
 				console.error(error);
-				return message.reply({ content:'can\'t send my commands to your DM! Is your DM closed?', allowedMentions: { repliedUser: true } });
+				return interaction.editReply({ content: 'Can\'t send my commands to your DM! Is your DM closed?', allowedMentions: { repliedUser: true } });
 			}
 		}
 
-		const [commandName] = args;
 		commandName.toLowerCase();
-		const command = commands.get(commandName) || commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
+		const command = slashCommands.get(commandName) || slashCommands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
 		if (!command) {
-			return message.reply({ content:'make sure you type the correct command.', allowedMentions: { repliedUser: true } });
+			return interaction.reply({ content: 'Make sure you type the correct command.', allowedMentions: { repliedUser: true } });
 		}
-		const commandInfoEmbed = new CommandInfoEmbed(command, commandName, prefix);
 
-		message.channel.send({ embed:commandInfoEmbed });
+		const commandInfoEmbed = new CommandInfoEmbed(command, commandName);
+		interaction.reply({ embeds:[commandInfoEmbed] });
 	}
 };
