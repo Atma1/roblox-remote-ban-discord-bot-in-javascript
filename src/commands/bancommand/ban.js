@@ -2,7 +2,7 @@ const { PermBanInfoEmbed } = require('@class/Embed/EmbedBanMessage');
 const { MessageActionRow } = require('discord.js');
 const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
 const PlayerBanDocument = require('@class/Firestore Document/PlayerBanDocument');
-const PlayerProfileButton = require('@class/PlayerProfileButton');
+const PlayerProfileButton = require('@class/Button/PlayerProfileButton');
 const { getUserId } = require('@modules/getUserId');
 const { getUserImg } = require('@modules/getUserImg');
 const { trimString:trim, formatToUTC } = require('@util/util');
@@ -15,7 +15,6 @@ module.exports = class PermBanCommand extends DatabaseSlashCommand {
 			'Ban player permanently. To edit the ban, just rerun the command.',
 			'<playerName> <banReason(Optional)>', {
 				example: 'ban joemama joemama is too fat',
-				cooldown: '5s',
 				defaultPermission: false,
 				slashCommandOptions: [{
 					name: 'playername',

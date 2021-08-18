@@ -2,7 +2,7 @@ const { TempBanInfoEmbed } = require('@class/Embed/EmbedBanMessage');
 const { MessageActionRow } = require('discord.js');
 const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
 const PlayerBanDocument = require('@class/Firestore Document/PlayerBanDocument');
-const PlayerProfileButton = require('@class/PlayerProfileButton');
+const PlayerProfileButton = require('@class/Button/PlayerProfileButton');
 const ms = require('ms');
 const { getUserId } = require('@modules/getUserId');
 const { getUserImg } = require('@modules/getUserImg');
@@ -23,7 +23,6 @@ module.exports = class TempBanCommand extends DatabaseSlashCommand {
 			'Temporary ban the player. To edit the ban, just rerun the command.',
 			'<playerName> <banDuration> <banReason(Optional)>', {
 				example: 'tempban joemama 420d joemama is too fat',
-				cooldown: '5s',
 				defaultPermission: false,
 				slashCommandOptions: [{
 					name: 'playername',

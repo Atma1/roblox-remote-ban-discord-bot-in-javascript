@@ -9,7 +9,6 @@ module.exports = class UnbanCommand extends DatabaseSlashCommand {
 			'Delete the player from the database.',
 			'<playerName>', {
 				example: 'unban joemama',
-				cooldown: '5s',
 				defaultPermission: false,
 				slashCommandOptions: [{
 					name: 'playername',
