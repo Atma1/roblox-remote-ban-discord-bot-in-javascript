@@ -21,9 +21,6 @@ module.exports = class EmbededCommandInfoMessage extends MessageEmbed {
 			name: 'Command Aliases:',
 			value: command.aliases ? command.aliases.join(', ') : 'No aliases',
 		}, {
-			name: 'Command Cooldown:',
-			value: command.cooldown,
-		}, {
 			name: 'Owner Only:',
 			value: command.guildOwnerOnly ? 'True' : 'False',
 		}, {
