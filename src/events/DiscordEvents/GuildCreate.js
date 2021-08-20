@@ -10,7 +10,6 @@ module.exports = class GuildCreateEvent extends EventClass {
 		);
 	}
 	execute(guildData) {
-		const { id:guildId } = guildData;
-		setupGuildConfigAndCommand(guildId, this.botClient);
+		setupGuildConfigAndCommand(guildData, this.botClient);
 	}
 };
