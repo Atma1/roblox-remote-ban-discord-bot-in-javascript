@@ -1,4 +1,4 @@
-const EventClass = require('@class/EventClass');
+const EventClass = require('@class/Event/EventClass');
 
 module.exports = class InteractionCreateEvent extends EventClass {
 	constructor(botClient) {

@@ -7,8 +7,7 @@ async function setupCommandPermission(guildConfig, guild) {
 	const authorizedRolesArray = guildConfig.get('authorizedRoles');
 	const slashCommandIds = guildConfig.get('guildSlashCommandIds');
 	if (!authorizedRolesArray.length) {
-		const userPermissionData = new PermissionData(ownerId, 'USER', true);
-		authorizedPermission = slashCommandIds.map(commandId => new CommandPermission(commandId, userPermissionData));
+		authorizedPermission = [new PermissionData(ownerId, 'USER', true)];
 	}
 	else {
 		authorizedPermission = authorizedRolesArray.map(roleId => new PermissionData(roleId, 'ROLE', true));

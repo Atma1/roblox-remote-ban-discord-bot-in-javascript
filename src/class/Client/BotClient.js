@@ -9,9 +9,8 @@ const botIntents = new Intents(['GUILDS', 'GUILD_MESSAGES']);
 module.exports = class BotClient extends Client {
 
 	constructor(token) {
-		super({ intents: botIntents });
+		super({ intents: botIntents, allowedMentions: { repliedUser: true } });
 		this.token = token;
-		this.cooldowns = new Collection();
 		this.guildConfigCollection = new Collection();
 		this.slashCommands = new Collection();
 	}

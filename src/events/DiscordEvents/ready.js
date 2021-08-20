@@ -1,4 +1,4 @@
-const EventClass = require('@class/EventClass');
+const EventClass = require('@class/Event/EventClass');
 const runAutoUnban = require('@modules/runAutoUnban');
 const { setupGuildConfigAndCommand } = require('@modules/guildConfig');
 const ms = require('ms');

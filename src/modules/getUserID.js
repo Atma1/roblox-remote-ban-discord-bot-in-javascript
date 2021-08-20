@@ -19,6 +19,9 @@ module.exports = {
 
 		if (response.success == false) {
 			const { errorMessage } = response;
+			if (errorMessage === 'User not found') {
+				return false;
+			}
 			throw new Error(errorMessage);
 		}
 
