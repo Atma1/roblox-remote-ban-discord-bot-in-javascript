@@ -1,5 +1,5 @@
 const EventClass = require('@class/Event/EventClass');
-const { setupGuildConfig } = require('@modules/GuildConfig');
+const { setupGuildConfigAndCommand } = require('@modules/GuildConfig');
 
 module.exports = class GuildCreateEvent extends EventClass {
 	constructor(botClient) {
@@ -11,6 +11,6 @@ module.exports = class GuildCreateEvent extends EventClass {
 	}
 	execute(guildData) {
 		const { id:guildId } = guildData;
-		setupGuildConfig(guildId, this.botClient);
+		setupGuildConfigAndCommand(guildId, this.botClient);
 	}
 };
