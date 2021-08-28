@@ -29,7 +29,8 @@ module.exports = class UnbanCommand extends DatabaseSlashCommand {
 		}
 		catch (error) {
 			console.error(error);
-			return interaction.editReply({ content: error });
+			return interaction.editReply({ content: error })
+				.catch(err => console.error(err));
 		}
 	}
 };
