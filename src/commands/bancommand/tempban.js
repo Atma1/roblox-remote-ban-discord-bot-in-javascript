@@ -65,7 +65,7 @@ module.exports = class TempBanCommand extends DatabaseSlashCommand {
 			await interaction.deferReply();
 			const playerId = await getUserId(playerName);
 			if (!playerId) {
-				return interaction.reply('That user is not found in Roblox!');
+				return interaction.editReply('That user is not found in Roblox!');
 			}
 			const playerBanDoc = new PlayerBanDocument(
 				playerId, playerName, banReason, bannedBy, 'tempBan', bannedAt, bannedUntil,
