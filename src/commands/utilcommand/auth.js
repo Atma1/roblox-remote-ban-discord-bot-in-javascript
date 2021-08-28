@@ -35,7 +35,7 @@ module.exports = class AuthorizeCommand extends DatabaseSlashCommand {
 		}
 
 		cachedAuthorizedRoles.push(roleId);
-		const authorizedPermission = cachedAuthorizedRoles.map(Id => new PermissionData(Id, 'ROLE', true));
+		const authorizedPermission = cachedAuthorizedRoles.map(cachedRoleId => new PermissionData(cachedRoleId, 'ROLE', true));
 		authorizedPermission.push(new PermissionData(ownerId, 'USER', true));
 
 		try {

@@ -39,7 +39,7 @@ module.exports = class UnauthorizeCommand extends DatabaseSlashCommand {
 		}
 
 		const updatedCachedAuthorizedRoles = removeRoleFromCache(cachedAuthorizedRoles, roleId);
-		const authorizedPermission = updatedCachedAuthorizedRoles.map(Id => new PermissionData(Id, 'ROLE', true));
+		const authorizedPermission = updatedCachedAuthorizedRoles.map(cachedRoleId => new PermissionData(cachedRoleId, 'ROLE', true));
 		authorizedPermission.push(new PermissionData(ownerId, 'USER', true));
 
 		try {
