@@ -44,8 +44,7 @@ module.exports = class BanInfoCommand extends DatabaseSlashCommand {
 		}
 		catch (error) {
 			console.error(error);
-			return interaction.editReply({ content:`There was an error while attempting to retrive the document!\n${error}`,
-				ephemeral: true, allowedMentions: { repliedUser: true } });
+			return interaction.editReply({ content: error });
 		}
 	}
 };

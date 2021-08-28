@@ -49,8 +49,7 @@ module.exports = class AuthorizeCommand extends DatabaseSlashCommand {
 		}
 		catch (error) {
 			console.error(error);
-			return interaction.editReply({ content:`There was an error while adding the role!\n${error}`,
-				ephemeral: true, allowedMentions: { repliedUser: true } });
+			return interaction.editReply({ content: error });
 		}
 	}
 };
