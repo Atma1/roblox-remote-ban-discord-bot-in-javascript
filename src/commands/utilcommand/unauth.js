@@ -39,7 +39,7 @@ module.exports = class UnauthorizeCommand extends DatabaseSlashCommand {
 		}
 
 		const updatedCachedAuthorizedRoles = removeRoleFromCache(cachedAuthorizedRoles, roleId);
-		const authorizedPermission = updatedCachedAuthorizedRoles.map(Id => new PermissionData(Id, 'ROLE', true));
+		const authorizedPermission = updatedCachedAuthorizedRoles.map(cachedRoleId => new PermissionData(cachedRoleId, 'ROLE', true));
 		authorizedPermission.push(new PermissionData(ownerId, 'USER', true));
 
 		try {
@@ -53,8 +53,7 @@ module.exports = class UnauthorizeCommand extends DatabaseSlashCommand {
 		}
 		catch (error) {
 			console.error(error);
-			return interaction.editReply({ content:`There was an error while removing the role!\n${error}`,
-				ephemeral: true, allowedMentions: { repliedUser: true } })
+			return interaction.editReply({ content: error })
 				.catch(err => console.error(err));
 		}
 	}

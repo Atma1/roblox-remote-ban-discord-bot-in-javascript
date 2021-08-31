@@ -29,8 +29,7 @@ module.exports = class BanInfoCommand extends DatabaseSlashCommand {
 			await interaction.deferReply();
 			const querySnapshot = await this.retriveBanDocument(playerName, guildId);
 			if (querySnapshot.empty) {
-				return interaction.editReply({ content:`${playerName} is not found in the database.`,
-					allowedMentions: { repliedUser: true } });
+				return interaction.editReply({ content:`${playerName} is not found in the database.` });
 			}
 			const documents = querySnapshot.docs;
 			const [ banDocument ] = documents;
@@ -44,8 +43,8 @@ module.exports = class BanInfoCommand extends DatabaseSlashCommand {
 		}
 		catch (error) {
 			console.error(error);
-			return interaction.editReply({ content:`There was an error while attempting to retrive the document!\n${error}`,
-				ephemeral: true, allowedMentions: { repliedUser: true } });
+			return interaction.editReply({ content: error })
+				.catch(err => console.error(err));
 		}
 	}
 };

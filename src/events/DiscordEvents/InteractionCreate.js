@@ -25,8 +25,7 @@ module.exports = class InteractionCreateEvent extends EventClass {
 		}
 		catch (error) {
 			console.error(error);
-			interaction.reply({ content: `${error}`, ephemeral: true,
-				allowedMentions: { repliedUser: true } })
+			interaction.reply({ content: `${error}`, ephemeral: true })
 				.catch(err => console.error(err));
 		}
 	}

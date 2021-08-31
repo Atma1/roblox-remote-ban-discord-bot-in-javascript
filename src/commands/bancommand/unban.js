@@ -29,8 +29,8 @@ module.exports = class UnbanCommand extends DatabaseSlashCommand {
 		}
 		catch (error) {
 			console.error(error);
-			return interaction.editReply({ content: `There was an error while banning the player!\n${error}`,
-				ephemeral: true, allowedMentions: { repliedUser: true } });
+			return interaction.editReply({ content: error })
+				.catch(err => console.error(err));
 		}
 	}
 };

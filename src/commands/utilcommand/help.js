@@ -45,6 +45,7 @@ module.exports = class HelpCommand extends SlashCommand {
 		}
 
 		const commandInfoEmbed = new CommandInfoEmbed(command, commandName);
-		interaction.reply({ embeds:[commandInfoEmbed] });
+		interaction.reply({ embeds:[commandInfoEmbed] })
+			.catch(err => console.error(err));
 	}
 };
