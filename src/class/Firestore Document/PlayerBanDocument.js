@@ -7,7 +7,7 @@ module.exports = class PlayerBanDocument {
 			banType : banType,
 			bannedBy : bannedBy,
 			bannedAt : bannedAt,
-			bannedUntil : bannedUntil || 'Ban is permanent',
+			bannedUntil : bannedUntil,
 		};
 	}
 };
