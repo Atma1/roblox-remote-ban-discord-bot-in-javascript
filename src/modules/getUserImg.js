@@ -10,7 +10,7 @@ module.exports = {
 	 */
 	getUserImg: async (userId) => {
 		const params = {
-			userId: `${userId}`,
+			userId: userId,
 			width: '60',
 			height: '62',
 			isCircular: 'true',
