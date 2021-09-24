@@ -4,8 +4,8 @@ const GuildConfigDocument = require('@class/Firestore Document/GuildConfigDocume
 const { PermBanInfoEmbed, TempBanInfoEmbed } = require('@class/Embed/EmbedBanMessage');
 
 const playerDocConverter = {
-	toFirestore: (Doc) => {
-		const { banDetails } = Doc;
+	toFirestore: (banDocument) => {
+		const { banDetails } = banDocument;
 		return {
 			banDetails: {
 				playerID: banDetails.playerID,
@@ -19,8 +19,8 @@ const playerDocConverter = {
 		};
 	},
 	fromFirestore: (snapshot, options) => {
-		const banDoc = snapshot.data(options);
-		const { banDetails } = banDoc;
+		const banDocument = snapshot.data(options);
+		const { banDetails } = banDocument;
 		return {
 			playerID: banDetails.playerID,
 			playerName: banDetails.playerName,
@@ -34,8 +34,8 @@ const playerDocConverter = {
 };
 
 const guildConfigDocConverter = {
-	toFirestore: (Doc) => {
-		const { guildConfig } = Doc;
+	toFirestore: (guildConfigDocument) => {
+		const { guildConfig } = guildConfigDocument;
 		return {
 			guildConfig: {
 				authorizedRoles: guildConfig.authorizedRoles,
