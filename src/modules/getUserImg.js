@@ -17,10 +17,11 @@ module.exports = {
 		};
 
 		try {
-			const response = await axios.get(endpoint, {
-				timeout: 3000,
-				params,
-			});
+			const response = await axios
+				.get(endpoint, {
+					timeout: 3000,
+					params,
+				});
 			const { data } = response;
 			const { Url: userImage } = data;
 			return userImage;
