@@ -79,7 +79,7 @@ const isBanDuration = (args) => {
 	const splittedArgs = args.split(' ');
 	if (splittedArgs.length >= 2) return false;
 	const durationRE = /(\d+)\s*(milliseconds|millisecond|millis|milli|ms|seconds|second|secs|sec|s|minutes|minute|mins|min|m|hours|hour|hrs|hr|h|days|day|d|weeks|week|w|months|month|mo|years|year|y)\s*/gy;
-	return splittedArgs.some(arg => durationRE.test(arg));
+	return splittedArgs.every(arg => durationRE.test(arg));
 };
 
 const trimString = (str, max) => {
