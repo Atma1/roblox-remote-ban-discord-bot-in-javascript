@@ -66,11 +66,12 @@ const createBanInfoEmbed = (data, userImage, playerName) => {
 	const formattedBanDate = formatToUTC(bannedAt);
 	const formattedUnbanDate = formatToUTC(bannedUntil);
 	const trimmedBanReason = trimString(banReason, 1024);
-	const banInfoEmbed = banType == 'permaBan' ? new PermBanInfoEmbed(
-		formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage,
-	) : new TempBanInfoEmbed(
-		formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
-	);
+	const banInfoEmbed = banType == 'permaBan' ?
+		new PermBanInfoEmbed(
+			formattedBanDate, bannedBy, playerName, playerID, trimmedBanReason, userImage,
+		) : new TempBanInfoEmbed(
+			formattedBanDate, bannedBy, playerName, playerID, banReason, userImage, formattedUnbanDate,
+		);
 	return banInfoEmbed;
 };
 
