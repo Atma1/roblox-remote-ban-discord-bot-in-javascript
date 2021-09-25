@@ -3,6 +3,7 @@ const { MessageActionRow } = require('discord.js');
 const DatabaseSlashCommand = require('@class/Command/DatabaseSlashCommand');
 const PlayerBanDocument = require('@class/Firestore Document/PlayerBanDocument');
 const PlayerProfileButton = require('@class/Button/PlayerProfileButton');
+const ms = require('ms');
 const { getUserId } = require('@modules/getUserId');
 const { getUserImg } = require('@modules/getUserImg');
 const { trimString:trim, formatToUTC } = require('@util/util');
@@ -11,9 +12,10 @@ module.exports = class PermBanCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
-			'ban',
-			'Ban player permanently. To edit the ban, just rerun the command.',
-			'<playerName> <banReason(Optional)>', {
+			{
+				commandName: 'ban',
+				description:'Ban player for a lifetime. To edit the ban, just rerun the command.',
+				usage:'<playerName> <banReason(Optional)>',
 				example: 'ban joemama joemama is too fat',
 				defaultPermission: false,
 				slashCommandOptions: [{

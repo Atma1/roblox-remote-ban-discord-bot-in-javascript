@@ -8,9 +8,10 @@ module.exports = class UnauthorizeCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
-			'unauth',
-			'Unauthorize specific role to command that require defaultPermission',
-			'<@role>', {
+			{
+				commandName: 'unauth',
+				description: 'Unauthorize specific role to command that require defaultPermission',
+				usage: '<@role>',
 				example: 'auth @joemama',
 				defaultPermission: false,
 				slashCommandOptions: [{

@@ -8,9 +8,10 @@ module.exports = class BanInfoCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
-			'baninfo',
-			'Check ban information for the player specified if exists.',
-			'<playerName>', {
+			{
+				commandName: 'baninfo',
+				description: 'Check ban information for the player specified if exists.',
+				usage:'<playerName>',
 				example: 'baninfo joemama',
 				defaultPermission: false,
 				slashCommandOptions: [{

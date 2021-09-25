@@ -19,9 +19,10 @@ module.exports = class TempBanCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
-			'tempban',
-			'Temporary ban the player. To edit the ban, just rerun the command.',
-			'<playerName> <banDuration> <banReason(Optional)>', {
+			{
+				commandName: 'tempban',
+				description: 'Temporary ban the player. To edit the ban, just rerun the command.',
+				usage: '<playerName> <banDuration> <banReason(Optional)>',
 				example: 'tempban joemama 420d joemama is too fat',
 				defaultPermission: false,
 				slashCommandOptions: [{

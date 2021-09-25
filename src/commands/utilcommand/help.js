@@ -6,9 +6,10 @@ module.exports = class HelpCommand extends SlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
-			'help',
-			'Give help or info on the specified command',
-			'<commandName(Optional)>', {
+			{
+				commandName: 'help',
+				description: 'Give help or info on the specified command',
+				usage: '<commandName(Optional)>',
 				example: '/help ban',
 				defaultPermission: false,
 				slashCommandOptions: [{

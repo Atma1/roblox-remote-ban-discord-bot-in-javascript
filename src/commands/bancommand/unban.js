@@ -5,9 +5,10 @@ module.exports = class UnbanCommand extends DatabaseSlashCommand {
 	constructor(botClient) {
 		super(
 			botClient,
-			'unban',
-			'Delete the player from the database.',
-			'<playerName>', {
+			{
+				commandName: 'unban',
+				description: 'Delete the player from the database.',
+				usage: '<playerName>',
 				example: 'unban joemama',
 				defaultPermission: false,
 				slashCommandOptions: [{
