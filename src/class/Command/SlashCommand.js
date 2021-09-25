@@ -1,8 +1,8 @@
 module.exports = class SlashCommand {
-	constructor(botClient, name, desc, usage, commandOptions = {}) {
-		this.name = name;
-		this.desc = desc;
-		this.usage = usage;
+	constructor(botClient, commandOptions) {
+		this.name = commandOptions.name;
+		this.desc = commandOptions.description;
+		this.usage = commandOptions.usage;
 		this.botClient = botClient;
 		this.example = commandOptions.example || false;
 		this.reqarglength = commandOptions.reqarglength || false;

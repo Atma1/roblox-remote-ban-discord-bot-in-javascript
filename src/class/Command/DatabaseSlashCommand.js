@@ -5,8 +5,8 @@ const SlashCommandClass = require('./SlashCommand');
 
 module.exports = class DatabaseSlashCommand extends SlashCommandClass {
 
-	constructor(botClient, name, desc, usage, commandOptions = {}) {
-		super(botClient, name, desc, usage, commandOptions);
+	constructor(botClient, commandOptions) {
+		super(botClient, commandOptions);
 		this.firestore = firestore;
 		this.database = admin.firestore();
 	}
