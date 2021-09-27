@@ -48,12 +48,12 @@ module.exports = class PermBanCommand extends DatabaseSlashCommand {
 			if (!playerId) {
 				return interaction.reply('That user is not found in Roblox!');
 			}
-			const playerBanDoc = new PlayerBanDocument(
+			const playerBanDocument = new PlayerBanDocument(
 				playerId, playerName, banReason, bannedBy, 'permaBan', bannedAt, formattedUnbanDate,
 			);
 			const [playerImage] = await Promise.all([
 				getUserImg(playerId),
-				this.addPlayerToBanList(playerBanDoc, guildId),
+				this.addPlayerToBanList(playerBanDocument, guildId),
 			]);
 			const banInfoEmbed = new PermBanInfoEmbed(
 				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage,

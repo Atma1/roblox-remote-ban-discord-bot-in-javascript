@@ -68,12 +68,12 @@ module.exports = class TempBanCommand extends DatabaseSlashCommand {
 			if (!playerId) {
 				return interaction.editReply('That user is not found in Roblox!');
 			}
-			const playerBanDoc = new PlayerBanDocument(
+			const playerBanDocument = new PlayerBanDocument(
 				playerId, playerName, banReason, bannedBy, 'tempBan', bannedAt, bannedUntil,
 			);
 			const [playerImage] = await Promise.all([
 				getUserImg(playerId),
-				this.addPlayerToBanList(playerBanDoc, guildId),
+				this.addPlayerToBanList(playerBanDocument, guildId),
 			]);
 			const banInfoEmbed = new TempBanInfoEmbed(
 				formattedBanDate, bannedBy, playerName, playerId, banReason, playerImage, formattedUnbanDate,
