@@ -7,8 +7,10 @@ module.exports = class ReadyEvent extends EventClass {
 	constructor(botClient) {
 		super(
 			botClient,
-			'ready',
-			'once',
+			{
+				eventType: 'ready',
+				eventEmitter: 'once',
+			},
 		);
 	}
 	async execute() {
@@ -18,7 +20,7 @@ module.exports = class ReadyEvent extends EventClass {
 		clientGuilds.forEach(async guild =>
 			await setupGuildConfigAndCommand(guild, this.botClient));
 
-		runAutoUnban(clientGuilds);
+		runAutoUnban(this.botClient);
 		setTimeout(() => runAutoUnban(clientGuilds), ms('10m'));
 	}
 };

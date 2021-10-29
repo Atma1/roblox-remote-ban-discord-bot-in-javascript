@@ -1,7 +1,7 @@
 module.exports = class EventClass {
-	constructor(botClient, eventType, eventEmmiter) {
+	constructor(botClient, eventOptions) {
 		this.botClient = botClient;
-		this.eventType = eventType;
-		this.eventEmmiter = eventEmmiter;
+		this.eventType = eventOptions.eventType;
+		this.eventEmmiter = eventOptions.eventEmmiter;
 	}
 };

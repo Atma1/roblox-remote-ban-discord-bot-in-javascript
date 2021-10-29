@@ -4,8 +4,10 @@ module.exports = class InteractionCreateEvent extends EventClass {
 	constructor(botClient) {
 		super(
 			botClient,
-			'interactionCreate',
-			'on',
+			{
+				eventType: 'interactionCreate',
+				eventEmitter: 'on',
+			},
 		);
 	}
 	execute(interaction) {

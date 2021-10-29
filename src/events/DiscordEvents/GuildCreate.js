@@ -5,8 +5,10 @@ module.exports = class GuildCreateEvent extends EventClass {
 	constructor(botClient) {
 		super(
 			botClient,
-			'guildCreate',
-			'on',
+			{
+				eventType:'guildCreate',
+				eventEmitter:'on',
+			},
 		);
 	}
 	execute(guildData) {
