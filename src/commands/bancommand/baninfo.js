@@ -28,7 +28,7 @@ module.exports = class BanInfoCommand extends DatabaseSlashCommand {
 
 		try {
 			await interaction.deferReply();
-			const querySnapshot = await this.retriveBanDocument(playerName, guildId);
+			const querySnapshot = await this.retrieveBanDocument(playerName, guildId);
 			if (querySnapshot.empty) {
 				return interaction.editReply({ content:`${playerName} is not found in the database.` });
 			}

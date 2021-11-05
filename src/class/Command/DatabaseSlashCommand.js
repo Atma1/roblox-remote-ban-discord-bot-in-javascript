@@ -22,7 +22,7 @@ module.exports = class DatabaseSlashCommand extends SlashCommandClass {
 			});
 	}
 
-	retriveBanDocument(playerName, guildId) {
+	retrieveBanDocument(playerName, guildId) {
 		const lowercasePlayerName = playerName.toLowerCase();
 		return this.database.collection(`guildDataBase:${guildId}`)
 			.doc('banList')
