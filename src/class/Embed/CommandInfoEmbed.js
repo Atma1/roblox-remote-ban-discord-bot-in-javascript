@@ -17,10 +17,7 @@ module.exports = class EmbededCommandInfoMessage extends MessageEmbed {
 		}, {
 			name: 'Command Example:',
 			value: command.example ? `/${command.example}` : 'No example',
-		}, {
-			name: 'Command Aliases:',
-			value: command.aliases ? command.aliases.join(', ') : 'No aliases',
-		}, {
+		},	{
 			name: 'Owner Only:',
 			value: command.guildOwnerOnly ? 'True' : 'False',
 		}, {
