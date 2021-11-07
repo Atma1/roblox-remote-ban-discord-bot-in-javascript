@@ -7,7 +7,6 @@ module.exports = class DatabaseSlashCommand extends SlashCommandClass {
 
 	constructor(botClient, commandOptions) {
 		super(botClient, commandOptions);
-		this.firestore = firestore;
 		this.database = admin.firestore();
 	}
 
@@ -44,7 +43,7 @@ module.exports = class DatabaseSlashCommand extends SlashCommandClass {
 		this.database.collection(`guildDataBase:${guildId}`)
 			.doc('guildConfigurations')
 			.update({
-				'guildConfig.authorizedRoles': this.firestore.FieldValue.arrayRemove(`${roleId}`),
+				'guildConfig.authorizedRoles': firestore.FieldValue.arrayRemove(`${roleId}`),
 			});
 	}
 
@@ -52,7 +51,7 @@ module.exports = class DatabaseSlashCommand extends SlashCommandClass {
 		this.database.collection(`guildDataBase:${guildId}`)
 			.doc('guildConfigurations')
 			.update({
-				'guildConfig.authorizedRoles': this.firestore.FieldValue.arrayUnion(`${roleId}`),
+				'guildConfig.authorizedRoles': firestore.FieldValue.arrayUnion(`${roleId}`),
 			});
 	}
 
