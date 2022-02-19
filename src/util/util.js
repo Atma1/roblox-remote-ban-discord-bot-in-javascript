@@ -39,7 +39,6 @@ const guildConfigDocConverter = {
 		return {
 			guildConfig: {
 				authorizedRoles: guildConfig.authorizedRoles,
-				defaultPrefix: guildConfig.defaultPrefix,
 			},
 		};
 	},
@@ -48,7 +47,6 @@ const guildConfigDocConverter = {
 		const { guildConfig } = guildConfigDoc;
 		return {
 			authorizedRoles: guildConfig.authorizedRoles,
-			defaultPrefix: guildConfig.defaultPrefix,
 		};
 	},
 };
@@ -165,8 +163,8 @@ const loadSlashCommands = async (client) => {
 };
 
 const setSlashCommands = async (guild, slashCommand, guildConfig) => {
-	const slashCommandDatas = slashCommand.map(command => command.slashCommandData);
-	const guildSlashCommands = await guild?.commands.set(slashCommandDatas);
+	const slashCommandData = slashCommand.map(command => command.slashCommandData);
+	const guildSlashCommands = await guild?.commands.set(slashCommandData);
 	const slashCommandIds = guildSlashCommands.map(command => command.id);
 	guildConfig.set('guildSlashCommandIds', slashCommandIds);
 };
