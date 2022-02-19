@@ -4,9 +4,8 @@ module.exports = class SlashCommand {
 		this.desc = commandOptions.description;
 		this.usage = commandOptions.usage;
 		this.botClient = botClient;
-		this.example = commandOptions.example || false;
-		this.reqarglength = commandOptions.reqarglength || false;
-		this.guildOwnerOnly = commandOptions.guildOwnerOnly || false;
+		this.example = commandOptions.example || 'No example';
+		this.defaultPermission = commandOptions.defaultPermission || true;
 		this.slashCommandData = {
 			name: this.name,
 			description: this.desc,
