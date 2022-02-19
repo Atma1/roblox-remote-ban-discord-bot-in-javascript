@@ -170,9 +170,9 @@ const setSlashCommands = async (guild, slashCommand, guildConfig) => {
 };
 
 const loadEvents = (client) => {
-	const eventsFolder = fs.readdirSync('./src/events/DiscordEvents').filter(file => file.endsWith('.js'));
+	const eventsFolder = fs.readdirSync('./src/events').filter(file => file.endsWith('.js'));
 	for (const eventFile of eventsFolder) {
-		const eventClass = require(`@events/DiscordEvents/${eventFile}`);
+		const eventClass = require(`@events/${eventFile}`);
 		const event = new eventClass(client);
 		client[event.eventEmmiter](event.eventType, (...parameters) => event.execute(...parameters));
 		delete require.cache[eventClass];
