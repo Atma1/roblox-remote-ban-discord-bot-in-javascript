@@ -16,13 +16,13 @@ module.exports = class EmbededCommandInfoMessage extends MessageEmbed {
 			value: `/${commnandName} ${command.usage}`,
 		}, {
 			name: 'Command Example:',
-			value: command.example ? `/${command.example}` : 'No example',
+			value: command.example,
 		},	{
 			name: 'Owner Only:',
-			value: command.guildOwnerOnly ? 'True' : 'False',
+			value: command.guildOwnerOnly,
 		}, {
 			name: 'Require Permission:',
-			value: command.permission ? 'True' : 'False',
+			value: command.defaultPermission,
 		});
 	}
 };
