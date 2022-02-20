@@ -10,7 +10,7 @@ module.exports = class SlashCommand {
 			name: this.commandName,
 			description: this.desc,
 			defaultPermission: commandOptions.defaultPermission ?? true,
-			options: commandOptions.slashCommandOptions ?? false,
+			options: commandOptions.slashCommandOptions ?? true,
 		};
 	}
 };
