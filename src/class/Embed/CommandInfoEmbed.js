@@ -21,7 +21,7 @@ module.exports = class EmbededCommandInfoMessage extends MessageEmbed {
 			name: 'Owner Only:',
 			value: command.guildOwnerOnly,
 		}, {
-			name: 'Require Permission:',
+			name: 'Use Default Permission:',
 			value: command.defaultPermission,
 		});
 	}
