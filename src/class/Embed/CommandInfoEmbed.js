@@ -7,7 +7,7 @@ module.exports = class EmbededCommandInfoMessage extends MessageEmbed {
 		this.setTitle('Command Information');
 		this.addFields({
 			name: 'Command Name:',
-			value: command.name,
+			value: command.commandName,
 		}, {
 			name: 'Command Desc:',
 			value: command.desc,

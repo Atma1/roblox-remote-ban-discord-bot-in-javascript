@@ -136,7 +136,7 @@ const loadCommands = (client) => {
 		for (const commandFile of commandFiles) {
 			const commandClass = require(`@commands/${commandFolders}/${commandFile}`);
 			const command = new commandClass(client);
-			client.commands.set(command.name, command);
+			client.commands.set(command.commandName, command);
 			commandFilesAmount += 1;
 			delete require.cache[commandClass];
 		}
@@ -154,7 +154,7 @@ const loadSlashCommands = async (client) => {
 		for (const commandFile of commandFiles) {
 			const commandClass = require(`@commands/${commandFolders}/${commandFile}`);
 			const command = new commandClass(client);
-			slashCommands.set(command.name, command);
+			slashCommands.set(command.commandName, command);
 			commandFilesAmount += 1;
 			delete require.cache[commandClass];
 		}
@@ -174,7 +174,7 @@ const loadEvents = (client) => {
 	for (const eventFile of eventsFolder) {
 		const eventClass = require(`@events/${eventFile}`);
 		const event = new eventClass(client);
-		client[event.eventEmmiter](event.eventType, (...parameters) => event.execute(...parameters));
+		client[event.eventEmitter](event.eventType, (...parameters) => event.execute(...parameters));
 		delete require.cache[eventClass];
 	}
 	console.log(`Loaded ${eventsFolder.length} events.`);
