@@ -163,10 +163,12 @@ const loadSlashCommands = async (client) => {
 };
 
 const setSlashCommands = async (guild, slashCommand, guildConfig) => {
+	const { name:guildName } = guild;
 	const slashCommandData = slashCommand.map(command => command.slashCommandData);
 	const guildSlashCommands = await guild?.commands.set(slashCommandData);
 	const slashCommandIds = guildSlashCommands.map(command => command.id);
 	guildConfig.set('guildSlashCommandIds', slashCommandIds);
+	console.log(`Slash commands have been set for guild ${guildName}!`);
 };
 
 const loadEvents = (client) => {
