@@ -17,8 +17,8 @@ async function setupGuildConfigAndCommand(guild, botClient) {
 		const snapshot = await fetchGuildPrefixAndRole(guildId);
 		if (!snapshot.exists) {
 			const [response, guildOwner] = await Promise.all([
-				createNewGuildDataBase(this.id, firestore),
-				botClient.users.fetch(this.ownerID),
+				createNewGuildDataBase(guildId, firestore),
+				botClient.users.fetch(guild.ownerID),
 			]);
 			guildConfig.set('authorizedRoles', []);
 			directMessageGuildOwner(guildOwner, response);
@@ -33,6 +33,15 @@ async function setupGuildConfigAndCommand(guild, botClient) {
 	catch (error) {
 		console.error(error);
 	}
+}
+
+async function setupGuildConfigAndCommandForGuilds(clientGuildsMap, botClient) {
+	console.log('Setting up slash commands for each guild!');
+	for (const clientGuildsMapValue of clientGuildsMap) {
+		const guildObject = clientGuildsMapValue[1];
+		await setupGuildConfigAndCommand(guildObject, botClient);
+	}
+	console.log('Setting up complete!');
 }
 
 function directMessageGuildOwner(guildOwner, message) {
@@ -56,4 +65,5 @@ module.exports = {
 	fetchGuildPrefixAndRole: fetchGuildPrefixAndRole,
 	getGuildConfigCollection: getGuildConfigCollection,
 	setupGuildConfigAndCommand: setupGuildConfigAndCommand,
+	setupGuildConfigAndCommandForGuilds: setupGuildConfigAndCommandForGuilds,
 };
